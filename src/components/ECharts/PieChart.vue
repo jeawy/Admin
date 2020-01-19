@@ -15,7 +15,7 @@ export default {
     },
     height: {
       type: String,
-      default: "320px"
+      default: "150px"
     },
     chartId: {
       type: String,
@@ -65,14 +65,28 @@ export default {
           formatter: "{a} <br/>{b} : {c} ({d}%)"
         },
         legend: {
-          bottom: "0"
+          orient: 'vertical',
+          left: "5",
         },
         series: [
           {
-            name: title,
+            name: "井状态",
             type: "pie",
             data: chartData,
-            radius: [0, 100]
+            radius: ['38%', '70%'],
+            label: {
+                normal: {
+                    show: false,
+                    position: 'center'
+                },
+                emphasis: {
+                    show: true,
+                    textStyle: {
+                        fontSize: '20',
+                        fontWeight: 'bold'
+                    }
+                }
+            },
           }
         ]
       };

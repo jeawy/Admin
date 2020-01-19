@@ -1,456 +1,365 @@
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&amp;ak=KOmVjPVUAey1G2E8zNhPiuQ6QiEmAwZu&amp;__ec_v__=20190126"></script>
 <script>
-import MyInfo from "./components/MyInfo";
-import MyFeedback from "./components/MyFeedback";
-import MyTaskCount from "./components/MyTaskCount";
-import MyManWork from "./components/MyManWork";
-import MyApprove from "./components/MyApprove";
-import noticeDetail from "@/components/Notice/components/notice-detail";
-import MyAllocation from "./components/MyAllocation";
-import MyReportCard from "./components/MyReportCard";
-import MyRanking from "./components/MyRanking";
-import taskForm from "@/views/task/components/task-form";
-import tabLog from "@/views/task/components/tab-log";
-import tabApprove from "@/views/task/components/tab-approve";
-import tabTaskDtail from "@/views/task/components/tab-task-detail";
-import approveLog from "@/views/components/approve-log";
 import { mapState } from "vuex";
-import { putNotice } from "@/api/notice";
 import thumbtackMixin from "@/utils/thumbtack-mixin";
-import {
-  addTaskRecord,
-  queryTaskRecord,
-  queryTask,
-  getStatusTaskList,
-  getStandardTaskList
-} from "@/api/task";
+import Chart from "@/components/ECharts/PieChart";
+import BarChart from "@/components/ECharts/BarMarker";
+import BaiduMap from "@/components/ECharts/BaiduMap";
 let TimeOut = null;
 export default {
   name: "HomePage",
   components: {
-    MyInfo,
-    MyTaskCount,
-    MyFeedback,
-    MyManWork,
-    MyApprove,
-    noticeDetail,
-    MyAllocation,
-    MyReportCard,
-    MyRanking,
-    //任务侧边栏相关
-    taskForm,
-    tabLog,
-    tabTaskDtail,
-    approveLog,
-    tabApprove
+    Chart,
+    BarChart,
+    BaiduMap
   },
   mixins: [thumbtackMixin],
   data() {
     return {
-      // 这三项是待分配镜头组件的侧边栏依赖
-      link: [],
-      isAssetDrawerShow: false,
-      deptList: this.$store.state.login.userInfo.dept,
-      MyTaskList: [],
-      MyStandardTaskList: [],
-      // 任务侧边栏相关
-      isDrawerShow: false,
-      TaskDetail: {
-        name: ""
-      },
-      Link: "",
-      Asset: "",
-      detailLoading: false,
-      LogList: [],
-      logsLoading: false,
-      TaskRecord: {},
-      createLoading: false,
-      activeRow: {}, //点击任务列表选中的列的数据
-      surplus_labor_hour: null,
-      trainingAuth: this.$store.state.login.userInfo.auth.view_training_project,
-      system_auth: this.$store.state.login.userInfo.auth.system_auth,
-      view_training_teacher:this.$store.state.login.userInfo.role.role
+      dynamic:1
     };
-  },
-  computed: {
-    ...mapState("notice", ["Notice", "unreadCount"]),
-    unreadList() {
-      if (this.Notice && this.Notice.length) {
-        return this.Notice.filter(t => !t.read);
-      } else {
-        return [];
-      }
-    }
-  },
-  created() {
-    this.getMyTasks();
-    if(this.view_training_teacher!=null){
-      return this.view_training_teacher=this.view_training_teacher.includes('练习生导师')
-    } 
-  },
-  beforeRouteEnter(to, from, next) {
-    // 刷新页面方法
-    const timeOutCallBack = function() {
-      this.$store.dispatch("tagsView/delAllCachedViews", this.$route);
-      const { fullPath } = this.$route;
-      this.$nextTick(() => {
-        this.$router.replace({
-          path: `/redirect${fullPath}`
-        });
-      });
-    };
-    // 此钩子函数中无法访问VUE实例（this），可在next回调的时候给个参数， setTimeout回调绑定vm为“this”，但必须bind因为是异步调用
-    // 60000*15 = 延迟十五分钟刷新一次
-    next(vm => {
-      TimeOut = setTimeout(timeOutCallBack.bind(vm), 60000 * 15);
-    });
-  },
-  beforeRouteLeave(to, from, next) {
-    clearTimeout(TimeOut);
-    next();
   },
   methods: {
-    //侧边栏添加任务
-    showTaskForm(link_id,dept_id,content,date_and_user){
-       this.$refs.MyAllocation.showTaskForm(link_id,dept_id,content,date_and_user)
+    chart_reload(days){
+       this.dynamic = days;
+       switch (days){
+          case 1:
+            break;
+          case 7:
+            break;
+          case 30:
+            break;
+          case 90:
+            break;
+          case 180:
+            break;
+          case 365:
+            break;
+       }
     },
-    // 展示 待分配镜头组件的 侧边栏 并传值
-    changeLinks(arr) {
-      this.link = arr;
-      this.isAssetDrawerShow = true;
-    },
-    // 点击消息触发，参数为点击的消息数据
-    handelClickNoticeItem({ url, task_id, category }) {
-      // category == 1 时候跳转到我的任务后需要打开任务的侧边栏，  在stroe中传递 id识别
-      if (category == 1) {
-        this.$store.commit("mine/setTaskId", task_id);
-      }
-      // 关闭notice的抽屉
-      this.$store.commit("notice/SET_CARDSHOW", false);
-      this.$router.push(url);
-    },
-    cancel() {
-      this.isDialogShow = false;
-    },
-    addRecord() {
-      this.createLoading = true;
-
-      addTaskRecord(this.TaskRecord)
-        .then(res => {
-          if (res.data.status === 0) {
-            this.$message.success(res.data.msg);
-            this.getMyTasks();
-          } else {
-            this.$message.warning(res.data.msg);
-          }
-          this.isDialogShow = false;
-          this.createLoading = false;
-          this.isDrawerShow = false;
-        })
-        .catch(err => {
-          this.createLoading = false;
-        });
-    },
-    taskBoardRightShow(row) {
-      this.isDrawerShow = true;
-
-      this.activeRow = {
-        ...row
-      };
-      this.TaskRecord = Object.assign(
-        {},
+    getStatistics() {
+      let chartData = [
         {
-          task_id: row.task.id,
-          type: 0,
-          date: new Date().toLocaleDateString()
+          name: "开井",
+          value: 2
+        },
+        {
+          name: "关井",
+          value: 3
         }
-      );
-      if (this.activeRow.task && this.activeRow.task.status === 2) {
-        this.$nextTick(() => {
-          this.$refs["tabApprove"].getMakeQequire(row.task.id);
-        });
-      }
-
-      this.logsLoading = true;
-      this.$refs["taskApprovelog"].getApproveLog(row.task.id);
-      queryTaskRecord({
-        task_id: row.task.id
-      })
-        .then(({ data }) => {
-          this.LogList = [...data.msg];
-          this.logsLoading = false;
-        })
-        .catch(() => {
-          this.logsLoading = false;
-        });
-      this.detailLoading = true;
-      this.$refs["taskDetail"].getDetail(row.task.id);
-      queryTask({
-        id: row.task.id
-      }).then(({ data }) => {
-        this.surplus_labor_hour = data.msg.surplus_labor_hour;
-        //   this.TaskDetail = {
-        //     ...data.msg
-        //   };
-        //   this.Asset = this.TaskDetail.asset;
-        //   this.Link = this.TaskDetail.link_dept_name;
-        //   this.detailLoading = false;
-        // })
-        // .catch(() => {
-        //   this.detailLoading = false;
-      });
+      ];
+      // //  this.$nextTick(()=>{
+      this.$refs["well-status"].initChart("", chartData);
+      // //  })
     },
-    // 修改是否已读
-    updateIsRead(row) {
-      if (row.read === 0) {
-        row.read = 1;
-      }
-      putNotice({
-        method: "put",
-        ids: row.id,
-        read: row.read
-      }).then(({ data }) => {
-        if (data.status === 0) {
-          // this.$message.success(data.msg);
-          this.getNoticeDetail();
-        }
-      });
+    getoutput() {
+      let customOption = {
+        title: {
+          text: "产量TOP20",
+          textStyle: {
+            //---主标题内容样式
+            color: "#000"
+            // height:"50px"
+          },
+          padding: [3, 0, 100, 50] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
+        },
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            type: "shadow"
+          }
+        },
+        legend: {
+          data: ["镜头个数", "任务个数"]
+        },
+        grid: {
+          left: "3%",
+          right: "4%",
+          bottom: "3%",
+          containLabel: true
+        },
+        xAxis: [
+          {
+            type: "category",
+            data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+            // nameGap :15,
+            axisLabel: {
+              //---坐标轴 标签
+              show: true, //---是否显示
+              inside: false, //---是否朝内
+              interval: 0,
+              rotate: 0,
+              margin: 5 //---刻度标签与轴线之间的距离
+            }
+          }
+        ],
+        yAxis: [
+          {
+            type: "value"
+          }
+        ],
+        series: [
+          {
+            // name: "任务个数",
+            type: "bar",
+            barWidth: 30,
+            barMaxWidth: 50,
+            barCategoryGap: "30%",
+            barGap: "0%",
+            data: [120, 200, 150, 80, 70, 110, 130]
+          }
+        ]
+      };
+      this.$refs["ouput"].initChart(customOption);
     },
-    getMyTasks() {
-      //获取我在进行中的标准项目下的任务
-      getStandardTaskList({
-        mytask: null,
-        status: "[0, 1, 2]",
-        page: 1,
-        pagenum: 100
-      }).then(({ data }) => {
-        this.MyStandardTaskList = [...data.msg];
-      });
-      // 获取我在进行中的标准和实训项目中的任务
-      getStatusTaskList({
-        mytask: null,
-        status: "[0, 1, 2]",
-        page: 1,
-        pagenum: 100
-      }).then(({ data }) => {
-        this.MyTaskList = [...data.msg];
-      });
+    getlevel() {
+      let customOption = {
+        title: {
+          text: "液面高度",
+          textStyle: {
+            //---主标题内容样式
+            color: "#000"
+            // height:"50px"
+          },
+          padding: [3, 0, 100, 50] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
+        },
+        tooltip: {
+          trigger: "axis",
+          axisPointer: {
+            type: "shadow"
+          }
+        },
+        legend: {
+          // data: ["镜头个数", "任务个数"]
+        },
+        grid: {
+          left: "3%",
+          right: "4%",
+          bottom: "3%",
+          containLabel: true
+        },
+        xAxis: [
+          {
+            type: "category",
+            data: ["周一", "周二", "周三", "周四", "周五", "周六", "周末"],
+            // nameGap :15,
+            axisLabel: {
+              //---坐标轴 标签
+              show: true, //---是否显示
+              inside: false, //---是否朝内
+              interval: 0,
+              rotate: 0,
+              margin: 5 //---刻度标签与轴线之间的距离
+            }
+          }
+        ],
+        yAxis: [
+          {
+            type: "value"
+          }
+        ],
+        series: [
+          {
+            // name: "任务个数",
+            type: "bar",
+            barWidth: 30,
+            barMaxWidth: 50,
+            barCategoryGap: "30%",
+            barGap: "0%",
+            data: [120, 200, 150, 80, 70, 110, 130]
+          }
+        ]
+      };
+      this.$refs["level"].initChart(customOption);
     },
-    getNoticeDetail() {
-      this.$store.dispatch("notice/get_Notice", {
-        userid: this.$store.state.login.userInfo.id
+    getlocation() {
+      let customOption = {
+      };
+      this.$nextTick(() => {
+        this.$refs["location"].initChart(customOption);
       });
     }
+  },
+  created() {},
+  mounted() {
+    this.getStatistics();
+    this.getoutput();
+    this.getlevel();
+    this.getlocation();
   }
 };
 </script>
 <template>
   <div id="home-page" ref="drawer-parent">
-    <el-row class="home-header-card" :gutter="15" v-if="trainingAuth&&!view_training_teacher||system_auth">
-      <el-col :span="12" class="card-warp">
-        <MyReportCard />
+    <el-row class="home-header-card" :gutter="15">
+      <el-col :span="6" class="card-warp">
+        <el-card class="home-header-item1" shadow="always">
+          <p class="text-light">实时数据</p>
+          <img
+            style="width: 270px;height: 60px;margin-top:20px"
+            src="@/assets/realdata.png" alt="">
+        </el-card>
       </el-col>
-      <el-col :span="12" class="card-warp">
-        <MyRanking />
+      <el-col :span="6" class="card-warp">
+        <el-card class="home-header-item2" shadow="always">
+          <p class="text-light">综合查询</p>
+          <img
+            style="width: 270px;height: 50px;margin-top:30px"
+            src="@/assets/query.png" alt="">
+        </el-card>
       </el-col>
-    </el-row>
-    <el-row class="home-header" :gutter="15">
-      <el-col :span="8">
-        <el-row class="basic" :gutter="15">
-          <el-col :span="24" class="card-warp">
-            <MyInfo />
-          </el-col>
-          <el-col :span="24" style="height:15px" />
-          <el-col :span="24" class="card-warp">
-            <MyFeedback :my-task-list="MyTaskList" @show-drawer="taskBoardRightShow" />
-          </el-col>
-        </el-row>
+      <el-col :span="6" class="card-warp">
+        <el-card class="home-header-item3" shadow="always">
+          <p class="text-light">告警</p>
+          <img
+            style="width: 270px;height: 60px;margin-top:28px"
+            src="@/assets/warning.png" alt="">
+        </el-card>
       </el-col>
-      <el-col :span="8" v-if="system_auth">
-        <el-row class="basic" :gutter="15">
-          <el-col :span="24" class="card-warp">
-            <MyManWork :MyStandardTaskList="MyStandardTaskList" />
-          </el-col>
-          <el-col :span="24" style="height:15px" />
-          <el-col :span="24" class="card-warp">
-            <MyTaskCount :my-task-list="MyTaskList" @show-drawer="taskBoardRightShow" />
-          </el-col>
-        </el-row>
-      </el-col>
-      <el-col :span="8" v-if="trainingAuth&&!system_auth">
-        <el-row class="aside" :gutter="15">
-          <el-col :span="24" class="card-warp">
-            <MyTaskCount :my-task-list="MyTaskList" @show-drawer="taskBoardRightShow" />
-          </el-col>
-        </el-row>
-      </el-col>
-      <el-col :span="8" class="aside">
-        <el-card shadow="always">
-          <el-row slot="header" type="flex" justify="space-between" align="middle">
-            <span class="card-header">我的消息</span>
-          </el-row>
-          <div>
-            <div class="content">
-              <el-table
-                ref="multipleTable"
-                :data="unreadList.filter((t,i)=>i<10)"
-                style="width: 100%"
-                tooltip-effect="dark"
-                @row-click="updateIsRead"
-              >
-                <el-table-column label="消息" show-overflow-tooltip :min-width="80">
-                  <template slot-scope="scope">
-                    <el-tooltip
-                      v-if="scope.row.urgency_level == 0"
-                      class="item"
-                      effect="dark"
-                      content="一般"
-                      placement="top"
-                    >
-                      <svg-icon v-if="scope.row.urgency_level == 0" icon-class="urgency1" />
-                    </el-tooltip>
-                    <el-tooltip
-                      v-if="scope.row.urgency_level == 1"
-                      class="item"
-                      effect="dark"
-                      content="紧急"
-                      placement="top"
-                    >
-                      <svg-icon v-if="scope.row.urgency_level == 1" icon-class="urgency2" />
-                    </el-tooltip>
-                    <el-tooltip
-                      v-if="scope.row.urgency_level == 2"
-                      class="item"
-                      effect="dark"
-                      content="特急"
-                      placement="top"
-                    >
-                      <svg-icon v-if="scope.row.urgency_level == 2" icon-class="urgency3" />
-                    </el-tooltip>
-                    <svg-icon v-if="scope.row.read == 0" icon-class="notice-close" />
-                    <svg-icon v-if="scope.row.read == 1" icon-class="notice-open" />
-                    <a @click="handelClickNoticeItem(scope.row)">{{ scope.row.title }}</a>
-                  </template>
-                </el-table-column>
-                <el-table-column label="时间" :min-width="40">
-                  <template slot-scope="scope">{{ scope.row.date|dateTimeFormat }}</template>
-                </el-table-column>
-              </el-table>
-              <el-button
-                v-show="unreadList.length>10"
-                type="text"
-                @click="$store.commit('notice/SET_CARDSHOW', true)"
-              >查看更多</el-button>
-              <!-- <el-button
-                @click="$store.commit('notice/SET_CARDSHOW', true)"
-                type="text"
-                style="color:#ed4014"
-              >{{unreadCount}} 条未读 <el-icon class="el-icon-position"/></el-button>-->
-            </div>
-          </div>
+      <el-col :span="6" class="card-warp">
+        <el-card class="home-header-item4" shadow="always">
+          <p class="text-light">统计分析</p>
+          <img
+            style="width: 260px;height: 60px;margin-top:28px"
+            src="@/assets/statistics.png" alt="">
         </el-card>
       </el-col>
     </el-row>
-    <el-row class="home-footer" :gutter="15">
-      <el-col :span="12" class="card-warp">
-        <MyApprove />
+    <el-row class="home-header" :gutter="15">
+      <el-col :span="12">
+        <el-row class="left" :gutter="15">
+          <el-col :span="24" class="card-warp">
+            <el-card shadow="always">
+              <div class="btn-group" data-toggle="buttons" aria-label="First group">
+                <div class="btn" :class="{colorChange:1 == dynamic}" @click="chart_reload(1)">
+                  <input type="radio" name="options" id="option1">今天
+                </div>
+                <div class="btn" :class="{colorChange:7 == dynamic}" @click="chart_reload(7)">
+                  <input type="radio" name="options" id="option2">近一周
+                </div>
+                <div class="btn" :class="{colorChange:30 == dynamic}" @click="chart_reload(30)">
+                  <input type="radio" name="options" id="option3">近一月
+                </div>
+                <div class="btn" :class="{colorChange:90 == dynamic}" @click="chart_reload(90)">
+                  <input type="radio" name="options" id="option4">近三月
+                </div>
+                <div class="btn" :class="{colorChange:180 == dynamic}" @click="chart_reload(180)">
+                  <input type="radio" name="options" id="option6">近半年
+                </div>
+                <div class="btn" :class="{colorChange:365 == dynamic}" @click="chart_reload(365)">
+                  <input type="radio" name="options" id="option5">近一年
+                </div>
+              </div>
+              <div>
+                <BarChart ref="ouput" chart-id="output" style="height:400px" />
+              </div>
+              <div style="margin-top:50px">
+                <BarChart ref="level" chart-id="level" style="height:400px" />
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
       </el-col>
-      <el-col :span="12" class="card-warp">
-        <MyAllocation @changeLinks="changeLinks" ref="MyAllocation"/>
+      <el-col :span="12">
+        <el-row class="right" :gutter="15">
+          <el-col :span="24" class="card-warp">
+            <el-row :gutter="15">
+              <el-col :span="12">
+                <el-row class="left-item">
+                  <el-col :span="24">
+                    <el-card shadow="always">
+                      <chart ref="well-status" chart-id="well-status" />
+                      <div class="prompt-text">开井：2 关井：3</div>
+                      <el-progress
+                        style="margin-top:10px"
+                        color="#28a745"
+                        :stroke-width="10"
+                        :percentage="20"
+                      ></el-progress>
+                    </el-card>
+                  </el-col>
+                  <el-col style="height:10px"></el-col>
+                  <el-col :span="24">
+                    <el-card shadow="always" style="height:200px">
+                      <div>
+                        <div class="prompt-text">告警</div>
+                        <strong style="color:black;font-size:15px">29 已处理 (40%)</strong>
+                        <el-progress
+                          style="margin-top:10px"
+                          color="#28a745"
+                          :stroke-width="10"
+                          :percentage="20"
+                        ></el-progress>
+                      </div>
+                      <div style="margin-top:10px">
+                        <div class="prompt-text">工况诊断</div>
+                        <strong style="color:black;font-size:15px">24 已完成 (20%)</strong>
+                        <el-progress
+                          style="margin-top:10px"
+                          color="#28a745"
+                          :stroke-width="10"
+                          :percentage="20"
+                        ></el-progress>
+                      </div>
+                    </el-card>
+                  </el-col>
+                </el-row>
+              </el-col>
+              <el-col :span="12">
+                <el-row class="right-item">
+                  <el-col :span="24">
+                    <el-card shadow="always">
+                      <div style="display:flex">
+                        <img
+                            style="width: 76px;height: 74px;margin-top:10px"
+                            src="@/assets/output.jpg" alt="">
+                        <div style="margin-left:20px;margin-top:10px">
+                          <div class="prompt-text">总产油量：(吨)</div>
+                          <div style="font-size:25px;margin-top:8px;">84212.59</div>
+                        </div>
+                      </div>
+                    </el-card>
+                  </el-col>
+                  <el-col style="height:15px"></el-col>
+                  <el-col :span="24">
+                    <el-card shadow="always">
+                      <div style="display:flex">
+                        <img
+                              style="width: 80px;height:82px;margin-top:10px"
+                              src="@/assets/work.jpg" alt="">
+                          <div class="prompt-text" style="margin-left:20px;margin-top:30px">工况诊断</div>
+                      </div>
+                    </el-card>
+                  </el-col>
+                  <el-col style="height:15px"></el-col>
+                  <el-col :span="24">
+                    <el-card shadow="always">
+                      <div style="display:flex">
+                        <img
+                              style="width: 82px;height: 78px;margin-top:10px"
+                              src="@/assets/info.jpg" alt="">
+                        <div class="prompt-text" style="margin-left:20px;margin-top:30px">基础信息</div>
+                      </div>
+                    </el-card>
+                  </el-col>
+                </el-row>
+              </el-col>
+            </el-row>
+          </el-col>
+          <el-col :span="24" style="height:15px" />
+          <el-col :span="24" class="card-warp">
+            <el-card shadow="always">
+              <div class="card-header">
+                <h4 style="font-size:17px">油井位置分布</h4>
+              </div>
+              <div>
+                <BaiduMap ref="location" chart-id="location" style="height: 465px;width:600px" />
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
       </el-col>
     </el-row>
-    <!-- 待分配镜头的抽屉组件 -->
-    <Drawer
-      ref="drawer"
-      v-model="isAssetDrawerShow"
-      scrollable
-      closable
-      width="526"
-      :transfer="false"
-      :mask="false"
-      :inner="isInner"
-      title="环节"
-    >
-      <div style="display:flex;overflow:auto">
-        <el-steps
-          v-for="(todo,Index) of link"
-          :key="Index"
-          direction="vertical"
-          :active="1"
-          style="width:250px;display:flex；justify-content:flex-start"
-        >
-          <el-step v-for="item of todo" :key="item.link_id" status="process" style="width:250px">
-            <div slot="title" style="font-size:14px;display:flex;justify-content:flex-start">
-              {{ item.dept.name }}
-              <template
-                v-if="deptList.filter(todo=>{ return todo.id === item.dept.id}).length"
-              >
-                <el-tooltip effect="dark" content="添加任务" placement="top">
-                  <span style="padding-left:5px">
-                    <i
-                      class="el-icon-plus"
-                      style="color:blue"
-                      @click="showTaskForm(item.link_id,item.dept.id,item.content,item.date_and_user)" 
-                    />
-                  </span>
-                </el-tooltip>
-              </template>
-            </div>
-            <ul slot="description" style="width:250px;">
-              <li>制作要求: {{ item.content }}</li>
-              <template>
-                <li>开始日期: {{ item.date_and_user.date_start|dateFormat }}</li>
-                <li>截止日期: {{ item.date_and_user.date_end|dateFormat }}</li>
-              </template>
-            </ul>
-          </el-step>
-        </el-steps>
-      </div>
-    </Drawer>
-    <Drawer
-      v-model="isDrawerShow"
-      scrollable
-      width="512px"
-      :transfer="false"
-      :mask="false"
-      :inner="isInner"
-      :mask-style="{backgroundColor: 'transparent'}"
-      draggable
-    >
-      <el-tabs>
-        <el-tab-pane label="任务详情">
-          <tabTaskDtail
-            ref="taskDetail"
-            :link="Link"
-            :asset="Asset"
-            :detail-loading="detailLoading"
-          />
-        </el-tab-pane>
-        <el-tab-pane label="执行记录">
-          <tabLog :loglist="LogList" :logs-loading="logsLoading" />
-        </el-tab-pane>
-        <el-tab-pane label="执行任务">
-          <task-form
-            :surplus_labor_hour="surplus_labor_hour"
-            :task-record.sync="TaskRecord"
-            :create-loading="createLoading"
-            @addRecord="addRecord"
-            @cancel="cancel"
-          />
-        </el-tab-pane>
-        <el-tab-pane label="提交审核">
-          <tab-approve
-            ref="tabApprove"
-            v-if="activeRow.task && activeRow.task.status === 2"
-            :row="activeRow"
-            @refresh="getMyTasks"
-          />
-          <div v-else style="display:flex;justify-content:center">任务状态不是进行中</div>
-        </el-tab-pane>
-        <el-tab-pane label="审批记录">
-          <approve-log ref="taskApprovelog" />
-        </el-tab-pane>
-      </el-tabs>
-    </Drawer>
   </div>
 </template>
 
@@ -488,45 +397,77 @@ export default {
   }
   .home-header {
     margin-bottom: 15px;
-    .basic {
-      height: 70%;
+    .left {
       .el-card {
-        height: 300px;
+        height: 990px;
+      }
+      .btn-group{
+        display: flex;
+        font-size:15px;
+        margin-bottom: 15px;
+        .btn{
+          border:1px solid #212529;
+          padding:8px 15px;
+          height: 35px;
+          margin-left:8px
+        }
+        .colorChange{
+					background:#262d37;
+          color: #fff;
+				}
       }
     }
-    .aside {
+    .middle {
       .el-card {
         height: 615px;
       }
     }
-  }
-  .home-footer {
-    .el-card {
-      height: 300px;
+    .right {
+      height: 70%;
+      .prompt-text {
+        display: flex;
+        color: #6c757d;
+        font-size: 15px;
+      }
+      .left-item {
+        .el-card {
+          height: 240px;
+        }
+      }
+      .right-item {
+        .el-card {
+          height: 140px;
+        }
+      }
     }
   }
   .home-header-card {
     margin-bottom: 15px;
     .el-card {
-      height: 300px;
+      height: 140px;
+    }
+    .home-header-item1 {
+      background: #63c2de;
+    }
+    .home-header-item2 {
+      background: #20a8d8;
+    }
+    .home-header-item3 {
+      background: #ffc107;
+    }
+    .home-header-item4 {
+      background: #f86c6b;
+    }
+    .text-light {
+      color: #f8f9fa;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 24px;
     }
   }
   .card-header {
     font-size: 14px;
     font-weight: 600;
-  }
-  .el-button--text {
-    padding: 0;
-  }
-  .svg-icon {
-    font-size: 16px;
-  }
-  .dept-link {
-    font-size: 12px;
-    color: #2d8cf0;
-    & + .dept-link {
-      margin-left: 5px;
-    }
   }
 }
 </style>

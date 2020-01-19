@@ -21,7 +21,7 @@
       highlight-current-row
       default-expand-all
       v-loading="tableLoading"
-      row-key="dept_name"
+      row-key="dept_user_count"
     >
       <el-table-column prop="dept_name" label="部门"></el-table-column>
       <el-table-column prop="dept_user_count" label="人员数量"></el-table-column>
@@ -52,8 +52,7 @@ export default {
     resetParams() {
       this.deptIds=[]
       this.work_days= 21.75
-      this.work_time= 8;
-      this.getDeptList();
+      this.work_time= 8
     },
     // 根据筛选条件搜索
     searchList() {
@@ -73,22 +72,14 @@ export default {
         } */
       this.tableLoading = true
       getDepartmentTime(params).then(({ data }) => {
-        this.workTime = [...data.msg];
-      }).finally(()=>{
-        this.tableLoading = false
-      })
-    },
-    getDeptList(){
-      this.tableLoading = true
-      getDepartmentTime().then(({ data }) => {
-        this.workTime = [...data.msg];
+        this.workTime = data.msg;
       }).finally(()=>{
         this.tableLoading = false
       })
     }
   },
   async created() {
-      this.getDeptList();
+    this.searchList();
   }
 };
 </script>
