@@ -194,10 +194,12 @@ export default {
     <el-row class="home-header-card" :gutter="15">
       <el-col :span="6" class="card-warp">
         <el-card class="home-header-item1" shadow="always">
-          <p class="text-light">实时数据</p>
-          <img
-            style="width: 270px;height: 60px;margin-top:20px"
-            src="@/assets/realdata.png" alt="">
+          <a href="/#/realdata/realdata">
+            <p class="text-light">实时数据</p>
+            <img
+              style="width: 270px;height: 60px;margin-top:20px"
+              src="@/assets/realdata.png" alt="">
+          </a>
         </el-card>
       </el-col>
       <el-col :span="6" class="card-warp">

@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import project from "@/views/overview/project";
+// import project from "@/views/overview/project";
 import { mapState } from "vuex";
 export default {
   name: "training-project",
