@@ -29,7 +29,7 @@
       </el-col>
       <el-col :span="6">
         <el-button type="primary" style="height:27.99px" @click="searchWell()">点击查询</el-button>
-        <el-button type="primary" style="height:27.99px">导出结果</el-button>
+        <el-button type="primary" style="height:27.99px" @click="targetUpload">导出结果</el-button>
       </el-col>
       <!-- <el-col :span="4">
         <el-button type="danger" style="height:27.99px" @click="histaryData()">历史数据</el-button>
@@ -90,6 +90,21 @@
       <el-table-column prop="address" label="偏磨" align="center"></el-table-column>
       <el-table-column prop="address" label="流压" align="center"></el-table-column>
     </el-table>
+    <!-- 导出 -->
+    <el-dialog title="Excel文件导出" :visible.sync="uploadVisible" width="400px" hieght="300px">
+      <el-row>
+        <el-col :span="6">
+          <span>excel文件</span>
+        </el-col>
+        <el-col :span="18">
+          <span @click="download" style="cursor:pointer;color:#2d8cf0">{{"点击下载"}}</span>
+        </el-col>
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="uploadVisible = false">取 消</el-button>
+        <el-button type="primary" @click="uploadExcel">确定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -132,7 +147,9 @@ export default {
           value: "2",
           label: "已移除"
         }
-      ]
+      ],
+      uploadVisible: false,
+      path: null,
     };
   },
   methods: {
@@ -157,6 +174,31 @@ export default {
       getRealdata(data).then( res =>{
          this.realdata = res.data.realdata;  
       })
+    },
+    // 实时数据导出dialog
+    targetUpload() {
+      const data = {
+        well_type:this.wellCategory,
+        number:this.wellNumber,
+        status:this.wellStatus,
+        print: 'null'
+      }
+      getRealdata(data)
+        .then(({
+          data
+        }) => {
+            this.uploadVisible = true
+            this.path = data.file;
+        })
+    },
+    // 导出Excel
+    download() {
+      const data = this.$store.state.BASE_URL + this.path;
+      window.location.href = data;
+      this.uploadVisible = false;
+    },
+    uploadExcel() {
+      this.uploadVisible = false;
     },
     // 运行状态格式化显示
     Status: function(row, column) {
