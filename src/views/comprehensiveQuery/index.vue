@@ -1,58 +1,69 @@
 <template>
   <div id="comprehensiveQuery">
-    <el-row>
-      <el-col :span="4">
-        井类别:
-        <el-select v-model="wellCategory" placeholder="请选择" style="width:130px;" filterable>
-          <el-option
-            v-for="item in category"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-      </el-col>
-      <el-col :span="1">井号:</el-col>
-      <el-col :span="2">
-        <el-input v-model="wellNumber"></el-input>
-      </el-col>
-      <el-col :span="4">
-        状态:
-        <el-select v-model="wellStatus" placeholder="请选择" style="width:130px;" filterable>
-          <el-option
-            v-for="item in wellstatus"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-      </el-col>
-      <el-col :span="2">上报日期:</el-col>
-      <el-col :span="4">
-        <el-date-picker
-      v-model="wellDatePicker"
-      type="daterange"
-      align="right"
-      range-separator="-"
-      start-placeholder="开始时间"
-      end-placeholder="结束时间"
-      size="mini"
-      style="width:200px">
-    </el-date-picker>
-      </el-col>
-      <el-col :span="6">
-        <el-button type="primary" style="height:27.99px" @click="searchWell()">点击查询</el-button>
-        <el-button type="primary" style="height:27.99px" @click="targetUpload">导出结果</el-button>
-      </el-col>
-    </el-row>
-    <el-table 
-    :data="comprehensivedata" 
-    stripe 
-    :border="true"  
-    style="width: 100%;"
-    :header-cell-style="{color:'#212529',fontSize:'16px',fontWeight:400}"
-    :row-style="{fontSize:'16px',color:'#212529;',fontWeight:400,}">
-      <el-table-column type="index" width="80" label="序号"  align="center"></el-table-column>
+      <el-row class="row-bg">
+        <el-col :span="2" class="col-bg">
+          井类别:
+        </el-col>
+        <el-col :span="3">
+          <el-select v-model="wellCategory" placeholder="请选择" style="width:130px;" filterable>
+            <el-option
+              v-for="item in category"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="2" class="col-bg">
+          井号:
+        </el-col>
+        <el-col :span="2">
+          <el-input v-model="wellNumber"></el-input>
+        </el-col>
+        <el-col :span="2" class="col-bg">
+          状态:
+        </el-col>
+        <el-col :span="2">
+          <el-select v-model="wellStatus" placeholder="请选择" style="width:130px;" filterable>
+            <el-option
+              v-for="item in wellstatus"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="2" class="col-bg">
+          上报日期:
+        </el-col>
+        <el-col :span="4" type="flex">
+          <el-date-picker
+            v-model="wellDatePicker"
+            type="daterange"
+            align="right"
+            range-separator="-"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
+            size="mini"
+            style="width:200px"
+            :picker-options="pickerOptions"
+            value-format="yyyy/MM/dd"
+          ></el-date-picker>
+        </el-col>
+        <el-col :span="5">
+          <el-button type="primary" style="height:27.99px" @click="searchWell()">点击查询</el-button>
+          <el-button type="primary" style="height:27.99px" @click="targetUpload">导出结果</el-button>
+        </el-col>
+      </el-row>
+    <el-table
+      :data="comprehensivedata"
+      stripe
+      :border="true"
+      style="width: 100%;"
+      :header-cell-style="{color:'#212529',fontSize:'16px',fontWeight:400}"
+      :row-style="{fontSize:'16px',color:'#212529;',fontWeight:400,}"
+    >
+      <el-table-column type="index" width="80" label="序号" align="center"></el-table-column>
       <el-table-column prop="welltype" label="井类别" align="center"></el-table-column>
       <el-table-column label="井号" class-name="links" width="120" align="center">
         <template slot-scope="scope">
@@ -63,7 +74,7 @@
       <el-table-column prop="factory" label="厂" align="center"></el-table-column>
       <el-table-column prop="mine" label="矿" align="center"></el-table-column>
       <el-table-column label="上报时间" width="150px" align="center">
-         <template slot-scope="scope">{{scope.row.time|dateTimeFormat}}</template>
+        <template slot-scope="scope">{{scope.row.time|dateTimeFormat}}</template>
       </el-table-column>
       <el-table-column prop="frequency" label="频率(Hz)" width="100px" align="center"></el-table-column>
       <el-table-column prop="level" label="动液面(米)" width="100px" align="center"></el-table-column>
@@ -110,14 +121,14 @@
   </div>
 </template>
 <script>
-import { getRealdata,getDetail} from "@/api/realdata";
+import { getRealdata, getDetail } from "@/api/realdata";
 export default {
   data() {
     return {
       comprehensivedata: [],
       wellCategory: "-1",
       wellStatus: "-1",
-      wellDatePicker:'',
+      wellDatePicker: "",
       category: [
         {
           value: "-1",
@@ -153,43 +164,77 @@ export default {
       ],
       uploadVisible: false,
       path: null,
+      pickerOptions: {
+          shortcuts: [{
+            text: '今天',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              picker.$emit('pick', [start, end]);
+            }
+          },{
+            text: '昨天',
+            onClick(picker) {
+              // const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24);
+              picker.$emit('pick', [start, start]);
+            }
+          },{
+            text: '最近7日',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近30日',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+        },
+
     };
   },
   methods: {
     GetcomprehensiveData() {
       getRealdata().then(res => {
-        this.comprehensivedata = res.data.realdata;   
+        this.comprehensivedata = res.data.realdata;
       });
     },
     //跳转到油井详情页
-    wellDetail(){
-      console.log(":5555555")
+    wellDetail() {
+      console.log(":5555555");
     },
-    searchWell(){
+    searchWell() {
       let data = {
-        well_type:this.wellCategory,
-        number:this.wellNumber,
-        status:this.wellStatus
+        well_type: this.wellCategory,
+        number: this.wellNumber,
+        status: this.wellStatus,
+        daterange:this.wellDatePicker[0]+'-'+this.wellDatePicker[1],
       };
-      getRealdata(data).then( res =>{
-         this.comprehensivedata = res.data.realdata;  
-      })
+      getRealdata(data).then(res => {
+        this.comprehensivedata = res.data.realdata;
+      });
     },
     // 实时数据导出dialog
     targetUpload() {
       const data = {
-        well_type:this.wellCategory,
-        number:this.wellNumber,
-        status:this.wellStatus,
-        print: 'null'
-      }
-      getRealdata(data)
-        .then(({
-          data
-        }) => {
-            this.uploadVisible = true
-            this.path = data.file;
-        })
+        well_type: this.wellCategory,
+        number: this.wellNumber,
+        status: this.wellStatus,
+        daterange:this.wellDatePicker[0]+'-'+this.wellDatePicker[1],
+        print: "null"
+      };
+      getRealdata(data).then(({ data }) => {
+        this.uploadVisible = true;
+        this.path = data.file;
+      });
     },
     // 导出Excel
     download() {
@@ -204,14 +249,14 @@ export default {
     Status: function(row, column) {
       switch (row.status) {
         case 0:
-          return '开井'
-          break
+          return "开井";
+          break;
         case 1:
-          return '关井'
-          break
+          return "关井";
+          break;
         case 2:
-          return '设备已被移除'
-          break
+          return "设备已被移除";
+          break;
       }
     }
   },
@@ -222,11 +267,20 @@ export default {
 </script>
 <style lang="scss">
 #comprehensiveQuery {
-//   font-size: 12px;
+  //   font-size: 12px;
   background-color: #f4f5f5;
   .links {
     cursor: pointer;
     color: #918e8e;
+  };
+  .el-col {
+    width: auto;
+  }
+  .row-bg {
+    padding-bottom: 10px;
+  }
+  .col-bg {
+    padding:5px 2px 0 5px;
   }
 }
 </style>
