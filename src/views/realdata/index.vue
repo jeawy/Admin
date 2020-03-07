@@ -1,48 +1,57 @@
 <template>
   <div id="realdata">
-    <el-row>
-      <el-col :span="4">
-        井类别:
-        <el-select v-model="wellCategory" placeholder="请选择" style="width:130px;" filterable>
-          <el-option
-            v-for="item in category"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-      </el-col>
-      <el-col :span="1">井号:</el-col>
-      <el-col :span="2">
-        <el-input v-model="wellNumber"></el-input>
-      </el-col>
-      <el-col :span="4">
-        状态:
-        <el-select v-model="wellStatus" placeholder="请选择" style="width:130px;" filterable>
-          <el-option
-            v-for="item in wellstatus"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-      </el-col>
-      <el-col :span="6">
-        <el-button type="primary" style="height:27.99px" @click="searchWell()">点击查询</el-button>
-        <el-button type="primary" style="height:27.99px" @click="targetUpload">导出结果</el-button>
-      </el-col>
-      <!-- <el-col :span="4">
+    <div style="padding-bottom: 10px;">
+      <el-row class="row-bg">
+        <el-col :span="2" class="col-bg">
+          井类别:
+        </el-col>
+        <el-col :span="3">
+          <el-select v-model="wellCategory" placeholder="请选择" style="width:130px;" filterable>
+            <el-option
+              v-for="item in category"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="2" class="col-bg">
+          井号:
+        </el-col>
+        <el-col :span="2">
+          <el-input v-model="wellNumber"></el-input>
+        </el-col>
+        <el-col :span="2" class="col-bg">
+          状态:
+        </el-col>
+        <el-col :span="2">
+          <el-select v-model="wellStatus" placeholder="请选择" style="width:130px;" filterable>
+            <el-option
+              v-for="item in wellstatus"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="6">
+          <el-button type="primary" style="height:27.99px" @click="searchWell()">点击查询</el-button>
+          <el-button type="primary" style="height:27.99px" @click="targetUpload">导出结果</el-button>
+        </el-col>
+        <!-- <el-col :span="4">
         <el-button type="danger" style="height:27.99px" @click="histaryData()">历史数据</el-button>
-      </el-col> -->
-    </el-row>
-    <el-table 
-    :data="realdata" 
-    stripe 
-    :border="true"  
-    style="width: 100%;"
-    :header-cell-style="{color:'#212529',fontSize:'16px',fontWeight:400}"
-    :row-style="{fontSize:'16px',color:'#212529;',fontWeight:400,}">
-      <el-table-column type="index" width="80" label="序号"  align="center"></el-table-column>
+        </el-col>-->
+      </el-row>
+    </div>
+    <el-table
+      :data="realdata"
+      stripe
+      :border="true"
+      style="width: 100%;"
+      :header-cell-style="{color:'#212529',fontSize:'16px',fontWeight:400}"
+      :row-style="{fontSize:'16px',color:'#212529;',fontWeight:400,}"
+    >
+      <el-table-column type="index" width="80" label="序号" align="center"></el-table-column>
       <el-table-column prop="welltype" label="井类别" align="center"></el-table-column>
       <el-table-column label="井号" class-name="links" width="120" align="center">
         <template slot-scope="scope">
@@ -53,16 +62,16 @@
       <el-table-column prop="factory" label="厂" align="center"></el-table-column>
       <el-table-column prop="mine" label="矿" align="center"></el-table-column>
       <el-table-column label="上报时间" width="150px" align="center">
-         <template slot-scope="scope">{{scope.row.time|dateTimeFormat}}</template>
+        <template slot-scope="scope">{{scope.row.time|dateTimeFormat}}</template>
       </el-table-column>
       <el-table-column label="开/关井时间" width="150px" align="center">
-         <template slot-scope="scope">{{scope.row.changed_time|dateTimeFormat}}</template>
+        <template slot-scope="scope">{{scope.row.changed_time|dateTimeFormat}}</template>
       </el-table-column>
       <el-table-column label="历史数据" width="100px" align="center">
         <template slot-scope="scope">
           <div @click="history(scope.row.name)">历史数据</div>
         </template>
-        </el-table-column>
+      </el-table-column>
       <el-table-column prop="frequency" label="频率(Hz)" width="100px" align="center"></el-table-column>
       <el-table-column prop="level" label="动液面(米)" width="100px" align="center"></el-table-column>
       <el-table-column prop="output" label="产量(吨)" align="center"></el-table-column>
@@ -105,10 +114,18 @@
         <el-button type="primary" @click="uploadExcel">确定</el-button>
       </span>
     </el-dialog>
+    <!-- <el-drawer
+    
+      :visible.sync="drawer"
+      :direction="direction"
+      :with-header="false"
+    >
+      <span>我来啦!</span>
+    </el-drawer> -->
   </div>
 </template>
 <script>
-import { getRealdata,getDetail} from "@/api/realdata";
+import { getRealdata, getDetail } from "@/api/realdata";
 export default {
   data() {
     return {
@@ -150,46 +167,46 @@ export default {
       ],
       uploadVisible: false,
       path: null,
+      // drawer: false,
+      // direction: 'btt',
     };
   },
   methods: {
     GetRealdata() {
-      getRealdata({realdata:''}).then(res => {
-        this.realdata = res.data.realdata;   
+      getRealdata({ realdata: "" }).then(res => {
+        this.realdata = res.data.realdata;
       });
     },
     //跳转到油井详情页
-    wellDetail(){
-      console.log(":5555555")
+    wellDetail() {
+      console.log(":5555555");
     },
-    history(){
-      console.log("历史数据")
+    history() {
+      console.log("历史数据");
+      // this.drawer=true;
     },
-    searchWell(){
+    searchWell() {
       let data = {
-        well_type:this.wellCategory,
-        number:this.wellNumber,
-        status:this.wellStatus
+        well_type: this.wellCategory,
+        number: this.wellNumber,
+        status: this.wellStatus
       };
-      getRealdata(data).then( res =>{
-         this.realdata = res.data.realdata;  
-      })
+      getRealdata(data).then(res => {
+        this.realdata = res.data.realdata;
+      });
     },
     // 实时数据导出dialog
     targetUpload() {
       const data = {
-        well_type:this.wellCategory,
-        number:this.wellNumber,
-        status:this.wellStatus,
-        print: 'null'
-      }
-      getRealdata(data)
-        .then(({
-          data
-        }) => {
-            this.uploadVisible = true
-            this.path = data.file;
-        })
+        well_type: this.wellCategory,
+        number: this.wellNumber,
+        status: this.wellStatus,
+        print: "null"
+      };
+      getRealdata(data).then(({ data }) => {
+        this.uploadVisible = true;
+        this.path = data.file;
+      });
     },
     // 导出Excel
     download() {
@@ -204,14 +221,14 @@ export default {
     Status: function(row, column) {
       switch (row.status) {
         case 0:
-          return '开井'
-          break
+          return "开井";
+          break;
         case 1:
-          return '关井'
-          break
+          return "关井";
+          break;
         case 2:
-          return '设备已被移除'
-          break
+          return "设备已被移除";
+          break;
       }
     }
   },
@@ -227,6 +244,15 @@ export default {
   .links {
     cursor: pointer;
     color: #918e8e;
+  }
+  .el-col {
+    width: auto;
+  }
+  .row-bg {
+    padding-bottom: 10px;
+  }
+  .col-bg {
+    padding:5px 2px 0 5px;
   }
 }
 </style>
