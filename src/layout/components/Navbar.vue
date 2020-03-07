@@ -1,31 +1,32 @@
 <template>
   <div class="navbar">
-    <div>
-      <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
-      <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
-    </div>
-    <shortcut-menu/>
-    <div class="right-menu">
-      <template v-if="device!=='mobile'">
-        <screenfull id="screenfull" class="right-menu-item hover-effect" />
-        <notice id="notice" class="right-menu-item"/>
-      </template>
-      <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
-        <div class="avatar-wrapper">
-          <img src="@/assets/logo.jpg" class="user-avatar">
-          <i class="el-icon-caret-bottom" />
-        </div>
-        <el-dropdown-menu slot="dropdown">
-          <router-link to="/">
-            <el-dropdown-item><i class="el-icon-s-home"></i> 主页</el-dropdown-item>
-          </router-link>
-          <el-dropdown-item @click.native="isDShow=!isDShow"><i class="el-icon-s-tools"></i> 设置</el-dropdown-item>
-          <el-dropdown-item>
-            <span style="display:block;" @click="logout"><i class="el-icon-switch-button"></i> 注销</span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
-    </div>
+    
+      <div>
+        <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+        <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
+      </div>
+      <div class="right-menu">
+        <template v-if="device!=='mobile'">
+          <screenfull id="screenfull" class="right-menu-item hover-effect" />
+          <notice id="notice" class="right-menu-item"/>
+        </template>
+        <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
+          <div class="avatar-wrapper">
+            <img src="@/assets/logo.jpg" class="user-avatar">
+            <i class="el-icon-caret-bottom" />
+          </div>
+          <el-dropdown-menu slot="dropdown">
+            <router-link to="/">
+              <el-dropdown-item><i class="el-icon-s-home"></i> 主页</el-dropdown-item>
+            </router-link>
+            <el-dropdown-item @click.native="isDShow=!isDShow"><i class="el-icon-s-tools"></i> 设置</el-dropdown-item>
+            <el-dropdown-item>
+              <span style="display:block;" @click="logout"><i class="el-icon-switch-button"></i> 注销</span>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+   
     <Drawer scrollable title="Global style settings" v-model="isDShow" :mask-style="{backgroundColor: 'transparent'}">
        <settings/>
     </Drawer>

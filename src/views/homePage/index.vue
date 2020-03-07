@@ -1,11 +1,9 @@
 <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&amp;ak=KOmVjPVUAey1G2E8zNhPiuQ6QiEmAwZu&amp;__ec_v__=20190126"></script>
 <script>
-import { mapState } from "vuex";
-import thumbtackMixin from "@/utils/thumbtack-mixin";
 import Chart from "@/components/ECharts/PieChart";
 import BarChart from "@/components/ECharts/BarMarker";
 import BaiduMap from "@/components/ECharts/BaiduMap";
-let TimeOut = null;
+import { getHomeData } from "@/api/homeData";
 export default {
   name: "HomePage",
   components: {
@@ -13,115 +11,135 @@ export default {
     BarChart,
     BaiduMap
   },
-  mixins: [thumbtackMixin],
   data() {
     return {
-      dynamic:1
+      days:1,
+      dynamic:1,
+      openCount:'',
+      stopCount:'',
+      openPercentage:'',
+      total:'',
     };
   },
   methods: {
-    chart_reload(days){
-       this.dynamic = days;
-       switch (days){
-          case 1:
-            break;
-          case 7:
-            break;
-          case 30:
-            break;
-          case 90:
-            break;
-          case 180:
-            break;
-          case 365:
-            break;
-       }
-    },
-    getStatistics() {
-      let chartData = [
+    homeData(days){
+      let data = {days:days};
+      getHomeData(data).then(res => {
+        let chartData = res.data
+        let wellName = []
+        let output = [] 
+        let level = []
+        this.openCount = chartData.open_count
+        this.stopCount = chartData.stop_count
+        this.openPercentage = chartData.open_percentage
+        this.total = chartData.total
+        chartData.results.forEach(item => {
+            wellName.push(item.well.name)
+            output.push(item.output)
+            level.push(item.level)
+        });
+        let chart = [
         {
           name: "开井",
-          value: 2
+          value: res.data.open_count
         },
         {
           name: "关井",
-          value: 3
+          value: res.data.stop_count
         }
-      ];
-      // //  this.$nextTick(()=>{
-      this.$refs["well-status"].initChart("", chartData);
-      // //  })
-    },
-    getoutput() {
-      let customOption = {
-        title: {
-          text: "产量TOP20",
-          textStyle: {
-            //---主标题内容样式
-            color: "#000"
-            // height:"50px"
-          },
-          padding: [3, 0, 100, 50] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
-        },
-        tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            type: "shadow"
-          }
-        },
-        legend: {
-          data: ["镜头个数", "任务个数"]
-        },
-        grid: {
-          left: "3%",
-          right: "4%",
-          bottom: "3%",
-          containLabel: true
-        },
-        xAxis: [
-          {
-            type: "category",
-            data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-            // nameGap :15,
-            axisLabel: {
-              //---坐标轴 标签
-              show: true, //---是否显示
-              inside: false, //---是否朝内
-              interval: 0,
-              rotate: 0,
-              margin: 5 //---刻度标签与轴线之间的距离
+        ];
+        this.$nextTick(()=>{
+          this.$refs["well-status"].initChart("", chart);
+        });
+        let option1 = {
+            title: {
+            text: "产量TOP20",
+            textStyle: {
+                //---主标题内容样式
+                color: "#000",
+                fontSize:20
+                // height:"50px"
+            },
+            padding:[1,18], //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
+            },
+            tooltip: {
+                trigger: "axis",
+                axisPointer: {
+                    type: "shadow"
+                }
+            },
+            grid: {
+                left: "3%",
+                bottom: "3%",
+                containLabel: true
+            },
+            legend: {
+                data:[]
+            },
+            xAxis: [
+            {
+                name:'井号',
+                nameTextStyle:{fontSize:16},
+                type: "category",
+                triggerEvent:true,
+                data: wellName,
+                // nameGap :15,
+                axisLabel: {
+                    //---坐标轴 标签
+                    fontSize:14,
+                    show: true, //---是否显示
+                    inside: false, //---是否朝内
+                    interval: 0,
+                    rotate: 45,
+                    margin: 5 //---刻度标签与轴线之间的距离
+                }
             }
-          }
-        ],
-        yAxis: [
-          {
-            type: "value"
-          }
-        ],
-        series: [
-          {
-            // name: "任务个数",
-            type: "bar",
-            barWidth: 30,
-            barMaxWidth: 50,
-            barCategoryGap: "30%",
-            barGap: "0%",
-            data: [120, 200, 150, 80, 70, 110, 130]
-          }
-        ]
-      };
-      this.$refs["ouput"].initChart(customOption);
-    },
-    getlevel() {
-      let customOption = {
+            ],
+            yAxis: [
+            {
+                type: "value",
+                name:'吨',
+                splitLine:{show:false},
+                axisLabel:{
+                    fontSize:14,
+                },
+                nameTextStyle:{fontSize:16},
+                }
+            ],
+            series: [
+            {
+                name: "产量",
+                type: "bar",
+                barWidth: 30,
+                barMaxWidth: 50,
+                barCategoryGap: "30%",
+                barGap: "0%",
+                data: output,
+                itemStyle: {
+                    normal: {
+                        label: {
+                            show: true, //开启显示
+                            position: 'top', //在上方显示
+                            textStyle: { //数值样式
+                                color: 'black',
+                                fontSize: 10
+                            }
+                        }
+                    }
+                }, 
+            }
+            ]
+        };
+        let option2 = {
         title: {
           text: "液面高度",
           textStyle: {
             //---主标题内容样式
-            color: "#000"
+            color: "#000",
+            fontSize:20
             // height:"50px"
           },
-          padding: [3, 0, 100, 50] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
+          padding: [1,18] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
         },
         tooltip: {
           trigger: "axis",
@@ -130,47 +148,90 @@ export default {
           }
         },
         legend: {
-          // data: ["镜头个数", "任务个数"]
+            data:[]
         },
         grid: {
           left: "3%",
-          right: "4%",
           bottom: "3%",
           containLabel: true
         },
         xAxis: [
           {
+            name:'井号',
             type: "category",
-            data: ["周一", "周二", "周三", "周四", "周五", "周六", "周末"],
-            // nameGap :15,
+            nameTextStyle:{fontSize:16},
+            data: wellName,
             axisLabel: {
               //---坐标轴 标签
+              fontSize:14,
               show: true, //---是否显示
               inside: false, //---是否朝内
               interval: 0,
-              rotate: 0,
+              rotate:45,
               margin: 5 //---刻度标签与轴线之间的距离
             }
           }
         ],
         yAxis: [
           {
-            type: "value"
+            type: "value",
+            name:"米",
+            splitLine:{show:false},
+            axisLabel:{
+                fontSize:14,
+            },
+            nameTextStyle:{fontSize:16},
           }
         ],
         series: [
           {
-            // name: "任务个数",
             type: "bar",
             barWidth: 30,
             barMaxWidth: 50,
             barCategoryGap: "30%",
             barGap: "0%",
-            data: [120, 200, 150, 80, 70, 110, 130]
+            data: level,
+            itemStyle: {
+                normal: {
+                    label: {
+                        show: true, //开启显示
+                        position: 'top', //在上方显示
+                        textStyle: { //数值样式
+                            color: 'black',
+                            fontSize: 10
+                        }
+                    }
+                }
+            }, 
           }
         ]
-      };
-      this.$refs["level"].initChart(customOption);
+        };
+        this.$refs["ouput"].initChart(option1);
+        this.$refs["level"].initChart(option2);
+        })
+    },
+    chart_reload(days){
+       this.dynamic = days;
+       switch (days){
+          case 1:
+            this.homeData(1)
+            break;
+          case 7:
+            this.homeData(7)
+            break;
+          case 30:
+            this.homeData(30)
+            break;
+          case 90:
+            this.homeData(90)
+            break;
+          case 180:
+            this.homeData(180)
+            break;
+          case 365:
+            this.homeData(365)
+            break;
+       }
     },
     getlocation() {
       let customOption = {
@@ -180,11 +241,10 @@ export default {
       });
     }
   },
-  created() {},
+  created() {
+    this.homeData(1);
+  },
   mounted() {
-    this.getStatistics();
-    this.getoutput();
-    this.getlevel();
     this.getlocation();
   }
 };
@@ -192,25 +252,27 @@ export default {
 <template>
   <div id="home-page" ref="drawer-parent">
     <el-row class="home-header-card" :gutter="15">
-      <el-col :span="6" class="card-warp">
+      <el-col :sm="12" :lg="6">
         <el-card class="home-header-item1" shadow="always">
-          <a href="/#/realdata/realdata">
-            <p class="text-light">实时数据</p>
+          <router-link :to="{name:'realdata'}">
+            <div class="text-light">实时数据</div>
             <img
               style="width: 270px;height: 60px;margin-top:20px"
               src="@/assets/realdata.png" alt="">
-          </a>
+          </router-link>
         </el-card>
       </el-col>
-      <el-col :span="6" class="card-warp">
+      <el-col :sm="12" :lg="6">
         <el-card class="home-header-item2" shadow="always">
-          <p class="text-light">综合查询</p>
-          <img
-            style="width: 270px;height: 50px;margin-top:30px"
-            src="@/assets/query.png" alt="">
+          <router-link :to="{name:'comprehensiveQuery'}">
+            <div class="text-light">综合查询</div>
+            <img
+                style="width: 270px;height: 50px;margin-top:30px"
+                src="@/assets/query.png" alt="">
+          </router-link>
         </el-card>
       </el-col>
-      <el-col :span="6" class="card-warp">
+      <el-col :sm="12" :lg="6">
         <el-card class="home-header-item3" shadow="always">
           <p class="text-light">告警</p>
           <img
@@ -218,7 +280,7 @@ export default {
             src="@/assets/warning.png" alt="">
         </el-card>
       </el-col>
-      <el-col :span="6" class="card-warp">
+      <el-col :sm="12" :lg="6">
         <el-card class="home-header-item4" shadow="always">
           <p class="text-light">统计分析</p>
           <img
@@ -228,9 +290,9 @@ export default {
       </el-col>
     </el-row>
     <el-row class="home-header" :gutter="15">
-      <el-col :span="12">
+      <el-col :lg="12">
         <el-row class="left" :gutter="15">
-          <el-col :span="24" class="card-warp">
+          <el-col :lg="24">
             <el-card shadow="always">
               <div class="btn-group" data-toggle="buttons" aria-label="First group">
                 <div class="btn" :class="{colorChange:1 == dynamic}" @click="chart_reload(1)">
@@ -262,26 +324,26 @@ export default {
           </el-col>
         </el-row>
       </el-col>
-      <el-col :span="12">
+      <el-col :lg="12">
         <el-row class="right" :gutter="15">
-          <el-col :span="24" class="card-warp">
+          <el-col :lg="24">
             <el-row :gutter="15">
-              <el-col :span="12">
+              <el-col :lg="12">
                 <el-row class="left-item">
-                  <el-col :span="24">
+                  <el-col :lg="24">
                     <el-card shadow="always">
                       <chart ref="well-status" chart-id="well-status" />
-                      <div class="prompt-text">开井：2 关井：3</div>
+                      <div class="prompt-text">开井：{{this.openCount}} 关井：{{this.stopCount}}</div>
                       <el-progress
                         style="margin-top:10px"
                         color="#28a745"
                         :stroke-width="10"
-                        :percentage="20"
+                        :percentage="this.openPercentage"
                       ></el-progress>
                     </el-card>
                   </el-col>
                   <el-col style="height:10px"></el-col>
-                  <el-col :span="24">
+                  <el-col :lg="24">
                     <el-card shadow="always" style="height:200px">
                       <div>
                         <div class="prompt-text">告警</div>
@@ -307,9 +369,9 @@ export default {
                   </el-col>
                 </el-row>
               </el-col>
-              <el-col :span="12">
+              <el-col :lg="12">
                 <el-row class="right-item">
-                  <el-col :span="24">
+                  <el-col :lg="24">
                     <el-card shadow="always">
                       <div style="display:flex">
                         <img
@@ -317,13 +379,13 @@ export default {
                             src="@/assets/output.jpg" alt="">
                         <div style="margin-left:20px;margin-top:10px">
                           <div class="prompt-text">总产油量：(吨)</div>
-                          <div style="font-size:25px;margin-top:8px;">84212.59</div>
+                          <div style="font-size:25px;margin-top:8px;">{{this.total}}</div>
                         </div>
                       </div>
                     </el-card>
                   </el-col>
                   <el-col style="height:15px"></el-col>
-                  <el-col :span="24">
+                  <el-col :lg="24">
                     <el-card shadow="always">
                       <div style="display:flex">
                         <img
@@ -334,7 +396,7 @@ export default {
                     </el-card>
                   </el-col>
                   <el-col style="height:15px"></el-col>
-                  <el-col :span="24">
+                  <el-col :lg="24">
                     <el-card shadow="always">
                       <div style="display:flex">
                         <img
@@ -348,8 +410,8 @@ export default {
               </el-col>
             </el-row>
           </el-col>
-          <el-col :span="24" style="height:15px" />
-          <el-col :span="24" class="card-warp">
+          <el-col :lg="24" style="height:15px" />
+          <el-col :lg="24">
             <el-card shadow="always">
               <div class="card-header">
                 <h4 style="font-size:17px">油井位置分布</h4>
@@ -364,7 +426,6 @@ export default {
     </el-row>
   </div>
 </template>
-
 <style lang="scss">
 #home-page {
   font-size: 12px;
