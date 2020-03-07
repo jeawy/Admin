@@ -17,7 +17,7 @@ export default {
       dynamic:1,
       openCount:'',
       stopCount:'',
-      openPercentage:'',
+      openPercentage:0,
       total:'',
     };
   },
@@ -338,7 +338,7 @@ export default {
                         style="margin-top:10px"
                         color="#28a745"
                         :stroke-width="10"
-                        :percentage="this.openPercentage"
+                        :percentage="openPercentage"
                       ></el-progress>
                     </el-card>
                   </el-col>
