@@ -65,9 +65,12 @@
     >
       <el-table-column type="index" width="80" label="序号" align="center"></el-table-column>
       <el-table-column prop="welltype" label="井类别" align="center"></el-table-column>
-      <el-table-column label="井号" class-name="links" width="120" align="center">
+      <el-table-column label="井号" width="120">
         <template slot-scope="scope">
-          <div @click="wellDetail(scope.row.name)">{{scope.row.name}}</div>
+          <router-link
+            style="cursor: pointer;"
+            :to="{name:'well-detail',params:{id:scope.row.wellid},query:{type:scope.row.pro_type}}"
+          >{{scope.row.name}}</router-link>
         </template>
       </el-table-column>
       <el-table-column prop="status" label="运行状态" width="120" :formatter="Status" align="center"></el-table-column>
@@ -207,11 +210,7 @@ export default {
         this.comprehensivedata = res.data.realdata;
       });
     },
-    //跳转到油井详情页
-    wellDetail() {
-      console.log(":5555555");
-    },
-    searchWell() {
+    searchWell(){
       let data = {
         well_type: this.wellCategory,
         number: this.wellNumber,
