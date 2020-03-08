@@ -7,6 +7,8 @@
 </template>
 
 <script>
+import dayjs from "dayjs";
+import { ApiGetHistorydata } from "@/api/realdata";
 import LineChart from "@/components/ECharts/LineMarker";
 export default {
   name: "lineHistory",
@@ -15,14 +17,26 @@ export default {
   },
   watch: {},
   data() {
-    return {};
+    return {
+      lineHistoryData:[],
+    };
   },
   methods: {
     //日产量折线图
-    getOutputChart() {
+    getOutputChart(wellid) {
+      function dataFormat(dateVal) {
+        return dayjs(dateVal).format("MM/DD");
+      }
+      ApiGetHistorydata({id:wellid,action:"line"}).then(res =>{
+        let outputdata =[];
+        let timedata =[];
+        res.data.msg.forEach((item, index) => {
+          outputdata.push(item.output);
+         timedata.push(dataFormat(item.time));
+          });      
       let customOption = {
         title: {
-          text: "日产量折线图",
+          text: "产量曲线图",
           textStyle: {
             fontSize: 20
           },
@@ -45,7 +59,8 @@ export default {
           axisLabel: {
             fontSize: 14
           },
-          data: ["2019/02/11", "2019/02/15", "2019/02/17", "2019/02/18"]
+          data:timedata
+          // data: ["2019/02/11", "2019/02/15", "2019/02/17", "2019/02/18"]
         },
         yAxis: {
           type: "value",
@@ -59,7 +74,8 @@ export default {
           name: "产量",
           type: "line",
           barWidth: 20,
-          data: [63, 10, 50, 30, 40, 50, 60, 60],
+          data: outputdata,
+          // data: [63, 10, 50, 30, 40, 50, 60, 60],
           itemStyle: {
             normal: {
               label: {
@@ -76,26 +92,43 @@ export default {
         }
       };
       this.$refs["output_chart"].initChart(customOption);
+    })
     },
     //液面折线图
-    getOutputLiquid() {
+    getOutputLiquid(wellid) {
+      function dataFormat(dateVal) {
+        return dayjs(dateVal).format("MM/DD");
+      }
+      ApiGetHistorydata({id:wellid,action:"line"}).then(res =>{
+        let leveldata =[];
+        let timedata =[];
+        res.data.msg.forEach((item, index) => {
+          leveldata.push(item.level);
+         timedata.push(dataFormat(item.time));
+          }); 
       let customOption = {
         title: {
-          text: "液面折线图",
+          text: "液面曲线图",
           textStyle: {
             fontSize: 20
           },
           // padding:[1,40,23,60],
-          padding: [1, 18]
+          padding: [1, 18],
+          left: "left",
+          top: 0
         },
         tooltip: {
           trigger: "axis"
         },
         xAxis: {
           type: "category",
+          nameTextStyle: { fontSize: 16 },
           name: "时间",
           boundaryGap: false,
-          data: ["2019/02/11", "2019/02/15", "2019/02/17", "2019/02/18"]
+          axisLabel: {
+            fontSize: 14
+          },
+          data:timedata
         },
         yAxis: {
           type: "value",
@@ -105,7 +138,7 @@ export default {
         series: [
           {
             name: "液面",
-            data: ["0.2", "0.5", "0.6", "0.1", "0.3", "0.48"],
+            data: leveldata,
             type: "line",
             itemStyle: {
               normal: {
@@ -120,14 +153,15 @@ export default {
                 }
               }
             },
-            areaStyle: {}
+            // areaStyle: {}
           }
         ]
       };
       this.$refs["output_liquid"].initChart(customOption);
+      })
     },
     //电流曲线图
-    getEleChart() {
+    getEleChart(wellid) {
       let customOption = {
         title: {
           text: "电流曲线:" 
@@ -170,11 +204,11 @@ export default {
       this.$refs["ele-chart"].initChart(customOption);
     }
   },
-  mounted() {
-    this.getOutputChart();
-    this.getOutputLiquid();
-    this.getEleChart();
-  }
+  // mounted() {
+  //   this.getOutputChart();
+  //   this.getOutputLiquid();
+  //   this.getEleChart();
+  // }
 };
 </script>
 

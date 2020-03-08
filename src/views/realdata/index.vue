@@ -288,6 +288,9 @@ export default {
         this.wellStatus = "关井";
       }
       this.getLineHistory(wellid);
+      this.$refs["linehistory"].getOutputChart(wellid);
+      this.$refs["linehistory"].getOutputLiquid(wellid);
+      this.$refs["linehistory"].getEleChart(wellid);
       this.$refs["barcharthistory"].getPowerMonth(wellid);
       this.$refs["tablehistory"].getHistoryData(wellid);
       this.$refs["tablerecord"].getRecordData(wellid);
