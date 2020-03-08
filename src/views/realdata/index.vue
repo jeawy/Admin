@@ -53,7 +53,7 @@
     >
       <el-table-column type="index" width="80" label="序号" align="center"></el-table-column>
       <el-table-column prop="welltype" label="井类别" align="center"></el-table-column>
-     <el-table-column label="井号" width="120">
+     <el-table-column label="井号" width="120" align="center">
         <template slot-scope="scope">
           <router-link
             style="cursor: pointer;"
@@ -61,7 +61,18 @@
           >{{scope.row.name}}</router-link>
         </template>
       </el-table-column>
-      <el-table-column prop="status" label="运行状态" width="120" :formatter="Status" align="center"></el-table-column>
+      <el-table-column  label="运行状态" width="120" align="center">
+         <template slot-scope="scope">
+           <div v-if="scope.row.status==0" class="cell-wellstatus">
+             {{scope.row.status|wellStatus}}
+             <img src="@/assets/on.png"/>
+           </div>
+           <div v-if="scope.row.status==1" class="cell-wellstatus">
+             {{scope.row.status|wellStatus}}
+              <img src="@/assets/off.png"/>
+           </div>
+         </template>
+      </el-table-column>
       <el-table-column prop="factory" label="厂" align="center"></el-table-column>
       <el-table-column prop="mine" label="矿" align="center"></el-table-column>
       <el-table-column label="上报时间" width="150px" align="center">
@@ -125,6 +136,7 @@
     :mask="true"
     draggable
     width="48%">
+    <!-- <Header /> -->
     <el-row :gutter="20">
       <!-- <el-col :span="5">
         油井号
@@ -253,20 +265,6 @@ export default {
     uploadExcel() {
       this.uploadVisible = false;
     },
-    // 运行状态格式化显示
-    Status: function(row, column) {
-      switch (row.status) {
-        case 0:
-          return "开井";
-          break;
-        case 1:
-          return "关井";
-          break;
-        case 2:
-          return "设备已被移除";
-          break;
-      }
-    }
   },
   created() {
     this.GetRealdata();
@@ -289,6 +287,14 @@ export default {
   }
   .col-bg {
     padding:5px 2px 0 5px;
+  }
+  .cell-wellstatus{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img{
+      padding-left: 5px;
+    }
   }
 }
 </style>

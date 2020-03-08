@@ -73,7 +73,18 @@
           >{{scope.row.name}}</router-link>
         </template>
       </el-table-column>
-      <el-table-column prop="status" label="运行状态" width="120" :formatter="Status" align="center"></el-table-column>
+      <el-table-column  label="运行状态" width="120" align="center">
+         <template slot-scope="scope">
+           <div v-if="scope.row.status==0" class="cell-wellstatus">
+             {{scope.row.status|wellStatus}}
+             <img src="@/assets/on.png"/>
+           </div>
+           <div v-if="scope.row.status==1" class="cell-wellstatus">
+             {{scope.row.status|wellStatus}}
+              <img src="@/assets/off.png"/>
+           </div>
+         </template>
+      </el-table-column>
       <el-table-column prop="factory" label="厂" align="center"></el-table-column>
       <el-table-column prop="mine" label="矿" align="center"></el-table-column>
       <el-table-column label="上报时间" width="150px" align="center">
@@ -313,6 +324,14 @@ export default {
   }
   .col-bg {
     padding:5px 2px 0 5px;
+  }
+  .cell-wellstatus{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img{
+      padding-left: 5px;
+    }
   }
 }
 </style>
