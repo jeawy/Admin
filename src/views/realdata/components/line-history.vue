@@ -1,0 +1,182 @@
+<template>
+  <div id="lineHistory">
+    <LineChart ref="output_chart" chart-id="output_chart" />
+    <LineChart ref="output_liquid" chart-id="output_liquid" />
+    <LineChart ref="ele-chart" chart-id="ele-chart" />
+  </div>
+</template>
+
+<script>
+import LineChart from "@/components/ECharts/LineMarker";
+export default {
+  name: "lineHistory",
+  components: {
+    LineChart
+  },
+  watch: {},
+  data() {
+    return {};
+  },
+  methods: {
+    //日产量折线图
+    getOutputChart() {
+      let customOption = {
+        title: {
+          text: "日产量折线图",
+          textStyle: {
+            fontSize: 20
+          },
+          // padding:[1,40,23,60],
+          padding: [1, 18],
+          left: "left",
+          top: 0
+        },
+        tooltip: {
+          trigger: "axis"
+        },
+        legend: {
+          data: []
+        },
+        xAxis: {
+          name: "时间",
+          nameTextStyle: { fontSize: 16 },
+          type: "category",
+          triggerEvent: true, //为标签添加触发事件
+          axisLabel: {
+            fontSize: 14
+          },
+          data: ["2019/02/11", "2019/02/15", "2019/02/17", "2019/02/18"]
+        },
+        yAxis: {
+          type: "value",
+          minInterval: 10,
+          name: "吨",
+          splitLine: { show: false },
+          axisLabel: { fontSize: 14 },
+          nameTextStyle: { fontSize: 16 }
+        },
+        series: {
+          name: "产量",
+          type: "line",
+          barWidth: 20,
+          data: [63, 10, 50, 30, 40, 50, 60, 60],
+          itemStyle: {
+            normal: {
+              label: {
+                show: false, //开启显示
+                position: "top", //在上方显示
+                textStyle: {
+                  //数值样式
+                  color: "black",
+                  fontSize: 16
+                }
+              }
+            }
+          }
+        }
+      };
+      this.$refs["output_chart"].initChart(customOption);
+    },
+    //液面折线图
+    getOutputLiquid() {
+      let customOption = {
+        title: {
+          text: "液面折线图",
+          textStyle: {
+            fontSize: 20
+          },
+          // padding:[1,40,23,60],
+          padding: [1, 18]
+        },
+        tooltip: {
+          trigger: "axis"
+        },
+        xAxis: {
+          type: "category",
+          name: "时间",
+          boundaryGap: false,
+          data: ["2019/02/11", "2019/02/15", "2019/02/17", "2019/02/18"]
+        },
+        yAxis: {
+          type: "value",
+          name: "米",
+          axisLabel: { fontSize: 14 }
+        },
+        series: [
+          {
+            name: "液面",
+            data: ["0.2", "0.5", "0.6", "0.1", "0.3", "0.48"],
+            type: "line",
+            itemStyle: {
+              normal: {
+                label: {
+                  show: false, //开启显示
+                  position: "top", //在上方显示
+                  textStyle: {
+                    //数值样式
+                    color: "black",
+                    fontSize: 16
+                  }
+                }
+              }
+            },
+            areaStyle: {}
+          }
+        ]
+      };
+      this.$refs["output_liquid"].initChart(customOption);
+    },
+    //电流曲线图
+    getEleChart() {
+      let customOption = {
+        title: {
+          text: "电流曲线:" 
+        },
+        tooltip: {
+          trigger: "axis"
+        },
+        xAxis: {
+          type: "category",
+          data: [0, 10, 50, 30, 10, 50, 60, 60,45,25,48,12,47,36,45,15,25,44,2,5,25],
+        },
+        yAxis: {
+          type: "value",
+          name: "安培",
+          axisLabel: {
+            fontSize: 14
+          }
+        },
+        series: [
+          {
+            smooth: true,//光滑
+            data: [63, 10, 50, 30, 10, 50, 60, 60,45,25,48,12,47,36,45,15,25,44,2,5,25],
+            type: "line",
+            itemStyle: {
+              normal: {
+                label: {
+                  show: false, //开启显示
+                  position: "top", //在上方显示
+                  textStyle: {
+                    //数值样式
+                    color: "black",
+                    fontSize: 16
+                  }
+                }
+              }
+            }
+          }
+        ]
+      };
+      this.$refs["ele-chart"].initChart(customOption);
+    }
+  },
+  mounted() {
+    this.getOutputChart();
+    this.getOutputLiquid();
+    this.getEleChart();
+  }
+};
+</script>
+
+<style>
+</style>
