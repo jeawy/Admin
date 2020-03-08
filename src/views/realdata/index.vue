@@ -308,16 +308,16 @@ export default {
         this.realdata = res.data.realdata;
       });
     },
-     searchWell(){
-      let data = {
-        // page: this.currentPage,
-        daterange:this.wellDatePicker[0]+'-'+this.wellDatePicker[1],
-      };
-      ApiGetRealdata(data).then(res => {
-        this.comprehensivedata = res.data.realdata;
-        this.total = res.data.page_count;
-      });
-    },
+    //  searchWell(){
+    //   let data = {
+    //     // page: this.currentPage,
+    //     daterange:this.wellDatePicker[0]+'-'+this.wellDatePicker[1],
+    //   };
+    //   ApiGetRealdata(data).then(res => {
+    //     this.comprehensivedata = res.data.realdata;
+    //     this.total = res.data.page_count;
+    //   });
+    // },
     // 实时数据导出dialog
     targetUpload() {
       const data = {
