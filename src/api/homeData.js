@@ -1,5 +1,5 @@
 import AXIOS from '@/utils/request'
 //获取首页信息
-export function getHomeData(params) {
+export function ApiGetHomedata(params) {
   return AXIOS.get('/', {params})
 }

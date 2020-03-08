@@ -3,7 +3,7 @@
 import Chart from "@/components/ECharts/PieChart";
 import BarChart from "@/components/ECharts/BarMarker";
 import BaiduMap from "@/components/ECharts/BaiduMap";
-import { getHomeData } from "@/api/homeData";
+import { ApiGetHomedata } from "@/api/homeData";
 export default {
   name: "HomePage",
   components: {
@@ -19,12 +19,14 @@ export default {
       stopCount:'',
       openPercentage:0,
       total:'',
+      wellid:'',
+      wellId:[]
     };
   },
   methods: {
     homeData(days){
       let data = {days:days};
-      getHomeData(data).then(res => {
+      ApiGetHomedata(data).then(res => {
         let chartData = res.data
         let wellName = []
         let output = [] 
@@ -37,6 +39,7 @@ export default {
             wellName.push(item.well.name)
             output.push(item.output)
             level.push(item.level)
+            this.wellId.push(item.well.id)
         });
         let chart = [
         {
@@ -239,7 +242,16 @@ export default {
       this.$nextTick(() => {
         this.$refs["location"].initChart(customOption);
       });
-    }
+    },
+    handleClickChart(params) {
+      for(var i = 0; params.dataIndex < 14; i++)
+      {
+        if(i == params.dataIndex){
+          this.wellid = this.wellId[i]
+        }
+      }
+      this.$router.push({name:'well-detail',params:{id:this.wellid},query:{type:params.pro_type}});
+    },
   },
   created() {
     this.homeData(1);
@@ -256,8 +268,7 @@ export default {
         <el-card class="home-header-item1" shadow="always">
           <router-link :to="{name:'realdata'}">
             <div class="text-light">实时数据</div>
-            <img
-              style="width: 270px;height: 60px;margin-top:20px"
+            <img class="realDataImage"
               src="@/assets/realdata.png" alt="">
           </router-link>
         </el-card>
@@ -266,8 +277,7 @@ export default {
         <el-card class="home-header-item2" shadow="always">
           <router-link :to="{name:'comprehensiveQuery'}">
             <div class="text-light">综合查询</div>
-            <img
-                style="width: 270px;height: 50px;margin-top:30px"
+            <img class="queryImage"
                 src="@/assets/query.png" alt="">
           </router-link>
         </el-card>
@@ -275,16 +285,14 @@ export default {
       <el-col :sm="12" :lg="6">
         <el-card class="home-header-item3" shadow="always">
           <p class="text-light">告警</p>
-          <img
-            style="width: 270px;height: 60px;margin-top:28px"
+          <img class="warnImage"
             src="@/assets/warning.png" alt="">
         </el-card>
       </el-col>
       <el-col :sm="12" :lg="6">
         <el-card class="home-header-item4" shadow="always">
           <p class="text-light">统计分析</p>
-          <img
-            style="width: 260px;height: 60px;margin-top:28px"
+          <img class="statisticsImage"
             src="@/assets/statistics.png" alt="">
         </el-card>
       </el-col>
@@ -315,10 +323,10 @@ export default {
                 </div>
               </div>
               <div>
-                <BarChart ref="ouput" chart-id="output" style="height:400px" />
+                <BarChart @click-item="handleClickChart" ref="ouput" chart-id="output" style="height:400px" />
               </div>
               <div style="margin-top:50px">
-                <BarChart ref="level" chart-id="level" style="height:400px" />
+                <BarChart @click-item="handleClickChart" ref="level" chart-id="level" style="height:400px" />
               </div>
             </el-card>
           </el-col>
@@ -520,6 +528,26 @@ export default {
     }
     .home-header-item4 {
       background: #f86c6b;
+    }
+    .realDataImage{
+      width: 270px;
+      height: 60px;
+      margin-top:20px
+    }
+    .queryImage{
+      width: 270px;
+      height: 50px;
+      margin-top:30px
+    }
+    .warnImage{
+      width: 270px;
+      height: 60px;
+      margin-top:28px
+    }
+    .statisticsImage{
+      width: 260px;
+      height: 60px;
+      margin-top:28px
     }
     .text-light {
       color: #f8f9fa;
