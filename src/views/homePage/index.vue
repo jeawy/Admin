@@ -165,13 +165,12 @@ export default {
             nameTextStyle:{fontSize:16},
             data: wellName,
             axisLabel: {
-              //---坐标轴 标签
               fontSize:14,
               show: true, //---是否显示
               inside: false, //---是否朝内
               interval: 0,
               rotate:45,
-              margin: 5 //---刻度标签与轴线之间的距离
+              margin: 5
             }
           }
         ],
