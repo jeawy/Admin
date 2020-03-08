@@ -163,14 +163,11 @@ export default {
     //电流曲线图
     getEleChart(wellid) {
       ApiGetElectdata({id:wellid,p_type:'3',json:''}).then(res =>{
-        console.log("000000000")
-        console.log(res)
         let P144data =res.data.datas;
         let time = res.data.time;
-        // res.data.datas.forEach((item, index) => {
-          
-        //   P144data.push(item);
-        //   }); 
+        let  x_list = []
+           for (let i = 0 ; i < 145; i ++)
+             x_list.push(i)
       let customOption = {
         title: {
           text: "电流曲线:"+time 
@@ -180,7 +177,8 @@ export default {
         },
         xAxis: {
           type: "category",
-          data: [0,5, 10, 15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140],
+          data: x_list,
+          // data: [0,5, 10, 15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140],
         },
         yAxis: {
           type: "value",
