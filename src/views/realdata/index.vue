@@ -72,7 +72,7 @@
       </el-table-column>
       <el-table-column label="历史数据" width="100px" align="center">
         <template slot-scope="scope">
-          <div @click="history(scope.row.name)">历史数据</div>
+          <div @click="history(scope.row.wellid)">历史数据</div>
         </template>
       </el-table-column>
       <el-table-column prop="frequency" label="频率(Hz)" width="100px" align="center"></el-table-column>
@@ -117,21 +117,48 @@
         <el-button type="primary" @click="uploadExcel">确定</el-button>
       </span>
     </el-dialog>
-    <!-- <el-drawer
-    
-      :visible.sync="drawer"
-      :direction="direction"
-      :with-header="false"
-    >
-      <span>我来啦!</span>
-    </el-drawer> -->
+    <Drawer 
+    ref="showdrawer"
+    scrollable 
+    v-model="isDShow" 
+    :mask-style="{backgroundColor: 'transparent'}"
+    :mask="true"
+    draggable
+    width="48%">
+    <el-row :gutter="20">
+      <!-- <el-col :span="5">
+        油井号
+      </el-col> -->
+      <el-col :span="19">
+       <el-tabs v-model="activeName" @tab-click="handleClick">
+            <el-tab-pane label="产量及页面历史曲线" name="first">
+                <line-history ref="linehistory"/>
+                <barchart-history ref="barcharthistory"/>
+            </el-tab-pane>
+            <el-tab-pane label="产量及页面历史表格" name="second">
+               <table-history ref="tablehistory" /> 
+            </el-tab-pane>
+            <el-tab-pane label="开关井记录" name="third">
+              <table-record ref="tablerecord" />
+            </el-tab-pane>
+        </el-tabs>
+      </el-col>
+    </el-row>
+    </Drawer>
   </div>
 </template>
 <script>
-import { getRealdata, getDetail } from "@/api/realdata";
+import tableHistory from './components/table-history'
+import lineHistory from './components/line-history'
+import tableRecord from './components/table-record'
+import barchartHistory from './components/barchart-history';
+import { ApiGetRealdata,ApiGetHistorydata } from "@/api/realdata";
 export default {
+  components: {tableHistory, lineHistory ,barchartHistory,tableRecord},
   data() {
     return {
+      activeName: "first",
+      wellid:'',
       realdata: [],
       wellCategory: "-1",
       wellStatus: "-1",
@@ -170,18 +197,29 @@ export default {
       ],
       uploadVisible: false,
       path: null,
-      // drawer: false,
-      // direction: 'btt',
+      isDShow: false,
+      tableHistoryData:[],
     };
   },
   methods: {
     GetRealdata() {
-      getRealdata({ realdata: "" }).then(res => {
+      ApiGetRealdata({ realdata: "" }).then(res => {
         this.realdata = res.data.realdata;
       });
     },
-    history(){
-      console.log("历史数据")
+    handleClick(tab, event) {
+  
+    },
+    history(wellid){
+      this.isDShow = true;
+      this.wellid = wellid;
+      this.getLineHistory(wellid);
+      this.$refs["barcharthistory"].getPowerMonth(wellid);
+      this.$refs["tablehistory"].getHistoryData(wellid);
+      this.$refs["tablerecord"].getRecordData(wellid);
+    },
+    getLineHistory(){
+       console.log("曲线图")
     },
     searchWell() {
       let data = {
@@ -189,7 +227,7 @@ export default {
         number: this.wellNumber,
         status: this.wellStatus
       };
-      getRealdata(data).then(res => {
+      ApiGetRealdata(data).then(res => {
         this.realdata = res.data.realdata;
       });
     },
@@ -201,7 +239,7 @@ export default {
         status: this.wellStatus,
         print: "null"
       };
-      getRealdata(data).then(({ data }) => {
+      ApiGetRealdata(data).then(({ data }) => {
         this.uploadVisible = true;
         this.path = data.file;
       });
@@ -235,7 +273,7 @@ export default {
   }
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 #realdata {
   font-size: 12px;
   background-color: #f4f5f5;
