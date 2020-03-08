@@ -1,6 +1,6 @@
 <template>
   <div id="realdata">
-    <div style="padding-bottom: 10px;">
+    <div class="content">
       <el-row class="row-bg">
         <el-col :span="2" class="col-bg">
           井类别:
@@ -35,12 +35,9 @@
           </el-select>
         </el-col>
         <el-col :span="6">
-          <el-button type="primary" style="height:27.99px" @click="searchWell()">点击查询</el-button>
-          <el-button type="primary" style="height:27.99px" @click="targetUpload">导出结果</el-button>
+          <el-button type="primary" class="button" @click="searchWell()">点击查询</el-button>
+          <el-button type="primary" class="button" @click="targetUpload">导出结果</el-button>
         </el-col>
-        <!-- <el-col :span="4">
-        <el-button type="danger" style="height:27.99px" @click="histaryData()">历史数据</el-button>
-        </el-col>-->
       </el-row>
     </div>
     <el-table
@@ -83,7 +80,7 @@
       </el-table-column>
       <el-table-column label="历史数据" width="100px" align="center">
         <template slot-scope="scope">
-          <div @click="history(scope.row.wellid)">历史数据</div>
+          <div @click="history(scope.row.wellid,scope.row.name,scope.row.factory,scope.row.mine,scope.row.status,scope.row.welltype)">历史数据</div>
         </template>
       </el-table-column>
       <el-table-column prop="frequency" label="频率(Hz)" width="100px" align="center"></el-table-column>
@@ -120,7 +117,7 @@
           <span>excel文件</span>
         </el-col>
         <el-col :span="18">
-          <span @click="download" style="cursor:pointer;color:#2d8cf0">{{"点击下载"}}</span>
+          <span @click="download" class="downloadExcle">{{"点击下载"}}</span>
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
@@ -136,12 +133,43 @@
     :mask="true"
     draggable
     width="48%">
-    <!-- <Header /> -->
-    <el-row :gutter="20">
-      <!-- <el-col :span="5">
-        油井号
-      </el-col> -->
-      <el-col :span="19">
+    <el-row type="flex" align="middle">
+      <el-col :span="8">
+        <div style="font-weight: 700; font-size: 18px;">
+        {{wellfactory}}{{wellmine}}/{{wellname}}{{wellStatus}}
+        </div>
+      </el-col>
+      <el-col :span="2">
+        <span v-if="wellStatus == '开井'" class="">
+              <img src="@/assets/on.png"/>
+           </span>
+           <span v-if="wellStatus == '关井'" class="">
+              <img src="@/assets/off.png"/>
+           </span>
+      </el-col>
+    </el-row>
+    <el-divider class="divider"/>
+    <el-row type="flex" justify="end" align="middle" class="row-time-select">
+       <el-col :span="3">
+          时间范围:
+        </el-col>
+        <el-col :span="6" type="flex">
+          <el-date-picker
+            v-model="wellDatePicker"
+            type="daterange"
+            align="right"
+            range-separator="-"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
+            size="mini"
+            style="width:200px"
+            :picker-options="pickerOptions"
+            value-format="yyyy/MM/dd"
+          ></el-date-picker>
+        </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="24">
        <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="产量及页面历史曲线" name="first">
                 <line-history ref="linehistory"/>
@@ -169,6 +197,12 @@ export default {
   components: {tableHistory, lineHistory ,barchartHistory,tableRecord},
   data() {
     return {
+      wellname:"",
+      wellfactory:null,
+      wellmine:"",
+      welltype:'',
+      wellStatus:'',
+      wellDatePicker: "",
       activeName: "first",
       wellid:'',
       realdata: [],
@@ -211,6 +245,25 @@ export default {
       path: null,
       isDShow: false,
       tableHistoryData:[],
+       pickerOptions: {
+          shortcuts: [{
+            text: '最近7日',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近30日',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+        },
     };
   },
   methods: {
@@ -222,9 +275,18 @@ export default {
     handleClick(tab, event) {
   
     },
-    history(wellid){
+    history(wellid,wellname,wellfactory,wellmine,wellstatus,welltype){
       this.isDShow = true;
       this.wellid = wellid;
+      this.wellfactory = wellfactory;
+      this.wellmine = wellmine;
+      this.wellname = wellname;
+      this.welltype = welltype;
+      if(wellstatus == 0){
+        this.wellStatus = "开井";
+      }else if(wellstatus == 1){
+        this.wellStatus = "关井";
+      }
       this.getLineHistory(wellid);
       this.$refs["barcharthistory"].getPowerMonth(wellid);
       this.$refs["tablehistory"].getHistoryData(wellid);
@@ -241,6 +303,16 @@ export default {
       };
       ApiGetRealdata(data).then(res => {
         this.realdata = res.data.realdata;
+      });
+    },
+     searchWell(){
+      let data = {
+        // page: this.currentPage,
+        daterange:this.wellDatePicker[0]+'-'+this.wellDatePicker[1],
+      };
+      ApiGetRealdata(data).then(res => {
+        this.comprehensivedata = res.data.realdata;
+        this.total = res.data.page_count;
       });
     },
     // 实时数据导出dialog
@@ -275,6 +347,12 @@ export default {
 #realdata {
   font-size: 12px;
   background-color: #f4f5f5;
+  .content{
+    padding-bottom: 10px;
+  }
+  .button{
+    height:27.99px
+  }
   .links {
     cursor: pointer;
     color: #918e8e;
@@ -295,6 +373,26 @@ export default {
     img{
       padding-left: 5px;
     }
+  }
+  .col-bg-header{
+    font-weight: 700;
+    font-size: 18px;
+    .img{
+      padding-top: 5px;
+    }
+  }
+  .col-bg-drawer{
+    padding-top:5px;
+  }
+  .row-time-select{
+    width: 95%;
+  }
+  .divider{
+        margin: 10px 0;
+  }
+  .downloadExcle{
+    cursor:pointer;
+    color:#2d8cf0
   }
 }
 </style>

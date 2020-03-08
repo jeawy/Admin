@@ -74,7 +74,7 @@ export default {
    getHistoryData(wellid){
      this.wellid = wellid;
      ApiGetHistorydata({action:"history",id: wellid,page:this.currentPage}).then(res =>{
-       console.log(res)
+      //  console.log(res)
         this.histarydata = res.data.msg;
         this.total = res.data.counts;
      })
