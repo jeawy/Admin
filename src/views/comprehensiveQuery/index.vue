@@ -134,7 +134,7 @@
   </div>
 </template>
 <script>
-import { getRealdata, getDetail } from "@/api/realdata";
+import { ApiGetRealdata, getDetail } from "@/api/realdata";
 export default {
   data() {
     return {
@@ -235,7 +235,7 @@ export default {
       // 
     },
     GetcomprehensiveData() {
-      getRealdata({page:this.currentPage}).then(res => {
+      ApiGetRealdata({page:this.currentPage}).then(res => {
         this.comprehensivedata = res.data.realdata;
         this.total = res.data.page_count;
       });
@@ -248,7 +248,7 @@ export default {
         status: this.wellStatus,
         daterange:this.wellDatePicker[0]+'-'+this.wellDatePicker[1],
       };
-      getRealdata(data).then(res => {
+      ApiGetRealdata(data).then(res => {
         this.comprehensivedata = res.data.realdata;
         this.total = res.data.page_count;
       });
@@ -263,7 +263,7 @@ export default {
         daterange:this.wellDatePicker[0]+'-'+this.wellDatePicker[1],
         print: "null"
       };
-      getRealdata(data).then(({ data }) => {
+      ApiGetRealdata(data).then(({ data }) => {
         this.uploadVisible = true;
         this.path = data.file;
       });
