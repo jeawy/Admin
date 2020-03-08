@@ -8,7 +8,7 @@
 
 <script>
 import dayjs from "dayjs";
-import { ApiGetHistorydata } from "@/api/realdata";
+import { ApiGetHistorydata ,ApiGetElectdata} from "@/api/realdata";
 import LineChart from "@/components/ECharts/LineMarker";
 export default {
   name: "lineHistory",
@@ -162,16 +162,25 @@ export default {
     },
     //电流曲线图
     getEleChart(wellid) {
+      ApiGetElectdata({id:wellid,p_type:'3',json:''}).then(res =>{
+        console.log("000000000")
+        console.log(res)
+        let P144data =res.data.datas;
+        let time = res.data.time;
+        // res.data.datas.forEach((item, index) => {
+          
+        //   P144data.push(item);
+        //   }); 
       let customOption = {
         title: {
-          text: "电流曲线:" 
+          text: "电流曲线:"+time 
         },
         tooltip: {
           trigger: "axis"
         },
         xAxis: {
           type: "category",
-          data: [0, 10, 50, 30, 10, 50, 60, 60,45,25,48,12,47,36,45,15,25,44,2,5,25],
+          data: [0,5, 10, 15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,125,130,135,140],
         },
         yAxis: {
           type: "value",
@@ -183,7 +192,8 @@ export default {
         series: [
           {
             smooth: true,//光滑
-            data: [63, 10, 50, 30, 10, 50, 60, 60,45,25,48,12,47,36,45,15,25,44,2,5,25],
+            data: P144data,
+            // data: [63, 10, 50, 30, 10, 50, 60, 60,45,25,48,12,47,36,45,15,25,44,2,5,25],
             type: "line",
             itemStyle: {
               normal: {
@@ -202,6 +212,7 @@ export default {
         ]
       };
       this.$refs["ele-chart"].initChart(customOption);
+      })
     }
   },
   // mounted() {

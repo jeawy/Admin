@@ -7,3 +7,7 @@ export function ApiGetRealdata(params) {
   export function ApiGetHistorydata(params) {
     return AXIOS.get('/clientdata/clientdata/', { params })
   }
+  //获取电流曲线
+  export function ApiGetElectdata(params) {
+    return AXIOS.get('/p144/p144/', { params })
+  }
