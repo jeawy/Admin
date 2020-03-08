@@ -1,6 +1,6 @@
 <template>
   <div id="realdata">
-    <div style="padding-bottom: 10px;">
+    <div class="content">
       <el-row class="row-bg">
         <el-col :span="2" class="col-bg">
           井类别:
@@ -35,12 +35,9 @@
           </el-select>
         </el-col>
         <el-col :span="6">
-          <el-button type="primary" style="height:27.99px" @click="searchWell()">点击查询</el-button>
-          <el-button type="primary" style="height:27.99px" @click="targetUpload">导出结果</el-button>
+          <el-button type="primary" class="button" @click="searchWell()">点击查询</el-button>
+          <el-button type="primary" class="button" @click="targetUpload">导出结果</el-button>
         </el-col>
-        <!-- <el-col :span="4">
-        <el-button type="danger" style="height:27.99px" @click="histaryData()">历史数据</el-button>
-        </el-col>-->
       </el-row>
     </div>
     <el-table
@@ -53,7 +50,7 @@
     >
       <el-table-column type="index" width="80" label="序号" align="center"></el-table-column>
       <el-table-column prop="welltype" label="井类别" align="center"></el-table-column>
-     <el-table-column label="井号" width="120">
+     <el-table-column label="井号" width="120" align="center">
         <template slot-scope="scope">
           <router-link
             style="cursor: pointer;"
@@ -61,7 +58,18 @@
           >{{scope.row.name}}</router-link>
         </template>
       </el-table-column>
-      <el-table-column prop="status" label="运行状态" width="120" :formatter="Status" align="center"></el-table-column>
+      <el-table-column  label="运行状态" width="120" align="center">
+         <template slot-scope="scope">
+           <div v-if="scope.row.status==0" class="cell-wellstatus">
+             {{scope.row.status|wellStatus}}
+             <img src="@/assets/on.png"/>
+           </div>
+           <div v-if="scope.row.status==1" class="cell-wellstatus">
+             {{scope.row.status|wellStatus}}
+              <img src="@/assets/off.png"/>
+           </div>
+         </template>
+      </el-table-column>
       <el-table-column prop="factory" label="厂" align="center"></el-table-column>
       <el-table-column prop="mine" label="矿" align="center"></el-table-column>
       <el-table-column label="上报时间" width="150px" align="center">
@@ -72,7 +80,7 @@
       </el-table-column>
       <el-table-column label="历史数据" width="100px" align="center">
         <template slot-scope="scope">
-          <div @click="history(scope.row.name)">历史数据</div>
+          <div @click="history(scope.row.wellid,scope.row.name,scope.row.factory,scope.row.mine,scope.row.status,scope.row.welltype)">历史数据</div>
         </template>
       </el-table-column>
       <el-table-column prop="frequency" label="频率(Hz)" width="100px" align="center"></el-table-column>
@@ -109,7 +117,7 @@
           <span>excel文件</span>
         </el-col>
         <el-col :span="18">
-          <span @click="download" style="cursor:pointer;color:#2d8cf0">{{"点击下载"}}</span>
+          <span @click="download" class="downloadExcle">{{"点击下载"}}</span>
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
@@ -117,21 +125,86 @@
         <el-button type="primary" @click="uploadExcel">确定</el-button>
       </span>
     </el-dialog>
-    <!-- <el-drawer
-    
-      :visible.sync="drawer"
-      :direction="direction"
-      :with-header="false"
-    >
-      <span>我来啦!</span>
-    </el-drawer> -->
+    <Drawer 
+    ref="showdrawer"
+    scrollable 
+    v-model="isDShow" 
+    :mask-style="{backgroundColor: 'transparent'}"
+    :mask="true"
+    draggable
+    width="48%">
+    <el-row type="flex" align="middle">
+      <el-col :span="8">
+        <div style="font-weight: 700; font-size: 18px;">
+        {{wellfactory}}{{wellmine}}/{{wellname}}{{wellStatus}}
+        </div>
+      </el-col>
+      <el-col :span="2">
+        <span v-if="wellStatus == '开井'" class="">
+              <img src="@/assets/on.png"/>
+           </span>
+           <span v-if="wellStatus == '关井'" class="">
+              <img src="@/assets/off.png"/>
+           </span>
+      </el-col>
+    </el-row>
+    <el-divider class="divider"/>
+    <el-row type="flex" justify="end" align="middle" class="row-time-select">
+       <el-col :span="3">
+          时间范围:
+        </el-col>
+        <el-col :span="6" type="flex">
+          <el-date-picker
+            v-model="wellDatePicker"
+            type="daterange"
+            align="right"
+            range-separator="-"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
+            size="mini"
+            style="width:200px"
+            :picker-options="pickerOptions"
+            value-format="yyyy/MM/dd"
+          ></el-date-picker>
+        </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="24">
+       <el-tabs v-model="activeName" @tab-click="handleClick">
+            <el-tab-pane label="产量及页面历史曲线" name="first">
+                <line-history ref="linehistory"/>
+                <barchart-history ref="barcharthistory"/>
+            </el-tab-pane>
+            <el-tab-pane label="产量及页面历史表格" name="second">
+               <table-history ref="tablehistory" /> 
+            </el-tab-pane>
+            <el-tab-pane label="开关井记录" name="third">
+              <table-record ref="tablerecord" />
+            </el-tab-pane>
+        </el-tabs>
+      </el-col>
+    </el-row>
+    </Drawer>
   </div>
 </template>
 <script>
-import { getRealdata, getDetail } from "@/api/realdata";
+import tableHistory from './components/table-history'
+import lineHistory from './components/line-history'
+import tableRecord from './components/table-record'
+import barchartHistory from './components/barchart-history';
+import { ApiGetRealdata,ApiGetHistorydata } from "@/api/realdata";
 export default {
+  components: {tableHistory, lineHistory ,barchartHistory,tableRecord},
   data() {
     return {
+      wellname:"",
+      wellfactory:null,
+      wellmine:"",
+      welltype:'',
+      wellStatus:'',
+      wellDatePicker: "",
+      activeName: "first",
+      wellid:'',
       realdata: [],
       wellCategory: "-1",
       wellStatus: "-1",
@@ -170,18 +243,60 @@ export default {
       ],
       uploadVisible: false,
       path: null,
-      // drawer: false,
-      // direction: 'btt',
+      isDShow: false,
+      tableHistoryData:[],
+       pickerOptions: {
+          shortcuts: [{
+            text: '最近7日',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近30日',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+        },
     };
   },
   methods: {
     GetRealdata() {
-      getRealdata({ realdata: "" }).then(res => {
+      ApiGetRealdata({ realdata: "" }).then(res => {
         this.realdata = res.data.realdata;
       });
     },
-    history(){
-      console.log("历史数据")
+    handleClick(tab, event) {
+  
+    },
+    history(wellid,wellname,wellfactory,wellmine,wellstatus,welltype){
+      this.isDShow = true;
+      this.wellid = wellid;
+      this.wellfactory = wellfactory;
+      this.wellmine = wellmine;
+      this.wellname = wellname;
+      this.welltype = welltype;
+      if(wellstatus == 0){
+        this.wellStatus = "开井";
+      }else if(wellstatus == 1){
+        this.wellStatus = "关井";
+      }
+      this.getLineHistory(wellid);
+      this.$refs["linehistory"].getOutputChart(wellid);
+      this.$refs["linehistory"].getOutputLiquid(wellid);
+      this.$refs["linehistory"].getEleChart(wellid);
+      this.$refs["barcharthistory"].getPowerMonth(wellid);
+      this.$refs["tablehistory"].getHistoryData(wellid);
+      this.$refs["tablerecord"].getRecordData(wellid);
+    },
+    getLineHistory(){
+       console.log("曲线图")
     },
     searchWell() {
       let data = {
@@ -189,10 +304,20 @@ export default {
         number: this.wellNumber,
         status: this.wellStatus
       };
-      getRealdata(data).then(res => {
+      ApiGetRealdata(data).then(res => {
         this.realdata = res.data.realdata;
       });
     },
+    //  searchWell(){
+    //   let data = {
+    //     // page: this.currentPage,
+    //     daterange:this.wellDatePicker[0]+'-'+this.wellDatePicker[1],
+    //   };
+    //   ApiGetRealdata(data).then(res => {
+    //     this.comprehensivedata = res.data.realdata;
+    //     this.total = res.data.page_count;
+    //   });
+    // },
     // 实时数据导出dialog
     targetUpload() {
       const data = {
@@ -201,7 +326,7 @@ export default {
         status: this.wellStatus,
         print: "null"
       };
-      getRealdata(data).then(({ data }) => {
+      ApiGetRealdata(data).then(({ data }) => {
         this.uploadVisible = true;
         this.path = data.file;
       });
@@ -215,30 +340,22 @@ export default {
     uploadExcel() {
       this.uploadVisible = false;
     },
-    // 运行状态格式化显示
-    Status: function(row, column) {
-      switch (row.status) {
-        case 0:
-          return "开井";
-          break;
-        case 1:
-          return "关井";
-          break;
-        case 2:
-          return "设备已被移除";
-          break;
-      }
-    }
   },
   created() {
     this.GetRealdata();
   }
 };
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 #realdata {
   font-size: 12px;
   background-color: #f4f5f5;
+  .content{
+    padding-bottom: 10px;
+  }
+  .button{
+    height:27.99px
+  }
   .links {
     cursor: pointer;
     color: #918e8e;
@@ -251,6 +368,34 @@ export default {
   }
   .col-bg {
     padding:5px 2px 0 5px;
+  }
+  .cell-wellstatus{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    img{
+      padding-left: 5px;
+    }
+  }
+  .col-bg-header{
+    font-weight: 700;
+    font-size: 18px;
+    .img{
+      padding-top: 5px;
+    }
+  }
+  .col-bg-drawer{
+    padding-top:5px;
+  }
+  .row-time-select{
+    width: 95%;
+  }
+  .divider{
+        margin: 10px 0;
+  }
+  .downloadExcle{
+    cursor:pointer;
+    color:#2d8cf0
   }
 }
 </style>

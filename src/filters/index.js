@@ -30,6 +30,20 @@ export function dateHMSFormat(date) {
     return ''
   }
 }
+// 油井运行状态格式化显示
+export function wellStatus(code) {
+  switch (code) {
+    case 0:
+          return "开井";
+          break;
+        case 1:
+          return "关井";
+          break;
+        case 2:
+          return "设备已被移除";
+          break;
+  }
+}
 // 项目工作流格式化
 export function projectStatus(code) {
   switch (code) {
