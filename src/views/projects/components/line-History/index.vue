@@ -9,6 +9,7 @@
 <script>
 import LineChart from "@/components/ECharts/LineMarker";
 import { getHistoryData } from "@/api/welldetail";
+import { ApiGetElectdata} from "@/api/realdata";
 import dayjs from "dayjs";
 export default {
   name: "lineHistory",
@@ -146,39 +147,23 @@ export default {
       });
     },
     //电流曲线图
-    getEleChart() {
+    getEleChart(wellid) {
+      ApiGetElectdata({id:wellid,p_type:'3',json:''}).then(res =>{
+        let P144data =res.data.datas;
+        let time = res.data.time;
+        let  x_list = []
+           for (let i = 0 ; i < 145; i ++)
+             x_list.push(i)
       let customOption = {
         title: {
-          text: "电流曲线:"
+          text: "电流曲线:"+time 
         },
         tooltip: {
           trigger: "axis"
         },
         xAxis: {
           type: "category",
-          data: [
-            0,
-            10,
-            50,
-            30,
-            10,
-            50,
-            60,
-            60,
-            45,
-            25,
-            48,
-            12,
-            47,
-            36,
-            45,
-            15,
-            25,
-            44,
-            2,
-            5,
-            25
-          ]
+          data: x_list,
         },
         yAxis: {
           type: "value",
@@ -189,30 +174,8 @@ export default {
         },
         series: [
           {
-            smooth: true, //光滑
-            data: [
-              63,
-              10,
-              50,
-              30,
-              10,
-              50,
-              60,
-              60,
-              45,
-              25,
-              48,
-              12,
-              47,
-              36,
-              45,
-              15,
-              25,
-              44,
-              2,
-              5,
-              25
-            ],
+            smooth: true,//光滑
+            data: P144data,
             type: "line",
             itemStyle: {
               normal: {
@@ -231,7 +194,9 @@ export default {
         ]
       };
       this.$refs["ele-chart"].initChart(customOption);
+      })
     }
+
   },
   mounted() {
     this.getOutputChart();
