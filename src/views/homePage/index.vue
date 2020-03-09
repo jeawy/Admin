@@ -243,14 +243,7 @@ export default {
       });
     },
     handleClickChart(params) {
-      console.log(params)
-      for(var i = 0; i < 13; i++)
-      {
-        if(i == params.dataIndex){
-          this.wellid = this.wellId[i]
-        }
-      }
-      console.log(this.wellid)
+      this.wellid = this.wellId[params.dataIndex]
       this.$router.push({name:'well-detail',params:{id:this.wellid},query:{type:params.pro_type}});
     },
   },
