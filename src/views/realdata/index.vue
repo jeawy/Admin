@@ -78,11 +78,11 @@
       <el-table-column label="开/关井时间" width="150px" align="center">
         <template slot-scope="scope">{{scope.row.changed_time|dateTimeFormat}}</template>
       </el-table-column>
-      <el-table-column label="历史数据" width="100px" align="center">
+      <!-- <el-table-column label="历史数据" width="100px" align="center">
         <template slot-scope="scope">
           <div @click="history(scope.row.wellid,scope.row.name,scope.row.factory,scope.row.mine,scope.row.status,scope.row.welltype)">历史数据</div>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column prop="frequency" label="频率(Hz)" width="100px" align="center"></el-table-column>
       <el-table-column prop="level" label="动液面(米)" width="100px" align="center"></el-table-column>
       <el-table-column prop="output" label="产量(吨)" align="center"></el-table-column>
@@ -125,7 +125,7 @@
         <el-button type="primary" @click="uploadExcel">确定</el-button>
       </span>
     </el-dialog>
-    <Drawer 
+    <!-- <Drawer 
     ref="showdrawer"
     scrollable 
     v-model="isDShow" 
@@ -184,7 +184,7 @@
         </el-tabs>
       </el-col>
     </el-row>
-    </Drawer>
+    </Drawer> -->
   </div>
 </template>
 <script>
@@ -194,7 +194,7 @@ import tableRecord from './components/table-record'
 import barchartHistory from './components/barchart-history';
 import { ApiGetRealdata,ApiGetHistorydata } from "@/api/realdata";
 export default {
-  components: {tableHistory, lineHistory ,barchartHistory,tableRecord},
+  // components: {tableHistory, lineHistory ,barchartHistory,tableRecord},
   data() {
     return {
       wellname:"",
@@ -272,32 +272,32 @@ export default {
         this.realdata = res.data.realdata;
       });
     },
-    handleClick(tab, event) {
+    // handleClick(tab, event) {
   
-    },
-    history(wellid,wellname,wellfactory,wellmine,wellstatus,welltype){
-      this.isDShow = true;
-      this.wellid = wellid;
-      this.wellfactory = wellfactory;
-      this.wellmine = wellmine;
-      this.wellname = wellname;
-      this.welltype = welltype;
-      if(wellstatus == 0){
-        this.wellStatus = "开井";
-      }else if(wellstatus == 1){
-        this.wellStatus = "关井";
-      }
-      this.getLineHistory(wellid);
-      this.$refs["linehistory"].getOutputChart(wellid);
-      this.$refs["linehistory"].getOutputLiquid(wellid);
-      this.$refs["linehistory"].getEleChart(wellid);
-      this.$refs["barcharthistory"].getPowerMonth(wellid);
-      this.$refs["tablehistory"].getHistoryData(wellid);
-      this.$refs["tablerecord"].getRecordData(wellid);
-    },
-    getLineHistory(){
-       console.log("曲线图")
-    },
+    // },
+    // history(wellid,wellname,wellfactory,wellmine,wellstatus,welltype){
+    //   this.isDShow = true;
+    //   this.wellid = wellid;
+    //   this.wellfactory = wellfactory;
+    //   this.wellmine = wellmine;
+    //   this.wellname = wellname;
+    //   this.welltype = welltype;
+    //   if(wellstatus == 0){
+    //     this.wellStatus = "开井";
+    //   }else if(wellstatus == 1){
+    //     this.wellStatus = "关井";
+    //   }
+    //   this.getLineHistory(wellid);
+    //   this.$refs["linehistory"].getOutputChart(wellid);
+    //   this.$refs["linehistory"].getOutputLiquid(wellid);
+    //   this.$refs["linehistory"].getEleChart(wellid);
+    //   this.$refs["barcharthistory"].getPowerMonth(wellid);
+    //   this.$refs["tablehistory"].getHistoryData(wellid);
+    //   this.$refs["tablerecord"].getRecordData(wellid);
+    // },
+    // getLineHistory(){
+    //    console.log("曲线图")
+    // },
     searchWell() {
       let data = {
         well_type: this.wellCategory,
