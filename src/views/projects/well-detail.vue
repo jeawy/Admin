@@ -127,7 +127,9 @@
               <el-tab-pane label="产量及页面历史表格" name="tableHistory">
                 <tableHistory ref="tableHistory" />
               </el-tab-pane>
-              <el-tab-pane label="开关井记录" name="well-record"></el-tab-pane>
+              <el-tab-pane label="开关井记录" name="recordHistory">
+               <recordHistory ref="recordHistory" />
+              </el-tab-pane>
               <el-tab-pane label="实测数据表格" name="measure-record"></el-tab-pane>
             </el-tabs>
           </el-row>
@@ -141,6 +143,7 @@
 import BarChart from "@/components/ECharts/BarMarker";
 import lineHistory from "./components/line-History/index";
 import tableHistory from "./components/table-History/index";
+import recordHistory from "./components/record-History/index";
 import dayjs from "dayjs";
 import { ApiGetElectdata } from "@/api/realdata";
 import {
@@ -153,7 +156,8 @@ export default {
   components: {
     BarChart,
     lineHistory,
-    tableHistory
+    tableHistory,
+    recordHistory
   },
   data() {
     return {
@@ -334,6 +338,9 @@ export default {
       });
       this.$nextTick(() => {
         this.$refs["tableHistory"].getHistoryData(this.$route.params.id);
+      });
+      this.$nextTick(() => {
+        this.$refs["recordHistory"].getRecordData(this.$route.params.id);
       });
     }
   },
