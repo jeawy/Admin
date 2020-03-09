@@ -7,3 +7,7 @@ export function getWellDetail(params){
 export function viewPowersMonth(params){
     return AXIOS.get('/stats/consuption/',{ params })
 }
+//获取历史数据
+export function getHistoryData(params){
+    return AXIOS.get('/clientdata/clientdata/',{ params })
+}

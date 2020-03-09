@@ -21,7 +21,7 @@
                     style="vertical-align: middle;"
                     v-if="wellDetail.status == 1"
                   />
-                <div >{{wellDetail.well_type}}</div>
+                  <div>{{wellDetail.well_type}}</div>
                   <div>开机时间:02/26 08:31:59</div>
                   <div>最大/小载荷:</div>
                   <div>配产：</div>
@@ -103,7 +103,7 @@
               <el-date-picker
                 style="width:350px;"
                 v-model="time"
-                type="datetimerange"
+                type="daterange"
                 :picker-options="pickerOptions"
                 range-separator="至"
                 start-placeholder="开始日期"
@@ -125,7 +125,7 @@
                 <lineHistory ref="lineHistory" />
               </el-tab-pane>
               <el-tab-pane label="产量及页面历史表格" name="tableHistory">
-               <tableHistory ref="tableHistory" /> 
+                <tableHistory ref="tableHistory" />
               </el-tab-pane>
               <el-tab-pane label="开关井记录" name="well-record"></el-tab-pane>
               <el-tab-pane label="实测数据表格" name="measure-record"></el-tab-pane>
@@ -141,7 +141,12 @@
 import BarChart from "@/components/ECharts/BarMarker";
 import lineHistory from "./components/line-History/index";
 import tableHistory from "./components/table-History/index";
-import { getWellDetail,viewPowersMonth } from "@/api/welldetail";
+import dayjs from "dayjs";
+import {
+  getWellDetail,
+  viewPowersMonth,
+  getHistoryData
+} from "@/api/welldetail";
 
 export default {
   components: {
@@ -151,9 +156,10 @@ export default {
   },
   data() {
     return {
+      endtime: "",
       activeName: "lineHistory",
       wellDetail: [],
-      monthList :[],
+      monthList: [],
 
       pickerOptions: {
         shortcuts: [
@@ -192,128 +198,138 @@ export default {
   methods: {
     //月耗电量和年耗电量
     getPowerMonth() {
-     viewPowersMonth({
+      viewPowersMonth({
         id: this.$route.params.id
       }).then(({ data }) => {
-         let month_power = []
-        let month_power_dates = [] 
+        let month_power = [];
+        let month_power_dates = [];
         // this.monthList = data.powers_month_list;
-          data.powers_month_list.forEach(item => {
-            month_power.push(item.power)
-            month_power_dates.push(item.month)
+        data.powers_month_list.forEach(item => {
+          month_power.push(item.power);
+          month_power_dates.push(item.month);
         });
-         let years_power = []
-        let years_power_dates = [] 
+        let years_power = [];
+        let years_power_dates = [];
         // this.monthList = data.powers_month_list;
-          data.powers_year_list.forEach(item => {
-            years_power.push(item.power)
-            years_power_dates.push(item.year)
+        data.powers_year_list.forEach(item => {
+          years_power.push(item.power);
+          years_power_dates.push(item.year);
         });
 
-      let powerMonthOption  = {
-        title: {
-          text: "月耗电量"
-        },
-        tooltip: {
-          trigger: "axis"
-        },
-        xAxis: {
-          type: "category",
-          data:  month_power_dates
-        },
-        yAxis: {
-          type: "value",
-          name: "千瓦时",
-          axisLabel: {
-            fontSize: 14
-          }
-        },
-        grid: {
-          left: 50
-        },
-        series: [
-          {
-            data: month_power,
-            type: "bar",
-            barWidth: 20,
-            itemStyle: {
-              normal: {
-                label: {
-                  show: true, //开启显示
-                  position: "top", //在上方显示
-                  textStyle: {
-                    //数值样式
-                    color: "black",
-                    fontSize: 16
+        let powerMonthOption = {
+          title: {
+            text: "月耗电量"
+          },
+          tooltip: {
+            trigger: "axis"
+          },
+          xAxis: {
+            type: "category",
+            data: month_power_dates
+          },
+          yAxis: {
+            type: "value",
+            name: "千瓦时",
+            axisLabel: {
+              fontSize: 14
+            }
+          },
+          grid: {
+            left: 50
+          },
+          series: [
+            {
+              data: month_power,
+              type: "bar",
+              barWidth: 20,
+              itemStyle: {
+                normal: {
+                  label: {
+                    show: true, //开启显示
+                    position: "top", //在上方显示
+                    textStyle: {
+                      //数值样式
+                      color: "black",
+                      fontSize: 16
+                    }
                   }
                 }
               }
             }
-          }
-        ]
-      };
-      this.$refs["powermonth"].initChart(powerMonthOption);
-       let powerYearOption = {
-        title: {
-          text: "年耗电量"
-        },
-        tooltip: {
-          trigger: "axis"
-        },
-        xAxis: {
-          type: "category",
-          data: years_power_dates
-        },
-        yAxis: {
-          type: "value",
-          name: "千瓦时",
-          axisLabel: {
-            fontSize: 14
-          }
-        },
-        grid: {
-          left: 50
-        },
-        series: [
-          {
-            data: years_power,
-            type: "bar",
-            barWidth: 20,
-            itemStyle: {
-              normal: {
-                label: {
-                  show: true, //开启显示
-                  position: "top", //在上方显示
-                  textStyle: {
-                    //数值样式
-                    color: "black",
-                    fontSize: 16
+          ]
+        };
+        this.$refs["powermonth"].initChart(powerMonthOption);
+        let powerYearOption = {
+          title: {
+            text: "年耗电量"
+          },
+          tooltip: {
+            trigger: "axis"
+          },
+          xAxis: {
+            type: "category",
+            data: years_power_dates
+          },
+          yAxis: {
+            type: "value",
+            name: "千瓦时",
+            axisLabel: {
+              fontSize: 14
+            }
+          },
+          grid: {
+            left: 50
+          },
+          series: [
+            {
+              data: years_power,
+              type: "bar",
+              barWidth: 20,
+              itemStyle: {
+                normal: {
+                  label: {
+                    show: true, //开启显示
+                    position: "top", //在上方显示
+                    textStyle: {
+                      //数值样式
+                      color: "black",
+                      fontSize: 16
+                    }
                   }
                 }
               }
             }
-          }
-        ]
-      };
-      this.$refs["poweryear"].initChart(powerYearOption);
-      
-        });
+          ]
+        };
+        this.$refs["poweryear"].initChart(powerYearOption);
+      });
     },
-  
-    search() {},
+
+    search(time) {
+      function dataFormat(params) {
+        return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
+      }
+      this.$refs["lineHistory"].getOutputChart(
+        this.$route.params.id,
+        dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
+      );
+    },
     getWellDetails() {
       getWellDetail({ id: this.$route.params.id, json: "" }).then(
         ({ data }) => {
           this.wellDetail = data.entities_list[0];
         }
       );
+      this.$nextTick(() => {
+        this.$refs["lineHistory"].getOutputChart(this.$route.params.id);
+      });
     }
   },
   created() {
     this.getWellDetails();
   },
   mounted() {
-    this.getPowerMonth()
+    this.getPowerMonth();
   }
 };
 </script>
