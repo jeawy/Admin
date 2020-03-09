@@ -142,6 +142,7 @@ import BarChart from "@/components/ECharts/BarMarker";
 import lineHistory from "./components/line-History/index";
 import tableHistory from "./components/table-History/index";
 import dayjs from "dayjs";
+import {ApiGetElectdata} from "@/api/realdata";
 import {
   getWellDetail,
   viewPowersMonth,
@@ -304,7 +305,7 @@ export default {
         this.$refs["poweryear"].initChart(powerYearOption);
       });
     },
-
+   //搜索页面产量图
     search(time) {
       function dataFormat(params) {
         return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
@@ -322,6 +323,9 @@ export default {
       );
       this.$nextTick(() => {
         this.$refs["lineHistory"].getOutputChart(this.$route.params.id);
+      });
+        this.$nextTick(() => {
+        this.$refs["lineHistory"].getEleChart(this.$route.params.id);
       });
     }
   },
