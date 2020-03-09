@@ -63,7 +63,7 @@ export default {
                 fontSize:20
                 // height:"50px"
             },
-            padding:[1,18], //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
+            padding:[20,18], //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
             },
             tooltip: {
                 trigger: "axis",
@@ -73,7 +73,8 @@ export default {
             },
             grid: {
                 left: "3%",
-                bottom: "3%",
+                top: "20%",
+                height:370,
                 containLabel: true
             },
             legend: {
@@ -156,6 +157,7 @@ export default {
         grid: {
           left: "3%",
           bottom: "3%",
+          height:370,
           containLabel: true
         },
         xAxis: [
@@ -258,7 +260,7 @@ export default {
 <template>
   <div id="home-page" ref="drawer-parent">
     <el-row class="home-header-card" :gutter="15">
-      <el-col :sm="12" :lg="6">
+      <el-col :sm="10" :lg="6">
         <el-card class="home-header-item1" shadow="always">
           <router-link :to="{name:'realdata'}">
             <div class="text-light">实时数据</div>
@@ -267,7 +269,7 @@ export default {
           </router-link>
         </el-card>
       </el-col>
-      <el-col :sm="12" :lg="6">
+      <el-col :sm="10" :lg="6">
         <el-card class="home-header-item2" shadow="always">
           <router-link :to="{name:'comprehensiveQuery'}">
             <div class="text-light">综合查询</div>
@@ -276,14 +278,14 @@ export default {
           </router-link>
         </el-card>
       </el-col>
-      <el-col :sm="12" :lg="6">
+      <el-col :sm="10" :lg="6">
         <el-card class="home-header-item3" shadow="always">
           <p class="text-light">告警</p>
           <img class="warnImage"
             src="@/assets/warning.png" alt="">
         </el-card>
       </el-col>
-      <el-col :sm="12" :lg="6">
+      <el-col :sm="10" :lg="6">
         <el-card class="home-header-item4" shadow="always">
           <p class="text-light">统计分析</p>
           <img class="statisticsImage"
@@ -292,7 +294,7 @@ export default {
       </el-col>
     </el-row>
     <el-row class="home-header" :gutter="15">
-      <el-col :lg="12">
+      <el-col :lg="12" :sm="20">
         <el-row class="left" :gutter="15">
           <el-col :lg="24">
             <el-card shadow="always">
@@ -317,16 +319,16 @@ export default {
                 </div>
               </div>
               <div>
-                <BarChart @click-item="handleClickChart" ref="ouput" chart-id="output" style="height:400px" />
+                <BarChart @click-item="handleClickChart" ref="ouput" chart-id="output" style="height:450px" />
               </div>
               <div style="margin-top:50px">
-                <BarChart @click-item="handleClickChart" ref="level" chart-id="level" style="height:400px" />
+                <BarChart @click-item="handleClickChart" ref="level" chart-id="level" style="height:450px" />
               </div>
             </el-card>
           </el-col>
         </el-row>
       </el-col>
-      <el-col :lg="12">
+      <el-col :lg="12" :sm="20">
         <el-row class="right" :gutter="15">
           <el-col :lg="24">
             <el-row :gutter="15">
@@ -413,13 +415,13 @@ export default {
             </el-row>
           </el-col>
           <el-col :lg="24" style="height:15px" />
-          <el-col :lg="24">
+          <el-col>
             <el-card shadow="always">
               <div class="card-header">
                 <h4 style="font-size:17px">油井位置分布</h4>
               </div>
               <div>
-                <BaiduMap ref="location" chart-id="location" style="height: 465px;width:600px" />
+                <BaiduMap ref="location" chart-id="location" />
               </div>
             </el-card>
           </el-col>
@@ -464,7 +466,7 @@ export default {
     margin-bottom: 15px;
     .left {
       .el-card {
-        height: 990px;
+        height: 1012px;
       }
       .btn-group{
         display: flex;
