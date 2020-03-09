@@ -165,7 +165,7 @@ import { mapState } from "vuex";
 export default {
   name: "Notice",
   created() {
-    this.getNoticeDetail();
+    // this.getNoticeDetail();
     this.clockRecord();
   },
   components: {
@@ -260,20 +260,20 @@ export default {
       function dateFormat(dateVal) {
         return new Date(dateVal).toLocaleDateString();
       }
-      HTTP.getClockRecord({ user_id: this.id }).then(({ data }) => {
-        if (data.status === 0) {
-          this.clockRed = [...data.msg];
-          // this.clockRed.forEach(item => {
-          //   if (dateFormat(item.date * 1000) === this.date) {
-          //   }else{
-          //     if(this.dateHour <9){
-          //       this.clockClose = false;
-          //       this.active = 1;
-          //     }
-          //   }
-          // });
-        }
-      });
+      // HTTP.getClockRecord({ user_id: this.id }).then(({ data }) => {
+      //   if (data.status === 0) {
+      //     this.clockRed = [...data.msg];
+      //     // this.clockRed.forEach(item => {
+      //     //   if (dateFormat(item.date * 1000) === this.date) {
+      //     //   }else{
+      //     //     if(this.dateHour <9){
+      //     //       this.clockClose = false;
+      //     //       this.active = 1;
+      //     //     }
+      //     //   }
+      //     // });
+      //   }
+      // });
     },
     handleClick(tab, event) {
       //  console.log(tab, event);

@@ -187,14 +187,14 @@ export default {
         };
       }
 
-      getClockRecord(data).then(({ data }) => {
-        this.clockRed = [...data.msg];
-      });
+      // getClockRecord(data).then(({ data }) => {
+      //   this.clockRed = [...data.msg];
+      // });
     },
     clockRecord2() {
-      getClockRecord().then(({ data }) => {
-        this.clockRed = [...data.msg];
-      });
+      // getClockRecord().then(({ data }) => {
+      //   this.clockRed = [...data.msg];
+      // });
     }
   }
 };
