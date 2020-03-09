@@ -199,7 +199,7 @@ export default {
 
   },
   mounted() {
-    this.getOutputChart();
+    // this.getOutputChart();
     this.getEleChart();
   }
 };
