@@ -19,7 +19,7 @@ export default {
       stopCount:'',
       openPercentage:0,
       total:'',
-      wellid:'',
+      wellid:0,
       wellId:[]
     };
   },
@@ -243,12 +243,14 @@ export default {
       });
     },
     handleClickChart(params) {
-      for(var i = 0; params.dataIndex < 14; i++)
+      console.log(params)
+      for(var i = 0; i < 13; i++)
       {
         if(i == params.dataIndex){
           this.wellid = this.wellId[i]
         }
       }
+      console.log(this.wellid)
       this.$router.push({name:'well-detail',params:{id:this.wellid},query:{type:params.pro_type}});
     },
   },
