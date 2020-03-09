@@ -142,7 +142,7 @@ import BarChart from "@/components/ECharts/BarMarker";
 import lineHistory from "./components/line-History/index";
 import tableHistory from "./components/table-History/index";
 import dayjs from "dayjs";
-import {ApiGetElectdata} from "@/api/realdata";
+import { ApiGetElectdata } from "@/api/realdata";
 import {
   getWellDetail,
   viewPowersMonth,
@@ -305,7 +305,7 @@ export default {
         this.$refs["poweryear"].initChart(powerYearOption);
       });
     },
-   //搜索页面产量图
+    //搜索页面产量
     search(time) {
       function dataFormat(params) {
         return new Date(params).toLocaleDateString(); //'yyyy/mm/dd hh:mm:ss'
@@ -314,7 +314,12 @@ export default {
         this.$route.params.id,
         dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
       );
+      this.$refs["tableHistory"].getHistoryData(
+        this.$route.params.id,
+        dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
+      );
     },
+    //井的详情信息
     getWellDetails() {
       getWellDetail({ id: this.$route.params.id, json: "" }).then(
         ({ data }) => {
@@ -324,8 +329,11 @@ export default {
       this.$nextTick(() => {
         this.$refs["lineHistory"].getOutputChart(this.$route.params.id);
       });
-        this.$nextTick(() => {
+      this.$nextTick(() => {
         this.$refs["lineHistory"].getEleChart(this.$route.params.id);
+      });
+      this.$nextTick(() => {
+        this.$refs["tableHistory"].getHistoryData(this.$route.params.id);
       });
     }
   },
