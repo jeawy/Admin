@@ -3,15 +3,15 @@
     <ElRow :gutter="24">
       <ElCol :span="6">
         <el-card>
-          <h4 slot="header">部门与工种</h4>
+          <h4 slot="header">部门</h4>
           <div>
             <el-row type="flex" align="middle" class="nav-title" v-if="DeptAuth">
-              <el-button @click="openGroupForm('add')" type="success" style="width:100%">添加工种</el-button>
+              <el-button @click="openGroupForm('add')" type="success" style="width:100%">添加部门</el-button>
             </el-row>
             <el-input class="search-group" placeholder="输入关键字进行搜索" v-model="filterText"></el-input>
             <el-tree
               class="filter-tree"
-              empty-text="未创建工种"
+              empty-text="未创建部门"
               highlight-current
               ref="tree"
               :data="DeptList"
@@ -28,14 +28,14 @@
                     class="el-icon-plus"
                     @click="openGroupForm('add',data)"
                     style="color:#409EFF"
-                    title="添加子工种"
+                    title="添加子部门"
                     v-if="DeptAuth"
                   ></i>
                   <i
                     class="el-icon-delete"
                     @click="removeGroup(data)"
                     style="color:#F56C6C"
-                    title="删除当前工种"
+                    title="删除当前部门"
                     v-if="DeptAuth"
                   ></i>
                 </span>
@@ -56,7 +56,7 @@
                     type="primary"
                     v-if="DeptAuth"
                     :disabled="showList"
-                  >修改工种信息</el-button>
+                  >修改部门信息</el-button>
                   <el-button
                     @click="openChangeMember(1)"
                     type="primary"
@@ -72,7 +72,7 @@
                   <el-button @click="show(ActiveGroup)" type="warning" :disabled="showList">审批流程</el-button>
                 </el-col>
                 <el-col :span="6">
-                  <label for>工种名称</label>
+                  <label for>部门名称</label>
 
                   ： {{ActiveGroup?ActiveGroup.name:'--'}}
                   <font
@@ -81,7 +81,7 @@
                 </el-col>
 
                 <el-col :span="6">
-                  <label for>工种负责人</label>
+                  <label for>部门负责人</label>
                   ：{{ActiveGroup?ActiveGroup.charger_name : '未指定'}}
                 </el-col>
               </el-row>
@@ -114,10 +114,10 @@
     <!-- 添加用户组弹出框 -->
     <el-dialog :title="DialogType.title" :visible.sync="dialogFormVisible" width="460px">
       <el-form :model="GroupForm" ref="GroupForm" :rules="GroupRules">
-        <el-form-item label="工种名" label-width="20%" prop="name">
+        <el-form-item label="部门名" label-width="20%" prop="name">
           <el-input v-model.trim="GroupForm.name" autocomplete="off" style="width:100%"></el-input>
         </el-form-item>
-        <el-form-item label="工种别名" label-width="20%" prop="alias">
+        <el-form-item label="部门别名" label-width="20%" prop="alias">
           <el-input v-model.trim="GroupForm.alias" autocomplete="off" style="width:100%"></el-input>
         </el-form-item>
         <el-form-item label="负责人" label-width="20%" prop="chargerid">
@@ -210,7 +210,7 @@ export default {
 
             trigger: "blur",
 
-            message: "工种名称未填写"
+            message: "部门名称未填写"
           }
         ],
         alias: [
@@ -227,7 +227,7 @@ export default {
 
             trigger: "blur",
 
-            message: "工种负责人未选择"
+            message: "部门负责人未选择"
           }
         ]
       },
@@ -443,7 +443,7 @@ export default {
     },
 
     removeGroup(data) {
-      this.$confirm("此操作将永久删除该工种?", "注意", {
+      this.$confirm("此操作将永久删除该部门?", "注意", {
         confirmButtonText: "删除",
 
         cancelButtonText: "取消",
@@ -481,7 +481,7 @@ export default {
           this.DialogType = Object.assign(
             {},
             {
-              title: "添加子工种",
+              title: "添加子部门",
 
               type
             }
@@ -497,7 +497,7 @@ export default {
           this.DialogType = Object.assign(
             {},
             {
-              title: "添加工种",
+              title: "添加部门",
 
               type
             }
@@ -509,7 +509,7 @@ export default {
         this.DialogType = Object.assign(
           {},
           {
-            title: "修改工种信息",
+            title: "修改部门信息",
 
             type
           }

@@ -24,13 +24,13 @@
               :disabled="this.multipleSelection.length === 0 ||this.multipleSelection.length>1"
             >重置密码</el-button>
               <el-button type="primary" icon="el-icon-plus" @click="openDialog(1)">添加用户</el-button>
-              <el-button
+              <!-- <el-button
                 icon="el-icon-upload2"
                 type="success"
                 @click="$router.push({name:'import-users'})"
               >
                 <slot name="import">用户导入</slot>
-              </el-button>
+              </el-button> -->
               <el-button
                 type="danger"
                 icon="el-icon-delete"
@@ -82,24 +82,21 @@
         <el-form-item label="是否启用" prop="isactive">
           <el-switch v-model="userForm.isactive"></el-switch>
         </el-form-item>
-         <el-form-item label="是否为练习生" prop="trainingMenber">
+         <!-- <el-form-item label="是否为练习生" prop="trainingMenber">
           <el-switch 
             v-model="userForm.trainingMenber"  
             @change="showSchool">
             </el-switch>
-        </el-form-item>
-        <el-form-item label="学校" prop="school" v-show="userForm.trainingMenber">
+        </el-form-item> -->
+        <!-- <el-form-item label="学校" prop="school" v-show="userForm.trainingMenber">
           <el-input v-model="userForm.school" @input="change($event)" ></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item>
           <el-button @click="cancel">取消</el-button>
           <el-button type="primary" @click="addUser">立即添加</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
-
-    
-   
     <el-dialog title="重置密码" :visible.sync="dialogShow2" width="400px">
       <el-form
         :model="resetPassForm"

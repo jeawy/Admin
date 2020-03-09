@@ -32,7 +32,7 @@
             >{{scope.row.username}}</span>
           </template>
         </el-table-column>
-           <el-table-column prop="school" label="学校" align="left" width="140">
+           <!-- <el-table-column prop="school" label="学校" align="left" width="140">
           <template slot-scope="scope">
             <el-input
               size="small"
@@ -47,7 +47,7 @@
               v-if="!editing||clickId !== scope.row.id"
             >{{scope.row.school}}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column prop="sex" label="性别" align="center" width="80">
           <template slot-scope="scope">
             <el-select
@@ -89,13 +89,13 @@
             <span v-if="!editing||clickId !== scope.row.id">{{scope.row.phone}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="dept" label="工种" align="left">
+        <!-- <el-table-column prop="dept" label="工种" align="left">
           <template slot-scope="scope">
             <div style="float:left;padding:5px" v-for="(item,index) of scope.row.dept" :key="index">
               <span @click="jump(item.id)" style="cursor: pointer">{{item.name}}</span>
             </div>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column prop="role" label="职务/角色" align="left" />
         <el-table-column label="是否启用" align="center" width="100">
           <template slot-scope="scope">
@@ -170,13 +170,15 @@
       :inner="isInner"
       :title="drawerTitle"
     >
-      <attrsBind
+    自定义属性
+    暂时未启用
+      <!-- <attrsBind
         :project="project"
         :customAttrs="customAttrs"
         :attrsList="attrsList"
         @refresh_customAttrs="NewcustomAttrs"
         :attrsTypeNum="attrsTypeNum"
-      />
+      /> -->
     </Drawer>
   </div>
 </template>
@@ -228,16 +230,16 @@ export default {
       this.drawer = true;
       this.drawerTitle = row.username
       this.project = row;
-      searchBind({ entity_type: 7 }).then(({ data }) => {
-        this.attrsList = [...data.msg];
-      });
-      getAttrsEntityList({ entity_id: row.id, entity_type: 7 }).then(({ data }) => {
-        // console.log("llllll");
-        this.customAttrs = [...data.msg];
-        // console.log("mmmm");
-        // console.log(this.customAttrs);
-        this.attrsTypeNum = 7;
-      });
+      // searchBind({ entity_type: 7 }).then(({ data }) => {
+      //   this.attrsList = [...data.msg];
+      // });
+      // getAttrsEntityList({ entity_id: row.id, entity_type: 7 }).then(({ data }) => {
+      //   // console.log("llllll");
+      //   this.customAttrs = [...data.msg];
+      //   // console.log("mmmm");
+      //   // console.log(this.customAttrs);
+      //   this.attrsTypeNum = 7;
+      // });
     },
     NewcustomAttrs() {
       getAttrsEntityList({ entity_id: this.project.id, entity_type: 7 }).then(

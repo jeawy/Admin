@@ -12,7 +12,7 @@ export function getDeptUsers(params) {
   })
 }
 
-//添加工种
+//添加部门
 export function addDept(data) {
   return AXIOS.post('/dept/dept/', data)
 }
