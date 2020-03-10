@@ -56,7 +56,7 @@
               <div>小平衡块重量2(Kn)：{{wellDetail.weight_2_small_balance?wellDetail.weight_2_small_balance:"-"}}</div>
               <div>曲柄重量2(Kn)：{{wellDetail.weight_2_crank?wellDetail.weight_2_crank:"-"}}</div>
               <div>有功2(Kw)：{{wellDetail.active2?wellDetail.active2:"-"}}</div>
-              <div>数据更新时间：{{wellDetail.time}}</div>
+              <div>数据更新时间：{{wellDetail.time|dateTimeFormat}}</div>
             </el-col>
             <el-col :span="11">
               <div>动液面(米):{{wellDetail.level}}</div>
@@ -187,7 +187,7 @@ export default {
             }
           },
           {
-            text: "最近三个月",
+            text: "自定义",
             onClick(picker) {
               const end = new Date();
               const start = new Date();
@@ -197,7 +197,7 @@ export default {
           }
         ]
       },
-      time: ""
+      time: {}
     };
   },
   methods: {
@@ -322,12 +322,19 @@ export default {
         this.$route.params.id,
         dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
       );
+      this.$refs["recordHistory"].getRecordData(
+        this.$route.params.id,
+        dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
+      );
+      
+      
     },
     //井的详情信息
     getWellDetails() {
       getWellDetail({ id: this.$route.params.id, json: "" }).then(
         ({ data }) => {
-          this.wellDetail = data.entities_list[0];
+         // this.wellDetail = data.entities_list[0];
+          this.wellDetail = data.well;
         }
       );
       this.$nextTick(() => {
