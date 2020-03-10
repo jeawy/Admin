@@ -1,10 +1,8 @@
 <template>
   <div :class="classObj" class="app-wrapper">
-    <el-col :sm="16" :lg="24">
+    <el-col :sm=24 :lg="24">
       <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
-      <el-row :sm="1">
-        <sidebar class="sidebar-container" /><!-- hassidebar:$route.meta.hiddenSideBar -->
-      </el-row>
+      <sidebar class="sidebar-container" /><!-- hassidebar:$route.meta.hiddenSideBar -->
       <div :class="[{hasTagsView:needTagsView,},'main-container',]"><!-- hassidebar:$route.meta.hiddenSideBar -->
             <div :class="{'fixed-header':fixedHeader}">
               <navbar />

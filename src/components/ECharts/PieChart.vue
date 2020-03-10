@@ -66,14 +66,15 @@ export default {
         },
         legend: {
           orient: 'vertical',
-          left: "5",
+          x: 'left',
+          data:['开井','关井']
         },
         series: [
           {
-            name: "井状态",
+            name: "状态",
             type: "pie",
             data: chartData,
-            radius: ['38%', '70%'],
+            radius: ['45%', '80%'],
             label: {
                 normal: {
                     show: false,

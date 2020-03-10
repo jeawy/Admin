@@ -79,7 +79,7 @@ import Settings from './Settings'
       display: flex;
       align-items: center;
     }
-
+    
     height: 50px;
     overflow: hidden;
     position: relative;

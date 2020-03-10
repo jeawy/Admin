@@ -526,22 +526,22 @@ export default {
       background: #f86c6b;
     }
     .realDataImage{
-      width: 270px;
+      width: 290px;
       height: 60px;
       margin-top:20px
     }
     .queryImage{
-      width: 270px;
+      width: 290px;
       height: 50px;
       margin-top:30px
     }
     .warnImage{
-      width: 270px;
+      width: 300px;
       height: 60px;
       margin-top:28px
     }
     .statisticsImage{
-      width: 260px;
+      width: 290px;
       height: 60px;
       margin-top:28px
     }
