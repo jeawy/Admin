@@ -11,3 +11,7 @@ export function viewPowersMonth(params){
 export function getHistoryData(params){
     return AXIOS.get('/clientdata/clientdata/',{ params })
 }
+//开关井记录
+export function ApiGetWellRecord(params){
+    return AXIOS.get('/well/record/',{ params })
+}

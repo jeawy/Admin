@@ -12,15 +12,14 @@
       <el-table-column type="index" width="80" label="序号" align="center"></el-table-column>
       <el-table-column prop="name" label="井号" width="100px" align="center"></el-table-column>
       <el-table-column prop="status" label="开/关井" :formatter="Status" width="100px" align="center"></el-table-column>
-      <el-table-column label="变更时间" width="150px" align="center">
-        <template slot-scope="scope">{{scope.row.changed_time|dateTimeFormat}}</template>
-      </el-table-column>
-      <el-table-column prop="time" label="持续时间(小时)" width="150px" align="center"></el-table-column>
+       <el-table-column prop="time" label="时间" width="180px" align="center"></el-table-column>
+      <el-table-column prop="last" label="持续时间(小时)" width="150px" align="center"></el-table-column>
     </el-table>
   </div>
 </template>
 <script>
-import { ApiGetHistorydata } from "@/api/realdata";
+import {ApiGetWellRecord} from "@/api/welldetail";
+import dayjs from "dayjs";
 export default {
   name: "recordHistory",
   data() {
@@ -29,9 +28,17 @@ export default {
     };
   },
   methods: {
-    getRecordData(wellid) {
-      ApiGetHistorydata({ id: wellid }).then(res => {
-        this.recorddata = res.data.msg;
+    getRecordData(wellid,date) {
+      let lines = {};
+      lines = {
+        id: wellid,
+        daterange: date
+      };
+      ApiGetWellRecord(lines).then(res => {
+        // this.recorddata = data;
+         this.recorddata = res.data;
+         console.log('11111')
+        console.log( this.recorddata)
       });
     },
        // 运行状态格式化显示
