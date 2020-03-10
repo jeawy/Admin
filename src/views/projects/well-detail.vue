@@ -56,7 +56,7 @@
               <div>小平衡块重量2(Kn)：{{wellDetail.weight_2_small_balance?wellDetail.weight_2_small_balance:"-"}}</div>
               <div>曲柄重量2(Kn)：{{wellDetail.weight_2_crank?wellDetail.weight_2_crank:"-"}}</div>
               <div>有功2(Kw)：{{wellDetail.active2?wellDetail.active2:"-"}}</div>
-              <div>数据更新时间：{{wellDetail.time}}</div>
+              <div>数据更新时间：{{wellDetail.time|dateTimeFormat}}</div>
             </el-col>
             <el-col :span="11">
               <div>动液面(米):{{wellDetail.level}}</div>
@@ -327,7 +327,11 @@ export default {
     getWellDetails() {
       getWellDetail({ id: this.$route.params.id, json: "" }).then(
         ({ data }) => {
-          this.wellDetail = data.entities_list[0];
+        
+          // this.wellDetail = data.entities_list[0];
+          this.wellDetail = data.well;
+            console.log('111111')
+          console.log(this.wellDetail)
         }
       );
       this.$nextTick(() => {
