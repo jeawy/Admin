@@ -1,14 +1,18 @@
 <template>
   <div :class="classObj" class="app-wrapper">
-    <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
-    <sidebar class="sidebar-container" /><!-- hassidebar:$route.meta.hiddenSideBar -->
-    <div :class="[{hasTagsView:needTagsView,},'main-container',]"><!-- hassidebar:$route.meta.hiddenSideBar -->
-      <div :class="{'fixed-header':fixedHeader}">
-        <navbar />
-        <tags-view v-if="needTagsView" />
+    <el-col :sm="16" :lg="24">
+      <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
+      <el-row :sm="1">
+        <sidebar class="sidebar-container" /><!-- hassidebar:$route.meta.hiddenSideBar -->
+      </el-row>
+      <div :class="[{hasTagsView:needTagsView,},'main-container',]"><!-- hassidebar:$route.meta.hiddenSideBar -->
+            <div :class="{'fixed-header':fixedHeader}">
+              <navbar />
+              <tags-view v-if="needTagsView" />
+            </div>
+        <app-main />
       </div>
-      <app-main />
-    </div>
+    </el-col>
   </div>
 </template>
 

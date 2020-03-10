@@ -1,6 +1,5 @@
 <template>
   <div class="navbar">
-    
       <div>
         <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
         <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
@@ -26,7 +25,6 @@
           </el-dropdown-menu>
         </el-dropdown>
       </div>
-   
     <Drawer scrollable title="Global style settings" v-model="isDShow" :mask-style="{backgroundColor: 'transparent'}">
        <settings/>
     </Drawer>

@@ -260,7 +260,7 @@ export default {
 <template>
   <div id="home-page" ref="drawer-parent">
     <el-row class="home-header-card" :gutter="15">
-      <el-col :sm="10" :lg="6">
+      <el-col :sm="12" :lg="6">
         <el-card class="home-header-item1" shadow="always">
           <router-link :to="{name:'realdata'}">
             <div class="text-light">实时数据</div>
@@ -269,7 +269,7 @@ export default {
           </router-link>
         </el-card>
       </el-col>
-      <el-col :sm="10" :lg="6">
+      <el-col :sm="12" :lg="6">
         <el-card class="home-header-item2" shadow="always">
           <router-link :to="{name:'comprehensiveQuery'}">
             <div class="text-light">综合查询</div>
@@ -278,14 +278,14 @@ export default {
           </router-link>
         </el-card>
       </el-col>
-      <el-col :sm="10" :lg="6">
+      <el-col :sm="12" :lg="6">
         <el-card class="home-header-item3" shadow="always">
           <p class="text-light">告警</p>
           <img class="warnImage"
             src="@/assets/warning.png" alt="">
         </el-card>
       </el-col>
-      <el-col :sm="10" :lg="6">
+      <el-col :sm="12" :lg="6">
         <el-card class="home-header-item4" shadow="always">
           <p class="text-light">统计分析</p>
           <img class="statisticsImage"
@@ -294,9 +294,9 @@ export default {
       </el-col>
     </el-row>
     <el-row class="home-header" :gutter="15">
-      <el-col :lg="12" :sm="20">
+      <el-col :lg="12">
         <el-row class="left" :gutter="15">
-          <el-col :lg="24">
+          <el-col :lg="24" :sm="24">
             <el-card shadow="always">
               <div class="btn-group" data-toggle="buttons" aria-label="First group">
                 <div class="btn" :class="{colorChange:1 == dynamic}" @click="chart_reload(1)">
@@ -328,7 +328,7 @@ export default {
           </el-col>
         </el-row>
       </el-col>
-      <el-col :lg="12" :sm="20">
+      <el-col :lg="12">
         <el-row class="right" :gutter="15">
           <el-col :lg="24">
             <el-row :gutter="15">
