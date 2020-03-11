@@ -252,6 +252,7 @@ export default {
       });
     },
     searchWell(){
+      this.cutType = 1;
       let data = {
         page: this.currentPage,
         well_type: this.wellCategory,
