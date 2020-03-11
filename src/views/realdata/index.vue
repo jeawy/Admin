@@ -78,11 +78,17 @@
       <el-table-column label="开/关井时间" width="150px" align="center">
         <template slot-scope="scope">{{scope.row.changed_time|dateTimeFormat}}</template>
       </el-table-column>
-      <!-- <el-table-column label="历史数据" width="100px" align="center">
+      <el-table-column label="历史数据" width="100px" align="center">
         <template slot-scope="scope">
-          <div @click="history(scope.row.wellid,scope.row.name,scope.row.factory,scope.row.mine,scope.row.status,scope.row.welltype)">历史数据</div>
+          <router-link
+            style="cursor: pointer;"
+            :to="{name:'well-detail',params:{id:scope.row.wellid},query:{type:scope.row.pro_type}}"
+          ><svg-icon icon-class="icon-history" /></router-link>
         </template>
-      </el-table-column> -->
+        <!-- <template slot-scope="scope">
+          <div @click="history(scope.row.wellid,scope.row.name,scope.row.factory,scope.row.mine,scope.row.status,scope.row.welltype)">历史数据</div>
+        </template> -->
+      </el-table-column>
       <el-table-column prop="frequency" label="频率(Hz)" width="100px" align="center"></el-table-column>
       <el-table-column prop="level" label="动液面(米)" width="100px" align="center"></el-table-column>
       <el-table-column prop="output" label="产量(吨)" align="center"></el-table-column>
