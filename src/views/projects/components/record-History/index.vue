@@ -37,8 +37,6 @@ export default {
       ApiGetWellRecord(lines).then(res => {
         // this.recorddata = data;
          this.recorddata = res.data;
-         console.log('11111')
-        console.log( this.recorddata)
       });
     },
        // 运行状态格式化显示

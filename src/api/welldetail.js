@@ -15,3 +15,11 @@ export function getHistoryData(params){
 export function ApiGetWellRecord(params){
     return AXIOS.get('/well/record/',{ params })
 }
+//填写实测数据
+export function ApiMeasureData(data) {
+    return AXIOS.post('/clientdata/clientdata/', data)
+}
+//获取实测数据
+export function ApiGetMeasureData(params){
+    return AXIOS.get('/clientdata/clientdata/',{ params })
+}

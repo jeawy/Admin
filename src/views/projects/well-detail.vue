@@ -121,17 +121,22 @@
           </el-row>
           <el-row>
             <el-tabs v-model="activeName">
-              <el-tab-pane label="产量及页面历史曲线" name="lineHistory">
+              <el-tab-pane label="产量及液面历史曲线" name="lineHistory">
                 <lineHistory ref="lineHistory" />
               </el-tab-pane>
-              <el-tab-pane label="产量及页面历史表格" name="tableHistory">
+              <el-tab-pane label="产量及液面历史表格" name="tableHistory">
                 <tableHistory ref="tableHistory" />
               </el-tab-pane>
               <el-tab-pane label="开关井记录" name="recordHistory">
                <recordHistory ref="recordHistory" />
               </el-tab-pane>
-              <el-tab-pane label="实测数据表格" name="measure-record"></el-tab-pane>
+              <el-tab-pane label="实测数据表格" name="relMeasure">
+              <relMeasure  ref="relMeasure"/>
+              </el-tab-pane>
             </el-tabs>
+          </el-row>
+          <el-row>
+          <dataOperation  ref="dataOperation"/> 
           </el-row>
         </div>
       </el-col>
@@ -144,12 +149,14 @@ import BarChart from "@/components/ECharts/BarMarker";
 import lineHistory from "./components/line-History/index";
 import tableHistory from "./components/table-History/index";
 import recordHistory from "./components/record-History/index";
+import relMeasure from "./components/rel-measure/index";
+import dataOperation from "./components/operation/index";
 import dayjs from "dayjs";
 import { ApiGetElectdata } from "@/api/realdata";
 import {
   getWellDetail,
   viewPowersMonth,
-  getHistoryData
+  getHistoryData,
 } from "@/api/welldetail";
 
 export default {
@@ -157,7 +164,9 @@ export default {
     BarChart,
     lineHistory,
     tableHistory,
-    recordHistory
+    recordHistory,
+    relMeasure,
+    dataOperation
   },
   data() {
     return {
@@ -348,6 +357,9 @@ export default {
       });
       this.$nextTick(() => {
         this.$refs["recordHistory"].getRecordData(this.$route.params.id);
+      });
+       this.$nextTick(() => {
+        this.$refs["relMeasure"].getMeasureData(this.$route.params.id);
       });
     }
   },
