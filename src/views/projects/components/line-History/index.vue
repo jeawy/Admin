@@ -22,15 +22,16 @@ export default {
   },
   methods: {
     //搜索日产量折线图
-    getOutputChart(id, data) {
+    getOutputChart(id, date) {
       function dataFormat(dateVal) {
         return dayjs(dateVal).format("MM/DD");
       }
       let lines = {};
       lines = {
-        id: id,
+        wellid: id,
         action: "line",
-        daterange: data
+        daterange: date,
+        welldetail:"",
       };
       getHistoryData(lines).then(({ data }) => {
         let output_list = [];

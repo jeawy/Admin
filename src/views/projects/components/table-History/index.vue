@@ -71,12 +71,13 @@ export default {
     //   }
     //   //
     // },
-    getHistoryData(wellid, data) {
+    getHistoryData(wellid, date) {
       let lines = {};
       lines = {
-        id: wellid,
+        wellid: wellid,
         action: "history",
-        daterange: data
+        daterange: date,
+        welldetail:""
       };
       ApiGetHistorydata(lines).then(res => {
         //  console.log(res)
