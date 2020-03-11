@@ -116,6 +116,16 @@
       <el-table-column prop="address" label="偏磨" align="center"></el-table-column>
       <el-table-column prop="address" label="流压" align="center"></el-table-column>
     </el-table>
+    <div class="block" style="text-align: right">
+        <el-pagination
+          @current-change="handleCurrentChange"
+          :current-page="currentPage"
+          :page-size="pageSize"
+          layout="total, prev, pager, next, jumper"
+          :total="total"
+          style="margin-top:10px"
+        ></el-pagination>
+      </div>
     <!-- 导出 -->
     <el-dialog title="Excel文件导出" :visible.sync="uploadVisible" width="400px" hieght="300px">
       <el-row>
@@ -270,12 +280,31 @@ export default {
             }
           }]
         },
+        total: 0,
+      pageCount: 0,
+      currentPage: 1,
+      pageSize: 20,
+      cutType: -1, //分页类型
     };
   },
   methods: {
+    //分页
+    handleCurrentChange(currentPage) {
+      this.currentPage = currentPage;
+      switch (this.cutType) {
+        case -1:
+          this.GetRealdata();//正常查看
+          break;
+        case 1:
+          this.searchWell(); //筛选分页查看
+          break;
+      }
+      // 
+    },
     GetRealdata() {
-      ApiGetRealdata({ realdata: "" }).then(res => {
+      ApiGetRealdata({ realdata: "" ,page:this.currentPage}).then(res => {
         this.realdata = res.data.realdata;
+        this.total = res.data.page_count;
       });
     },
     // handleClick(tab, event) {
@@ -305,28 +334,22 @@ export default {
     //    console.log("曲线图")
     // },
     searchWell() {
+      this.cutType=1;
       let data = {
+        page: this.currentPage,
         well_type: this.wellCategory,
         number: this.wellNumber,
         status: this.wellStatus
       };
       ApiGetRealdata(data).then(res => {
         this.realdata = res.data.realdata;
+        this.total = res.data.page_count;
       });
     },
-    //  searchWell(){
-    //   let data = {
-    //     // page: this.currentPage,
-    //     daterange:this.wellDatePicker[0]+'-'+this.wellDatePicker[1],
-    //   };
-    //   ApiGetRealdata(data).then(res => {
-    //     this.comprehensivedata = res.data.realdata;
-    //     this.total = res.data.page_count;
-    //   });
-    // },
     // 实时数据导出dialog
     targetUpload() {
       const data = {
+        page: this.currentPage,
         well_type: this.wellCategory,
         number: this.wellNumber,
         status: this.wellStatus,
