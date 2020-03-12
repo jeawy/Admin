@@ -137,10 +137,7 @@ export default {
           label: "已移除"
         }
       ],
-      uploadVisible: false,
-      path: null,
       total: 0,
-      pageCount: 0,
       currentPage: 1,
       pageSize: 20,
       cutType: -1, //分页类型
