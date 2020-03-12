@@ -44,6 +44,17 @@ export function wellStatus(code) {
           break;
   }
 }
+// DTU连接状态格式化显示
+export function dtuStatus(code) {
+    switch (code) {
+      case 0:
+        return "连接";
+        break;
+      case 1:
+        return "未连接";
+        break;
+    }
+}
 // 项目工作流格式化
 export function projectStatus(code) {
   switch (code) {
