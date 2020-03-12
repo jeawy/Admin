@@ -61,12 +61,14 @@
       <el-table-column  label="运行状态" width="120" align="center">
          <template slot-scope="scope">
            <div v-if="scope.row.status==0" class="cell-wellstatus">
-             {{scope.row.status|wellStatus}}
-             <img src="@/assets/on.png"/>
+            <span class="well-status">{{scope.row.status|wellStatus}}</span>
+             <!-- <img src="@/assets/on.png"/> -->
+             <svg-icon icon-class="wellon" />
            </div>
            <div v-if="scope.row.status==1" class="cell-wellstatus">
-             {{scope.row.status|wellStatus}}
-              <img src="@/assets/off.png"/>
+             <span class="well-status">{{scope.row.status|wellStatus}}</span>
+             <svg-icon icon-class="welloff" />
+              <!-- <img src="@/assets/off.png"/> -->
            </div>
          </template>
       </el-table-column>
@@ -397,6 +399,9 @@ export default {
   }
   .col-bg {
     padding:5px 2px 0 5px;
+  }
+  .well-status{
+    padding-right:5px
   }
   .cell-wellstatus{
     display: flex;

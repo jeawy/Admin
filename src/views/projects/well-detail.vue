@@ -11,7 +11,13 @@
               <div>
                 <el-row>
                   <label class="well_no">{{wellDetail.name}}</label>
-                  <img
+                  <span v-if="wellDetail.status == 0">
+                    <svg-icon icon-class="wellon" />
+                    </span>
+                  <span v-if="wellDetail.status == 1">
+                    <svg-icon icon-class="welloff" />
+                    </span>
+                  <!-- <img
                     src="@/assets/on.png"
                     style="vertical-align: middle;"
                     v-if="wellDetail.status == 0"
@@ -20,7 +26,7 @@
                     src="@/assets/off.png"
                     style="vertical-align: middle;"
                     v-if="wellDetail.status == 1"
-                  />
+                  /> -->
                   <div>{{wellDetail.well_type}}</div>
                   <div>开机时间:02/26 08:31:59</div>
                   <div>最大/小载荷:</div>
