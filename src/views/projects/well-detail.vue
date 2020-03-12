@@ -174,7 +174,7 @@ export default {
       activeName: "lineHistory",
       wellDetail: [],
       monthList: [],
-
+      num:'',
       pickerOptions: {
         shortcuts: [
           {
@@ -344,6 +344,12 @@ export default {
         ({ data }) => {
          // this.wellDetail = data.entities_list[0];
           this.wellDetail = data.well;
+          this.num=this.wellDetail.number;
+          // console.log('11111111')
+          // console.log(this.num)
+           this.$nextTick(() => {
+        this.$refs["dataOperation"].number=this.num;
+      });
         }
       );
       this.$nextTick(() => {
@@ -361,6 +367,7 @@ export default {
        this.$nextTick(() => {
         this.$refs["relMeasure"].getMeasureData(this.$route.params.id);
       });
+      
     }
   },
   created() {

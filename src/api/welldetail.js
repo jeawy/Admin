@@ -23,3 +23,11 @@ export function ApiMeasureData(data) {
 export function ApiGetMeasureData(params){
     return AXIOS.get('/clientdata/clientdata/',{ params })
 }
+//获取指令列表
+export function ApiGetOrders(params){
+    return AXIOS.get('/orders/orders/',{ params })
+}
+//创建指令
+export function ApiCreateOrder(data) {
+    return AXIOS.post('/orders/orders/', data)
+}
