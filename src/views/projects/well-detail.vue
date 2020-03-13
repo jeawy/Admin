@@ -13,10 +13,10 @@
                   <label class="well_no">{{wellDetail.name}}</label>
                   <span v-if="wellDetail.status == 0">
                     <svg-icon icon-class="wellon" />
-                    </span>
+                  </span>
                   <span v-if="wellDetail.status == 1">
                     <svg-icon icon-class="welloff" />
-                    </span>
+                  </span>
                   <!-- <img
                     src="@/assets/on.png"
                     style="vertical-align: middle;"
@@ -26,7 +26,7 @@
                     src="@/assets/off.png"
                     style="vertical-align: middle;"
                     v-if="wellDetail.status == 1"
-                  /> -->
+                  />-->
                   <div>{{wellDetail.well_type}}</div>
                   <div>开机时间:02/26 08:31:59</div>
                   <div>最大/小载荷:</div>
@@ -134,15 +134,15 @@
                 <tableHistory ref="tableHistory" />
               </el-tab-pane>
               <el-tab-pane label="开关井记录" name="recordHistory">
-               <recordHistory ref="recordHistory" />
+                <recordHistory ref="recordHistory" />
               </el-tab-pane>
               <el-tab-pane label="实测数据表格" name="relMeasure">
-              <relMeasure  ref="relMeasure"/>
+                <relMeasure ref="relMeasure" />
               </el-tab-pane>
             </el-tabs>
           </el-row>
           <el-row>
-          <dataOperation  ref="dataOperation"/> 
+            <dataOperation ref="dataOperation" />
           </el-row>
         </div>
       </el-col>
@@ -162,7 +162,7 @@ import { ApiGetElectdata } from "@/api/realdata";
 import {
   getWellDetail,
   viewPowersMonth,
-  getHistoryData,
+  getHistoryData
 } from "@/api/welldetail";
 
 export default {
@@ -180,7 +180,8 @@ export default {
       activeName: "lineHistory",
       wellDetail: [],
       monthList: [],
-      num:'',
+      num: "",
+      auth: "",
       pickerOptions: {
         shortcuts: [
           {
@@ -341,21 +342,21 @@ export default {
         this.$route.params.id,
         dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
       );
-      
-      
     },
     //井的详情信息
     getWellDetails() {
       getWellDetail({ id: this.$route.params.id, json: "" }).then(
         ({ data }) => {
-         // this.wellDetail = data.entities_list[0];
+          // this.wellDetail = data.entities_list[0];
           this.wellDetail = data.well;
-          this.num=this.wellDetail.number;
-          // console.log('11111111')
-          // console.log(this.num)
-           this.$nextTick(() => {
-        this.$refs["dataOperation"].number=this.num;
-      });
+          this.num = this.wellDetail.number;
+          this.auth = data.auth.order;
+          this.$nextTick(() => {
+            this.$refs["dataOperation"].number = this.num;
+          });
+          this.$nextTick(() => {
+            this.$refs["dataOperation"].auth = this.auth;
+          });
         }
       );
       this.$nextTick(() => {
@@ -370,10 +371,9 @@ export default {
       this.$nextTick(() => {
         this.$refs["recordHistory"].getRecordData(this.$route.params.id);
       });
-       this.$nextTick(() => {
+      this.$nextTick(() => {
         this.$refs["relMeasure"].getMeasureData(this.$route.params.id);
       });
-      
     }
   },
   created() {

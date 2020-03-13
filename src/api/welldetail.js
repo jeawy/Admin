@@ -31,3 +31,7 @@ export function ApiGetOrders(params){
 export function ApiCreateOrder(data) {
     return AXIOS.post('/orders/orders/', data)
 }
+//删除指令
+export function ApiDeleteOrder(data) {
+    return AXIOS.post('/orders/orders/?put', data)
+}

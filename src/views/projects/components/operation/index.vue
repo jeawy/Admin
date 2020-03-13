@@ -2,19 +2,19 @@
   <div id="dataOperation">
     <el-row :gutter="20">
       <el-col :span="4">
-        <el-button type="primary" class="btn" @click="openDialog(1)" size="medium">固定调参</el-button>
+        <el-button type="primary" class="btn" @click="openDialog(1)" size="medium"  v-if="auth">固定调参</el-button>
       </el-col>
       <el-col :span="4">
-        <el-button type="warning" class="btn" @click="openDialog(2)" size="medium">自动调参</el-button>
+        <el-button type="warning" class="btn" @click="openDialog(2)" size="medium"  v-if="auth">自动调参</el-button>
       </el-col>
       <el-col :span="4">
-        <el-button type="primary" class="btn" @click="openDialog(3)" size="medium">参量修改</el-button>
+        <el-button type="primary" class="btn" @click="openDialog(3)" size="medium"  v-if="auth">参量修改</el-button>
       </el-col>
       <el-col :span="5">
-        <el-button type="success" class="btn" @click="openDialog(4)" size="medium">发送实测值</el-button>
+        <el-button type="success" class="btn" @click="openDialog(4)" size="medium"  v-if="auth">发送实测值</el-button>
       </el-col>
       <el-col :span="6">
-        <el-button type="warning" class="btn" @click="openDialog(5)" size="medium">直接指令发送</el-button>
+        <el-button type="warning" class="btn" @click="openDialog(5)" size="medium"  v-if="auth">直接指令发送</el-button>
       </el-col>
     </el-row>
     <el-row>
@@ -40,7 +40,20 @@
           <template slot-scope="scope">{{scope.row.exe_date|dateTimeFormat}}</template>
         </el-table-column>
         <el-table-column prop="result" label="执行结果" width="100px" align="center"></el-table-column>
+         <el-table-column label="操作" align="center" width="100px" v-if="auth">
+             <template slot-scope="scope">
+            <el-tooltip effect="dark" content="删除" placement="top">
+              <el-button
+                @click="deleteOrder(scope.row.id)"
+                icon="el-icon-delete"
+                style="color:red"
+                type="text"
+              />
+            </el-tooltip>
+              </template>
+         </el-table-column>
       </el-table>
+
     </el-row>
     <el-dialog title="调频" :visible.sync="dialogVisible1" width="380px">
       <el-form :model="freguencyModal" ref="freguency-modal" label-width="100px" :rules="rules">
@@ -149,7 +162,8 @@
 import {
   ApiGetWellRecord,
   ApiGetOrders,
-  ApiCreateOrder
+  ApiCreateOrder,
+  ApiDeleteOrder
 } from "@/api/welldetail";
 import dayjs from "dayjs";
 export default {
@@ -157,6 +171,7 @@ export default {
   data() {
     return {
       number: "",
+      auth:"",
       id: this.$route.params.id,
       orderList: [],
       data: "",
@@ -432,6 +447,21 @@ export default {
         }
       });
 
+    },
+     //指令删除
+    deleteOrder(id) {
+      this.$confirm("此操作将永久删除指令, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        ApiDeleteOrder({ id: id,method: "delete",}).then(({ data }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            this.getOrderList();
+          }
+        });
+      });
     },
     Status: function(row, column) {
       switch (row.status) {
