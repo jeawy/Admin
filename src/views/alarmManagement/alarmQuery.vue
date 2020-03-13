@@ -1,16 +1,16 @@
 <template>
-  <div id="alarmQuery">
+  <div id="alarmList">
       <el-row class="row-bg">
-        <el-col class="col-bg">
+        <el-col class="col-bg" :span="3">
           井名:
         </el-col>
-        <el-col>
+        <el-col :span="3">
           <el-input class="input" v-model="wellName"></el-input>
         </el-col>
-        <el-col class="col-bg type">
+        <el-col :span="3" class="col-bg type">
           告警类型:
         </el-col>
-        <el-col>
+        <el-col :span="3">
           <el-select v-model="alarmCategory" placeholder="请选择" style="width:130px;" filterable>
             <el-option
               v-for="item in category"
@@ -20,10 +20,10 @@
             ></el-option>
           </el-select>
         </el-col>
-        <el-col class="col-bg">
+        <el-col class="col-bg alarmtime" :span="3">
           告警时间:
         </el-col>
-        <el-col type="flex">
+        <el-col :span="3" type="flex">
           <el-date-picker
             class="datePicker"
             v-model="alarmDatePicker"
@@ -38,19 +38,13 @@
             value-format="yyyy/MM/dd"
           ></el-date-picker>
         </el-col>
-        <el-col class="col-bg">
+        <el-col class="col-bg way" :span="3">
           产生方式:
         </el-col>
-        <el-col>
-          <el-input class="input" v-model="productWay"></el-input>
-        </el-col>
-        <el-col class="col-bg">
-          告警状态:
-        </el-col>
-        <el-col>
-          <el-select v-model="alarmStatus" placeholder="请选择" style="width:130px;" filterable>
+        <el-col :span="3">
+          <el-select v-model="productWay" placeholder="请选择" style="width:130px;" filterable>
             <el-option
-              v-for="item in status1"
+              v-for="item in way"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -59,29 +53,29 @@
         </el-col>
       </el-row>
       <el-row class="row-bg">
-        <el-col class="col-bg">
+        <el-col class="col-bg" :span="1">
           处置人:
         </el-col>
-        <el-col>
+        <el-col :span="1">
           <el-input class="input" v-model="handleMan"></el-input>
         </el-col>
-        <el-col class="col-bg">
-          处置状态:
+        <el-col class="col-bg alarmstatus" :span="1">
+          告警状态:
         </el-col>
-        <el-col>
-          <el-select v-model="handleStatus" placeholder="请选择" style="width:130px;" filterable>
+        <el-col :span="2">
+          <el-select v-model="alarmStatus" placeholder="请选择" style="width:130px;" filterable>
             <el-option
-              v-for="item in status2"
+              v-for="item in status"
               :key="item.value"
               :label="item.label"
               :value="item.value"
             ></el-option>
           </el-select>
         </el-col>
-        <el-col class="col-bg">
+        <el-col class="col-bg processtime" :span="1">
           处置时间:
         </el-col>
-        <el-col>
+        <el-col :span="4">
           <el-date-picker
             class="datePicker"
             v-model="handleDatePicker"
@@ -96,33 +90,105 @@
             value-format="yyyy/MM/dd"
           ></el-date-picker>
         </el-col>
-        <el-col>
-          <el-button type="primary" style="height:27.99px;margin-left:10px" @click="searchWell()">点击查询</el-button>
+        <el-col :span="1">
+          <el-button type="primary" style="height:27.99px;margin-left:10px" @click="search()">点击查询</el-button>
         </el-col>
       </el-row>
     <el-table
-      :data="comprehensivedata"
+      :data="alarmList"
       stripe
       :border="true"
       style="width: 100%;"
       :header-cell-style="{color:'#212529',fontSize:'16px',fontWeight:400}"
       :row-style="{fontSize:'16px',color:'#212529;',fontWeight:400,}"
     >
-      <el-table-column type="index" width="100" label="序号" align="center"></el-table-column>
-      <el-table-column prop="welltype" width="100" label="井" align="center"></el-table-column>
-      <el-table-column prop="welltype" width="120" label="告警类型" align="center"></el-table-column>
-      <el-table-column prop="welltype" width="120" label="告警标题" align="center"></el-table-column>
-      <el-table-column prop="welltype" width="120" label="产生方式" align="center"></el-table-column>
-      <el-table-column label="告警时间" width="170px" align="center">
-        <template slot-scope="scope">{{scope.row.time|dateTimeFormat}}</template>
+      <el-table-column type="index" width="60" label="序号" align="center"></el-table-column>
+      <el-table-column prop="well" width="120" label="井" align="center"></el-table-column>
+      <el-table-column width="110" label="告警类型" align="center">
+        <template slot-scope="scope">
+          <div v-if="scope.row.category==0">
+            开关井异常
+          </div>
+          <div v-if="scope.row.category==1">
+            动液面异常
+          </div>
+          <div v-if="scope.row.category==2">
+            日产量告警
+          </div>
+        </template>
       </el-table-column>
-      <el-table-column prop="welltype" width="120" label="告警状态" align="center"></el-table-column>
-      <el-table-column prop="welltype" width="120" label="告警处置" align="center"></el-table-column>
-      <el-table-column prop="welltype" width="80" label="处置人" align="center"></el-table-column>
-      <el-table-column label="处置时间" width="160px" align="center">
-        <template slot-scope="scope">{{scope.row.time|dateTimeFormat}}</template>
+      <el-table-column prop="title" width="220" label="告警标题" align="center"></el-table-column>
+      <el-table-column width="120" label="产生方式" align="center">
+        <template slot-scope="scope">
+          <div v-if="scope.row.way==0">
+            <span>系统自动</span>
+            <svg-icon icon-class="xitong" />
+          </div>
+          <div v-if="scope.row.way==1">
+            <span>人为手动</span>
+            <svg-icon icon-class="renwei" />
+          </div>
+        </template>
       </el-table-column>
-      <el-table-column prop="welltype" width="120" label="处置状态" align="center"></el-table-column>
+      <el-table-column label="告警时间" width="150px" align="center">
+        <template slot-scope="scope">{{scope.row.date|dateTimeFormat}}</template>
+      </el-table-column>
+      <el-table-column width="110" label="告警状态" align="center">
+        <template slot-scope="scope">
+          <div v-if="scope.row.status==0">
+            <span>新增</span>
+            <svg-icon icon-class="xinzeng" />
+          </div>
+          <div v-if="scope.row.status==1">
+            <span>忽略</span>
+            <svg-icon icon-class="hulve" />
+          </div>
+          <div v-if="scope.row.status==2">
+            <span>关闭</span>
+            <svg-icon icon-class="guanbi" />
+          </div>
+          <div v-if="scope.row.status==3||scope.row.status==4">
+            <span>误报</span>
+            <svg-icon icon-class="wubao" />
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column width="100" label="告警处置" align="center">
+        <template slot-scope="scope">
+          <router-link
+            style="cursor: pointer;color:blue"
+            :to="{name:'alarmDetail',params:{id:scope.row.wellid},query:{type:scope.row.pro_type}}"
+          >处置详情</router-link>
+        </template>
+      </el-table-column>
+      <el-table-column prop="username" width="80" label="处置人" align="center"></el-table-column>
+      <el-table-column label="处置时间" width="150px" align="center">
+        <template slot-scope="scope">{{scope.row.modify_date|dateTimeFormat}}</template>
+      </el-table-column>
+      <el-table-column prop="welltype" width="110" label="处置状态" align="center">
+        <template slot-scope="scope">
+          <div v-if="scope.row.status==0">
+            <span>未处置</span>
+            <svg-icon icon-class="weichuzhi" />
+          </div>
+          <div v-if="scope.row.status==1">
+            <span>忽略</span>
+            <svg-icon icon-class="hulve" />
+          </div>
+          <div v-if="scope.row.status==2">
+            <span>关闭</span>
+            <svg-icon icon-class="guanbi" />
+          </div>
+          <div v-if="scope.row.status==3">
+            <span>误报</span>
+            <svg-icon icon-class="wubao" />
+          </div>
+          <div v-if="scope.row.status==4">
+            <span>已处置</span>
+            <svg-icon icon-class="yichuzhi" />
+          </div>
+        </template>
+      </el-table-column>
     </el-table>
     <div class="block" style="text-align: right">
         <el-pagination
@@ -137,16 +203,28 @@
   </div>
 </template>
 <script>
-import { ApiGetRealdata, getDetail } from "@/api/realdata";
+import { ApiAlarmQuery } from "@/api/alarmManagement";
 export default {
   data() {
     return {
-      alarmQuery: [],
+      alarmList: [],
       alarmCategory: "",
       alarmStatus: "",
       alarmDatePicker: "",
       handleDatePicker:"",
       handleStatus:"",
+      handleMan:null,
+      productWay:null,
+      way:[
+        {
+          value: "0",
+          label: "系统自动"
+        },
+        {
+          value: "1",
+          label: "人为手动"
+        }
+      ],
       category: [
         {
           value: "0",
@@ -154,15 +232,16 @@ export default {
         },
         {
           value: "1",
-          label: "动液面高度异常"
+          label: "动液面异常"
         },
         {
           value: "2",
-          label: "日产量异常"
+          label: "日产量告警"
         }
       ],
+      username:"",
       wellName: null,
-      status1: [
+      status: [
         {
           value: "0",
           label: "新增"
@@ -178,28 +257,13 @@ export default {
         {
           value: "3",
           label: "误报"
-        }
-      ],
-      status2: [
-        {
-          value: "0",
-          label: "忽略"
         },
         {
-          value: "1",
-          label: "关闭"
-        },
-        {
-          value: "2",
-          label: "误报"
-        },
-        {
-          value: "3",
+          value: "4",
           label: "已处置"
-        }
+        },
+
       ],
-      uploadVisible: false,
-      path: null,
       pickerOptions: {
           shortcuts: [{
             text: '今天',
@@ -239,7 +303,6 @@ export default {
       currentPage: 1,
       pageSize: 20,
       cutType: -1, //分页类型
-      // pageSizeList: [20, 30, 50, 100],
 
     };
   },
@@ -249,32 +312,35 @@ export default {
       this.currentPage = currentPage;
       switch (this.cutType) {
         case -1:
-          this.GetcomprehensiveData();//正常查看
+          this.GetalarmList();//正常查看
           break;
         case 1:
-          this.searchWell(); //筛选分页查看
+          this.search(); //筛选分页查看
           break;
       }
       // 
     },
-    GetcomprehensiveData() {
-      ApiGetRealdata({page:this.currentPage}).then(res => {
-        this.comprehensivedata = res.data.realdata;
-        this.total = res.data.page_count;
+    GetalarmList() {
+      ApiAlarmQuery({page:this.currentPage}).then(res => {
+        this.alarmList = res.data.msg.warnings;
+        this.total = res.data.msg.total;
       });
     },
-    searchWell(){
+    search(){
       this.cutType = 1;
       let data = {
+        well_name:this.wellName,
+        category:this.alarmCategory,
+        warning_date:this.alarmDatePicker[0]+'-'+this.alarmDatePicker[1],
+        way:this.productWay,
+        status:this.alarmStatus,
+        username:this.handleMan,
+        deal_date:this.handleDatePicker[0]+'-'+this.handleDatePicker[1],
         page: this.currentPage,
-        well_type: this.wellCategory,
-        number: this.wellNumber,
-        status: this.wellStatus,
-        daterange:this.wellDatePicker[0]+'-'+this.wellDatePicker[1],
       };
-      ApiGetRealdata(data).then(res => {
-        this.comprehensivedata = res.data.realdata;
-        this.total = res.data.page_count;
+      ApiAlarmQuery(data).then(res => {
+        this.alarmList = res.data.msg.warnings;
+        this.total = res.data.msg.total;
       });
     },
     // 运行状态格式化显示
@@ -293,12 +359,12 @@ export default {
     }
   },
   created() {
-    this.GetcomprehensiveData();
+    this.GetalarmList();
   }
 };
 </script>
 <style lang="scss">
-#alarmQuery {
+#alarmList {
   //   font-size: 12px;
   background-color: #f4f5f5;
   .links {
@@ -313,6 +379,9 @@ export default {
   }
   .col-bg {
     padding:5px 2px 0 5px;
+  }
+  .type{
+    margin-left:14px;
   }
   .datePicker{
     width:210px
