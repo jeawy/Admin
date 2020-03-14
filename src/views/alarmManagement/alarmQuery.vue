@@ -161,7 +161,7 @@
               </el-col>
             </el-row>
             <div slot="reference">
-              <el-button type="primary" style="height:27.99px;margin-left:27px">添加告警</el-button>
+              <el-button type="primary" :disabled="disabled" style="height:27.99px;margin-left:27px">添加告警</el-button>
             </div>
           </el-popover>
         </el-col>
@@ -389,7 +389,8 @@ export default {
       visible:false,
       wellid:"",
       alarmTitle:"",
-      content:""
+      content:"",
+      disabled:true
     };
   },
   methods: {
@@ -411,6 +412,9 @@ export default {
       ApiAlarmQuery({page:this.currentPage}).then(({ data }) => {
         this.alarmList = data.msg.warnings;
         this.total = data.msg.total;
+        if(data.msg.auth.manage_warning == true){
+          this.disabled = false
+        }
       });
     },
     //告警查询
