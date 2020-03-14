@@ -93,6 +93,78 @@
         <el-col :span="1">
           <el-button type="primary" style="height:27.99px;margin-left:10px" @click="search()">点击查询</el-button>
         </el-col>
+        <el-col :span="1">
+          <el-popover placement="right" trigger="click" width="250" v-model="visible">
+            <el-row>
+              <el-col :span="24">
+                <el-row>
+                  <el-col :span="8">井ID:</el-col>
+                  <el-col :span="16"><el-input v-model="wellid" placeholder="请输入井的ID"/></el-col>
+                </el-row>
+                <el-row style="height:8px"/>
+                <el-row>
+                  <el-col :span="8">告警类型:</el-col>
+                  <el-col :span="16">
+                    <el-select v-model="alarmCategory" placeholder="请选择告警类型" filterable>
+                      <el-option
+                        v-for="item in category"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      ></el-option>
+                    </el-select>
+                  </el-col>
+                </el-row>
+                <el-row style="height:8px"/>
+                <el-row>
+                  <el-col :span="8">告警标题:</el-col>
+                  <el-col :span="16"><el-input v-model="alarmTitle" placeholder="请输入告警标题"/></el-col>
+                </el-row>
+                <el-row style="height:8px"/>
+                <el-row>
+                  <el-col :span="8">产生方式:</el-col>
+                  <el-col :span="16">
+                    <el-select v-model="productWay" placeholder="请选择产生方式" filterable>
+                      <el-option
+                        v-for="item in way"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      ></el-option>
+                    </el-select>
+                  </el-col>
+                </el-row>
+                <el-row style="height:8px"/>
+                <el-row>
+                  <el-col :span="8">告警内容:</el-col>
+                  <el-col :span="16"><el-input v-model="content" placeholder="请输入告警内容"/></el-col>
+                </el-row>
+                <el-row style="height:8px"/>
+                <el-row>
+                  <el-col :span="8">告警状态:</el-col>
+                  <el-col :span="16">
+                    <el-select v-model="alarmStatus" placeholder="请选择告警状态" filterable>
+                      <el-option
+                        v-for="item in status"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      ></el-option>
+                    </el-select>
+                  </el-col>
+                </el-row>
+                <el-row style="height:20px"/>
+                <el-row>
+                  <el-col :span="12"><el-button size="mini" type="primary" @click="visible = false">取消</el-button></el-col>
+                  <el-col :span="12"><el-button type="primary" size="mini" @click="addWell">确定</el-button></el-col>
+                </el-row>
+              </el-col>
+            </el-row>
+            <div slot="reference">
+              <el-button type="primary" style="height:27.99px;margin-left:27px">添加告警</el-button>
+            </div>
+          </el-popover>
+        </el-col>
       </el-row>
     <el-table
       :data="alarmList"
@@ -157,7 +229,7 @@
         <template slot-scope="scope">
           <router-link
             style="cursor: pointer;color:blue"
-            :to="{name:'alarmDetail',params:{id:scope.row.wellid},query:{type:scope.row.pro_type}}"
+            :to="{name:'alarmDetail',params:{id:scope.row.id},query:{type:scope.row.pro_type}}"
           >处置详情</router-link>
         </template>
       </el-table-column>
@@ -203,19 +275,22 @@
   </div>
 </template>
 <script>
-import { ApiAlarmQuery } from "@/api/alarmManagement";
+import { ApiAlarmQuery,ApiaddAlarm} from "@/api/alarmManagement";
 export default {
   data() {
     return {
       alarmList: [],
-      alarmCategory: "",
-      alarmStatus: "",
+      alarmCategory: "-1",
+      alarmStatus: "-1",
       alarmDatePicker: "",
       handleDatePicker:"",
-      handleStatus:"",
       handleMan:null,
-      productWay:null,
+      productWay:"-1",
       way:[
+        {
+          value: "-1",
+          label: "全部"
+        },
         {
           value: "0",
           label: "系统自动"
@@ -226,6 +301,10 @@ export default {
         }
       ],
       category: [
+        {
+          value: "-1",
+          label: "全部"
+        },
         {
           value: "0",
           label: "开关井异常"
@@ -242,6 +321,10 @@ export default {
       username:"",
       wellName: null,
       status: [
+        {
+          value: "-1",
+          label: "全部"
+        },
         {
           value: "0",
           label: "新增"
@@ -303,7 +386,10 @@ export default {
       currentPage: 1,
       pageSize: 20,
       cutType: -1, //分页类型
-
+      visible:false,
+      wellid:"",
+      alarmTitle:"",
+      content:""
     };
   },
   methods: {
@@ -320,12 +406,14 @@ export default {
       }
       // 
     },
+    //获取告警列表
     GetalarmList() {
-      ApiAlarmQuery({page:this.currentPage}).then(res => {
-        this.alarmList = res.data.msg.warnings;
-        this.total = res.data.msg.total;
+      ApiAlarmQuery({page:this.currentPage}).then(({ data }) => {
+        this.alarmList = data.msg.warnings;
+        this.total = data.msg.total;
       });
     },
+    //告警查询
     search(){
       this.cutType = 1;
       let data = {
@@ -356,6 +444,23 @@ export default {
           return "设备已被移除";
           break;
       }
+    },
+    //添加告警
+    addWell(){
+      let data = {
+        well_id:this.wellid,
+        category:this.alarmCategory,
+        title:this.alarmTitle,
+        way:this.productWay,
+        detail:this.content,
+        status:this.alarmStatus
+      };
+      ApiaddAlarm(data).then(({ data }) => {
+        if(data.status == 0){
+          this.GetalarmList();
+          this.visible = false
+        }
+      });
     }
   },
   created() {
@@ -388,6 +493,13 @@ export default {
   }
   .input{
     width:120px
+  }
+  .wellInfo{
+    margin-top:10px;
+    display:flex
+  }
+  .text{
+    width:100px;
   }
   .cell-wellstatus{
     display: flex;
