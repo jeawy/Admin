@@ -5,3 +5,7 @@ export function ApiAlarmQuery(params) {
     params
   })
 }
+//添加告警
+export function ApiaddAlarm(data) {
+  return AXIOS.post('/warning/warning/', data)
+}
