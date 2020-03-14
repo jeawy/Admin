@@ -280,9 +280,11 @@ export default {
       </el-col>
       <el-col :sm="12" :lg="6">
         <el-card class="home-header-item3" shadow="always">
-          <p class="text-light">告警</p>
-          <img class="warnImage"
-            src="@/assets/warning.png" alt="">
+          <router-link :to="{name:'alarmQuery'}">
+            <div class="text-light">告警查询</div>
+            <img class="queryImage"
+                src="@/assets/warning.png" alt="">
+          </router-link>
         </el-card>
       </el-col>
       <el-col :sm="12" :lg="6">
@@ -402,12 +404,14 @@ export default {
                   <el-col style="height:15px"></el-col>
                   <el-col :lg="24">
                     <el-card shadow="always">
-                      <div style="display:flex">
-                        <img
+                      <router-link :to="{name:'wellList'}">
+                        <div style="display:flex">
+                          <img
                               style="width: 82px;height: 78px;margin-top:10px"
                               src="@/assets/info.jpg" alt="">
-                        <div class="prompt-text" style="margin-left:20px;margin-top:30px">基础信息</div>
-                      </div>
+                          <div class="prompt-text" style="margin-left:20px;margin-top:30px">基础信息</div>
+                        </div>
+                      </router-link>
                     </el-card>
                   </el-col>
                 </el-row>
