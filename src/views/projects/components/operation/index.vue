@@ -268,7 +268,7 @@ export default {
   methods: {
     //获取指令列表
     getOrderList() {
-      ApiGetOrders().then(res => {
+      ApiGetOrders({ wellid: this.id}).then(res => {
         this.orderList = res.data.msg;
       });
     },
@@ -301,7 +301,7 @@ export default {
           this.$message.success(res.data.msg);
           this.dialogVisible1 = false;
           this.freguencyModal = {};
-          this.getOrderList();
+          this.getOrderList(this.id);
         } else {
           this.$message.error(res.data.msg);
           this.freguencyModal = {};
@@ -314,7 +314,7 @@ export default {
         if (res.data.status === 0) {
           this.$message.success(res.data.msg);
           this.dialogVisible2 = false;
-          this.getOrderList();
+          this.getOrderList(this.id);
         } else {
           this.$message.error(res.data.msg);
         }
@@ -376,7 +376,7 @@ export default {
           this.$message.success(res.data.msg);
           this.dialogVisible3 = false;
           this.paramModal = {};
-          this.getOrderList();
+          this.getOrderList(this.id);
         } else {
           this.$message.error(res.data.msg);
           this.paramModal = {};
@@ -402,7 +402,7 @@ export default {
           this.$message.success(res.data.msg);
           this.dialogVisible4 = false;
           this.readdataBtn = {};
-          this.getOrderList();
+          this.getOrderList(this.id);
         } else {
           this.$message.error(res.data.msg);
           this.readdataBtn = {};
@@ -440,7 +440,7 @@ export default {
           this.$message.success(res.data.msg);
           this.dialogVisible5= false;
           this.anyOrderModal = {};
-          this.getOrderList();
+          this.getOrderList(this.id);
         } else {
           this.$message.error(res.data.msg);
           this.anyOrderModal = {};
@@ -458,7 +458,7 @@ export default {
         ApiDeleteOrder({ id: id,method: "delete",}).then(({ data }) => {
           if (data.status === 0) {
             this.$message.success(data.msg);
-            this.getOrderList();
+            this.getOrderList(this.id);
           }
         });
       });
