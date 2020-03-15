@@ -93,7 +93,7 @@
         <el-col :span="1">
           <el-button type="primary" style="height:27.99px;margin-left:10px" @click="search()">点击查询</el-button>
         </el-col>
-        <el-col :span="1">
+        <el-col :span="1" v-if="disabled">
           <el-popover placement="right" trigger="click" width="250" v-model="visible">
             <el-row>
               <el-col :span="24">
@@ -161,7 +161,7 @@
               </el-col>
             </el-row>
             <div slot="reference">
-              <el-button type="primary" :disabled="disabled" style="height:27.99px;margin-left:27px">添加告警</el-button>
+              <el-button type="primary" style="height:27.99px;margin-left:27px">添加告警</el-button>
             </div>
           </el-popover>
         </el-col>
@@ -190,7 +190,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="title" width="220" label="告警标题" align="center"></el-table-column>
-      <el-table-column width="120" label="产生方式" align="center">
+      <el-table-column width="110" label="产生方式" align="center">
         <template slot-scope="scope">
           <div v-if="scope.row.way==0">
             <span>系统自动</span>
@@ -205,27 +205,44 @@
       <el-table-column label="告警时间" width="150px" align="center">
         <template slot-scope="scope">{{scope.row.date|dateTimeFormat}}</template>
       </el-table-column>
-      <el-table-column width="110" label="告警状态" align="center">
-        <template slot-scope="scope">
-          <div v-if="scope.row.status==0">
-            <span>新增</span>
-            <svg-icon icon-class="xinzeng" />
-          </div>
-          <div v-if="scope.row.status==1">
-            <span>忽略</span>
-            <svg-icon icon-class="hulve" />
-          </div>
-          <div v-if="scope.row.status==2">
-            <span>关闭</span>
-            <svg-icon icon-class="guanbi" />
-          </div>
-          <div v-if="scope.row.status==3||scope.row.status==4">
-            <span>误报</span>
-            <svg-icon icon-class="wubao" />
-          </div>
+      <el-table-column width="105" label="告警状态" align="center">
+         <template slot-scope="scope">
+          <el-select 
+            v-model="scope.row.status" 
+            placeholder="请选择" 
+            v-if="editing&&clickId === scope.row.id">
+            <el-option
+              v-for="item in status"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+          <span v-if="!editing||clickId !== scope.row.id">
+            <div v-if="scope.row.status==0">
+              <span>新增</span>
+              <svg-icon icon-class="xinzeng" />
+            </div>
+            <div v-if="scope.row.status==1">
+              <span>忽略</span>
+              <svg-icon icon-class="hulve" />
+            </div>
+            <div v-if="scope.row.status==2">
+              <span>关闭</span>
+              <svg-icon icon-class="guanbi" />
+            </div>
+            <div v-if="scope.row.status==3">
+              <span>误报</span>
+              <svg-icon icon-class="wubao" />
+            </div>
+            <div v-if="scope.row.status==4">
+              <span>已处置</span>
+              <svg-icon icon-class="yichuzhi" />
+            </div>
+          </span>
         </template>
       </el-table-column>
-      <el-table-column width="100" label="告警处置" align="center">
+      <el-table-column width="95" label="告警处置" align="center">
         <template slot-scope="scope">
           <router-link
             style="cursor: pointer;color:blue"
@@ -233,11 +250,11 @@
           >处置详情</router-link>
         </template>
       </el-table-column>
-      <el-table-column prop="username" width="80" label="处置人" align="center"></el-table-column>
+      <el-table-column prop="username" width="70" label="处置人" align="center"></el-table-column>
       <el-table-column label="处置时间" width="150px" align="center">
         <template slot-scope="scope">{{scope.row.modify_date|dateTimeFormat}}</template>
       </el-table-column>
-      <el-table-column prop="welltype" width="110" label="处置状态" align="center">
+      <!-- <el-table-column prop="welltype" width="110" label="处置状态" align="center">
         <template slot-scope="scope">
           <div v-if="scope.row.status==0">
             <span>未处置</span>
@@ -260,6 +277,37 @@
             <svg-icon icon-class="yichuzhi" />
           </div>
         </template>
+      </el-table-column> -->
+      <el-table-column label="操作" align="center" width="140" show-overflow v-if="disabled">
+        <template slot-scope="scope">
+          <el-tooltip effect="dark" content="修改告警状态" placement="top">
+            <el-button
+              v-if="!editing||clickId !== scope.row.id"
+              type="primary"
+              icon="el-icon-edit"
+              @click="editAlarm(scope.row)"
+            />
+          </el-tooltip>
+          <el-tooltip effect="dark" content="保存修改" placement="top">
+            <el-button
+              v-if="editing&&clickId === scope.row.id"
+              type="success"
+              icon="el-icon-check"
+              @click="saveEdit(scope.$index,scope.row)"
+            />
+          </el-tooltip>
+          <el-tooltip effect="dark" content="取消" placement="top">
+            <el-button v-if="editing&&clickId === scope.row.id" type="primary" icon="el-icon-error" @click="cancleAlarm(scope.row)" />
+          </el-tooltip>
+
+          <el-tooltip effect="dark" content="删除告警" placement="top">
+              <el-button 
+              v-if="!editing||clickId !== scope.row.id" 
+              icon="el-icon-delete" 
+              type="danger"   
+              @click="deleteAlarm(scope.row.id)"/>
+          </el-tooltip>
+        </template>
       </el-table-column>
     </el-table>
     <div class="block" style="text-align: right">
@@ -275,13 +323,13 @@
   </div>
 </template>
 <script>
-import { ApiAlarmQuery,ApiaddAlarm} from "@/api/alarmManagement";
+import { ApiAlarmQuery,ApiaddAlarm,ApiDeleteAlarm,ApiPutAlarm} from "@/api/alarmManagement";
 export default {
   data() {
     return {
       alarmList: [],
       alarmCategory: "-1",
-      alarmStatus: "-1",
+      alarmStatus: "",
       alarmDatePicker: "",
       handleDatePicker:"",
       handleMan:null,
@@ -321,10 +369,6 @@ export default {
       username:"",
       wellName: null,
       status: [
-        {
-          value: "-1",
-          label: "全部"
-        },
         {
           value: "0",
           label: "新增"
@@ -390,7 +434,12 @@ export default {
       wellid:"",
       alarmTitle:"",
       content:"",
-      disabled:true
+      disabled:false,
+      editing: false,
+      clickId: null,
+      iconShow: false,
+      list:[],
+      Info:[]
     };
   },
   methods: {
@@ -413,7 +462,7 @@ export default {
         this.alarmList = data.msg.warnings;
         this.total = data.msg.total;
         if(data.msg.auth.manage_warning == true){
-          this.disabled = false
+          this.disabled = true
         }
       });
     },
@@ -461,9 +510,73 @@ export default {
       };
       ApiaddAlarm(data).then(({ data }) => {
         if(data.status == 0){
+          this.$message.success(data.msg);
           this.GetalarmList();
           this.visible = false
+        }else{
+          this.$message.error(data.msg);
         }
+      });
+    },
+    //修改告警状态
+    editAlarm(row) {
+      this.list = JSON.stringify(row);
+      if (this.iconShow === true) {
+        this.$confirm("当前修改未保存", "注意", {
+          confirmButtonText: "确定",
+          concelButtonText: "取消",
+          type: "warning"
+        });
+      } else {
+        this.editing = true;
+        this.clickId = row.id;
+      }
+    },
+    //取消修改
+    cancleAlarm(row) {
+        this.Info = JSON.parse(this.list);
+        row.status = this.Info.status;
+        this.editing = false;
+        this.iconShow = false;
+    },
+    //删除告警
+    deleteAlarm(id){
+      this.$confirm("是否删除该用户?", "提示", {
+        confirmButtonText: "确认",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        ApiDeleteAlarm({ ids: id, method: "delete " }).then(({ data }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            this.GetalarmList();
+          } else {
+            this.$message.error(data.msg);
+          }
+        });
+      });
+    },
+    //保存修改
+    saveEdit(index, row) {
+      this.$confirm("确定保存当前修改？", "注意", {
+        confirmButtonText: "确定",
+        concelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        this.iconShow = false;
+        ApiPutAlarm({
+          method: "put",
+          id: row.id,
+          status:row.status
+        }).then(({ data }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+            this.editing = false;
+            this.GetalarmList();
+          } else {
+            this.$message.error(data.msg);
+          }
+        });
       });
     }
   },

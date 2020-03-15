@@ -9,3 +9,11 @@ export function ApiAlarmQuery(params) {
 export function ApiaddAlarm(data) {
   return AXIOS.post('/warning/warning/', data)
 }
+//删除告警
+export function ApiDeleteAlarm(data) {
+  return AXIOS.post('/warning/warning/?delete', data)
+}
+//修改告警处置状态
+export function ApiPutAlarm(data) {
+  return AXIOS.post('/warning/warning/?put', data)
+}
