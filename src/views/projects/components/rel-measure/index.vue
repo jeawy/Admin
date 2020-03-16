@@ -12,14 +12,25 @@
         :header-cell-style="{color:'#212529',fontSize:'16px',fontWeight:400}"
         :row-style="{fontSize:'16px',color:'#212529;',fontWeight:400,}"
       >
-        <el-table-column type="index" width="80" label="序号" align="center"></el-table-column>
+        <el-table-column type="index"  label="序号" align="center"></el-table-column>
         <!-- <el-table-column label="井号" width="100px" align="center"></el-table-column> -->
-        <el-table-column label="上报时间" width="150px" align="center">
+        <el-table-column label="上报时间"  align="center">
           <template slot-scope="scope">{{scope.row.time|dateFormat}}</template>
         </el-table-column>
-        <el-table-column label="实测液面(米)" width="150px" align="center" prop="level"></el-table-column>
-        <el-table-column label="实测产量(吨)" width="150px" align="center" prop="output"></el-table-column>
+        <el-table-column label="实测液面(米)"  align="center" prop="level"></el-table-column>
+        <el-table-column label="实测产量(吨)" align="center" prop="output"></el-table-column>
       </el-table>
+       <div class="block" style="text-align: right">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="pageSizeList"
+        :page-size="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+      ></el-pagination>
+    </div>
     </el-row>
     <el-dialog title="填写实测数据" :visible.sync="dialogVisible" width="380px">
       <el-form :model="measureForm" ref="measure-form" label-width="100px" :rules="rules">
@@ -72,17 +83,40 @@ export default {
       id: this.$route.params.id,
       measureData: [],
       measuredata: [],
-      rules: {}
+      rules: {},
+      currentPage: 1,
+      pageSize: 20,
+      pageSizeList: [20, 30, 50, 100],
+      total: 0,
+      cutType: -1, //分页类型
+     
     };
   },
   methods: {
     openDialog() {
       this.dialogVisible = true;
     },
+      //分页
+    handleSizeChange(val) {
+      this.pageSize = val;
+    },
+    handleCurrentChange(currentPage) {
+      this.currentPage = currentPage;
+       switch (this.cutType) {
+        case -1:
+          this.getMeasureData(this.id);
+          break;
+       }
+    },
+    //解决索引旨在当前页排序的问题，增加函数自定义索引序号
+    indexMethod(index) {
+      return (this.currentPage - 1) * this.pageSize + index + 1;
+    },
     //获取实测数据
     getMeasureData(wellid) {
-      ApiGetMeasureData({ wellid: wellid }).then(res => {
+      ApiGetMeasureData({ wellid: wellid,page:this.currentPage,pagenum:20 }).then(res => {
         this.measureData = res.data.msg.datas;
+         this.total = res.data.msg.totalcount;
       });
     },
     submitForm(measureForm) {
