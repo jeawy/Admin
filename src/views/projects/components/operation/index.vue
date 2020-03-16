@@ -58,7 +58,7 @@
     <el-dialog title="调频" :visible.sync="dialogVisible1" width="380px">
       <el-form :model="freguencyModal" ref="freguency-modal" label-width="100px" :rules="rules">
         <el-form-item label="频率" prop="freguency">
-          <el-input-number v-model="freguencyModal.freguency" :precision="1" :step="0.1" :max="10"></el-input-number>
+          <el-input-number v-model="freguencyModal.freguency" :precision="1" :step="0.1" ></el-input-number>
         </el-form-item>
         <div class="butn">
           <el-button @click="cancel">取消</el-button>
