@@ -28,7 +28,8 @@
                     v-if="wellDetail.status == 1"
                   />-->
                   <div>{{wellDetail.well_type}}</div>
-                  <div>开机时间:02/26 08:31:59</div>
+                   <div v-if="wellDetail.status == 0">开机时间:{{wellDetail.changed_date|dateTimeFormat}}</div>
+                   <div v-if="wellDetail.status == 1">关机时间{{wellDetail.changed_date|dateTimeFormat}}</div>
                   <div>最大/小载荷:</div>
                   <div>配产：</div>
                 </el-row>
@@ -126,7 +127,7 @@
             </div>
           </el-row>
           <el-row>
-            <el-tabs v-model="activeName">
+            <el-tabs v-model="activeName" style="margin-left:10px;">
               <el-tab-pane label="产量及液面历史曲线" name="lineHistory">
                 <lineHistory ref="lineHistory" />
               </el-tab-pane>
