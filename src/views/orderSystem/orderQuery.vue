@@ -1,21 +1,20 @@
 <template>
   <div id="orderList">
-    <el-row>
+    <el-row style="margin-bottom:10px;">
       <el-col :span="1">井名:</el-col>
       <el-col :span="4">
         <el-input class="input" v-model="wellName"></el-input>
       </el-col>
       <el-col :span="2" style="margin-left:10px;">指令下发时间:</el-col>
-      <el-col :span="6">
+      <el-col :span="5">
         <el-date-picker
           v-model="orderTime"
           type="daterange"
-          range-separator="至"
+          range-separator="-"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          style="width:290px;"
+          style="width:240px;"
         ></el-date-picker>
-          <!-- <el-button type="primary" @click="OrderSearch()">点击查询</el-button> -->
       </el-col>
       <el-col :span="3">
         <el-button type="primary" @click="OrderSearch()">点击查询</el-button>
@@ -31,13 +30,17 @@
       :header-cell-style="{color:'#212529',fontSize:'16px',fontWeight:400}"
       :row-style="{fontSize:'16px',color:'#212529;',fontWeight:400,}"
     >
-      <el-table-column type="index" label="序号" align="center"></el-table-column>
+      <el-table-column type="index" label="序号" width="80px;" align="center"></el-table-column>
       <el-table-column prop="wellname" label="井名称" align="center"></el-table-column>
+        <el-table-column prop="user" label="指令下发人" align="center" width="110px;"></el-table-column>
+         <el-table-column label="指令下发时间" align="center" width="110px;">
+        <template slot-scope="scope">{{scope.row.date|dateTimeFormat}}</template>
+      </el-table-column>
       <el-table-column
         prop="order_type"
         label="指令类型"
         :formatter="Order_type"
-        width="200px"
+        width="150px"
         align="center"
       ></el-table-column>
       <el-table-column prop="text" label="指令说明" align="center"></el-table-column>
