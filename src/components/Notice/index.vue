@@ -18,57 +18,15 @@
             <svg-icon icon-class="people2" style="width:50px;height:50px;"></svg-icon>
           </el-col>
           <el-col :span="14">
-            <el-row style="f5ont-size:20px"></el-row>
+            <el-row style="font-size:20px"></el-row>
             <el-col>{{loginMessage.msg}}</el-col>
-            <el-row style="padding-top:10px">
+            <el-row style="padding-top:30px">
               <el-col :span="4">邮箱：</el-col>
               <el-col :span="20">{{loginMessage.email}}</el-col>
             </el-row>
-            <el-row style="padding-top:10px">
-              <el-col :span="4">工种：</el-col>
-              <el-col :span="20">
-                <el-col
-                  :span="6"
-                  v-for="(item,index) of loginMessage.dept"
-                  :key="index"
-                  style="cursor: pointer"
-                >
-                  <el-tooltip effect="dark" content="点击跳转工种详情" placement="top">
-                    <router-link :to="{path:'/admin/userGroup',query:{id:item.id}}">{{item.name}}</router-link>
-                  </el-tooltip>
-                </el-col>
-              </el-col>
-            </el-row>
+           
           </el-col>
-          <el-col :span="5">
-            <el-popover trigger="click" placement="bottom" width="400">
-              <el-row>
-                <el-col :span="8">
-                  <el-steps direction="vertical" :active="active" :space="200">
-                    <el-step title="上班 9:00" icon="el-icon-user"></el-step>
-                    <el-step title="下班 18:00" icon="el-icon-user-solid"></el-step>
-                  </el-steps>
-                </el-col>
-                <el-col :span="16" align="center" style="padding-top:45px">
-                  <el-button
-                    type="primary"
-                    circle
-                    style="width:150px;height:150px"
-                    @click="clock()"
-                    :disabled="clockClose"
-                  >
-                    <el-row style="padding-bottom:20px">
-                      <h2>打卡</h2>
-                    </el-row>
-                    <el-row>{{date}}</el-row>
-                  </el-button>
-                </el-col>
-              </el-row>
-              <el-button slot="reference" type="text">
-                <svg-icon icon-class="clock-in" style="width:50px;height:50px;"></svg-icon>
-              </el-button>
-            </el-popover>
-          </el-col>
+         
         </el-row>
       </div>
       <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -132,25 +90,7 @@
         <el-tab-pane label="个人资料" name="fifth">
           <NoticeInfo :userInfo="userInfo" />
         </el-tab-pane>
-        <el-tab-pane label="打卡记录" name="sixth">
-          <el-table
-            :data="clockRed"
-            ref="clockRed"
-            :header-cell-style="{background:'#eef1f6',color:'#606266'}"
-            highlight-current-row
-          >
-            <el-table-column prop="user_name" label="用户名"></el-table-column>
-            <el-table-column prop="date" label="打卡日期">
-              <template slot-scope="scope">{{scope.row.date|dateFormat}}</template>
-            </el-table-column>
-            <el-table-column prop="come" label="上班时间">
-              <template slot-scope="scope">{{scope.row.come|dateHMSFormat}}</template>
-            </el-table-column>
-            <el-table-column prop="leave" label="下班时间">
-              <template slot-scope="scope">{{scope.row.leave|dateHMSFormat}}</template>
-            </el-table-column>
-          </el-table>
-        </el-tab-pane>
+      
       </el-tabs>
     </Drawer>
   </div>
