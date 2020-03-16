@@ -1,7 +1,7 @@
 <template>
   <div id="detail">
     <el-row :gutter="20">
-      <el-col :span="9">
+      <el-col :span="9" :sm="24" :lg="12">
         <div class="left">
           <el-row>
             <el-col :span="13">
@@ -102,7 +102,7 @@
           <BarChart ref="poweryear" chart-id="poweryear" style="width:100%;height:380px;" />
         </div>
       </el-col>
-      <el-col :span="15">
+      <el-col :span="15" :sm="24" :lg="12">
         <div class="right">
           <el-row>
             <div class="selectTime">
