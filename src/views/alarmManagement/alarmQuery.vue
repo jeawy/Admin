@@ -1,6 +1,6 @@
 <template>
   <div id="alarmList">
-      <el-row class="row-bg">
+      <el-row class="row-bg" :sm="24" :lg="24">
         <el-col class="col-bg" :span="3">
           井名:
         </el-col>
@@ -93,7 +93,7 @@
         <el-col :span="1">
           <el-button type="primary" style="height:27.99px;margin-left:10px" @click="search()">点击查询</el-button>
         </el-col>
-        <el-col :span="1" v-if="disabled">
+        <el-col :span="1">
           <el-popover placement="right" trigger="click" width="250" v-model="visible">
             <el-row>
               <el-col :span="24">
@@ -161,15 +161,15 @@
               </el-col>
             </el-row>
             <div slot="reference">
-              <el-button type="primary" style="height:27.99px;margin-left:27px">添加告警</el-button>
+              <el-button type="primary" style="height:27.99px;margin-left:27px" @click="addAlarm()">添加告警</el-button>
             </div>
           </el-popover>
         </el-col>
       </el-row>
     <el-table
       :data="alarmList"
-      stripe
       :border="true"
+      highlight-current-row
       style="width: 100%;"
       :header-cell-style="{color:'#212529',fontSize:'16px',fontWeight:400}"
       :row-style="{fontSize:'16px',color:'#212529;',fontWeight:400,}"
@@ -278,7 +278,7 @@
           </div>
         </template>
       </el-table-column> -->
-      <el-table-column label="操作" align="center" width="140" show-overflow v-if="disabled">
+      <el-table-column label="操作" align="center" show-overflow>
         <template slot-scope="scope">
           <el-tooltip effect="dark" content="修改告警状态" placement="top">
             <el-button
@@ -313,9 +313,11 @@
     <div class="block" style="text-align: right">
         <el-pagination
           @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
           :current-page="currentPage"
           :page-size="pageSize"
-          layout="total, prev, pager, next, jumper"
+          :page-sizes="pageSizeList"
+          layout="total, sizes, prev, pager, next, jumper"
           :total="total"
           style="margin-top:10px"
         ></el-pagination>
@@ -328,17 +330,15 @@ export default {
   data() {
     return {
       alarmList: [],
-      alarmCategory: "-1",
+      alarmCategory: "",
       alarmStatus: "",
       alarmDatePicker: "",
+      alarmDate:"",
+      handleDate:"",
       handleDatePicker:"",
       handleMan:null,
-      productWay:"-1",
+      productWay:"",
       way:[
-        {
-          value: "-1",
-          label: "全部"
-        },
         {
           value: "0",
           label: "系统自动"
@@ -349,10 +349,6 @@ export default {
         }
       ],
       category: [
-        {
-          value: "-1",
-          label: "全部"
-        },
         {
           value: "0",
           label: "开关井异常"
@@ -429,6 +425,7 @@ export default {
       pageCount: 0,
       currentPage: 1,
       pageSize: 20,
+      pageSizeList: [20, 30, 50, 100],
       cutType: -1, //分页类型
       visible:false,
       wellid:"",
@@ -444,6 +441,10 @@ export default {
   },
   methods: {
     //分页
+    handleSizeChange(val) {
+      this.pageSize = val;
+      this.GetalarmList();
+    },
     handleCurrentChange(currentPage) {
       this.currentPage = currentPage;
       switch (this.cutType) {
@@ -458,7 +459,7 @@ export default {
     },
     //获取告警列表
     GetalarmList() {
-      ApiAlarmQuery({page:this.currentPage}).then(({ data }) => {
+      ApiAlarmQuery({page:this.currentPage,pagenum:this.pageSize}).then(({ data }) => {
         this.alarmList = data.msg.warnings;
         this.total = data.msg.total;
         if(data.msg.auth.manage_warning == true){
@@ -469,14 +470,24 @@ export default {
     //告警查询
     search(){
       this.cutType = 1;
+      if(this.alarmDatePicker==""){
+        this.alarmDate = ''
+      }else{
+        this.alarmDate = this.alarmDatePicker[0]+'-'+this.alarmDatePicker[1]
+      }
+      if(this.handleDatePicker==""){
+        this.handleDate = ''
+      }else{
+        this.handleDate = this.handleDatePicker[0]+'-'+this.handleDatePicker[1]
+      }
       let data = {
         well_name:this.wellName,
         category:this.alarmCategory,
-        warning_date:this.alarmDatePicker[0]+'-'+this.alarmDatePicker[1],
+        warning_date:this.alarmDate,
         way:this.productWay,
         status:this.alarmStatus,
         username:this.handleMan,
-        deal_date:this.handleDatePicker[0]+'-'+this.handleDatePicker[1],
+        deal_date:this.handleDate,
         page: this.currentPage,
       };
       ApiAlarmQuery(data).then(res => {
@@ -521,15 +532,19 @@ export default {
     //修改告警状态
     editAlarm(row) {
       this.list = JSON.stringify(row);
-      if (this.iconShow === true) {
-        this.$confirm("当前修改未保存", "注意", {
-          confirmButtonText: "确定",
-          concelButtonText: "取消",
-          type: "warning"
-        });
-      } else {
-        this.editing = true;
-        this.clickId = row.id;
+      if(this.disabled==true){
+        if (this.iconShow === true) {
+          this.$confirm("当前修改未保存", "注意", {
+            confirmButtonText: "确定",
+            concelButtonText: "取消",
+            type: "warning"
+          });
+        } else {
+          this.editing = true;
+          this.clickId = row.id;
+        }
+      }else{
+        this.$message.error("您没有操作权限");
       }
     },
     //取消修改
@@ -541,20 +556,24 @@ export default {
     },
     //删除告警
     deleteAlarm(id){
-      this.$confirm("是否删除该用户?", "提示", {
-        confirmButtonText: "确认",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(() => {
-        ApiDeleteAlarm({ ids: id, method: "delete " }).then(({ data }) => {
-          if (data.status === 0) {
-            this.$message.success(data.msg);
-            this.GetalarmList();
-          } else {
-            this.$message.error(data.msg);
-          }
+      if(this.disabled==true){
+        this.$confirm("是否删除该用户?", "提示", {
+          confirmButtonText: "确认",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+          ApiDeleteAlarm({ ids: id, method: "delete " }).then(({ data }) => {
+            if (data.status === 0) {
+              this.$message.success(data.msg);
+              this.GetalarmList();
+            } else {
+              this.$message.error(data.msg);
+            }
+          });
         });
-      });
+      }else{
+        this.$message.error("您没有操作权限");
+      }
     },
     //保存修改
     saveEdit(index, row) {
@@ -578,6 +597,13 @@ export default {
           }
         });
       });
+    },
+    //告警
+    addAlarm(){
+      if(this.disabled == false){
+        this.visible = true
+        this.$message.error("您没有操作权限");
+      }
     }
   },
   created() {
