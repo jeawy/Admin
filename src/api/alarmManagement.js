@@ -17,3 +17,19 @@ export function ApiDeleteAlarm(data) {
 export function ApiPutAlarm(data) {
   return AXIOS.post('/warning/warning/?put', data)
 }
+//查看告警详情
+export function ApiAlarmDetail(params) {
+  return AXIOS.get('/warning/warning/?id=9151', {params})
+}
+//提交评论
+export function ApiSubmitComment(data) {
+  return AXIOS.post('/warning/comment/', data)
+}
+//删除评论
+export function ApiDeleteComment(data) {
+  return AXIOS.post('/warning/comment/?method=delete', data)
+}
+//获取评论管理权限
+export function ApiGetAuthority(params) {
+  return AXIOS.get('/warning/comment/', {params})
+}
