@@ -121,9 +121,11 @@
     <div class="block" style="text-align: right">
         <el-pagination
           @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
           :current-page="currentPage"
           :page-size="pageSize"
-          layout="total, prev, pager, next, jumper"
+          :page-sizes="pageSizeList"
+          layout="total, sizes, prev, pager, next, jumper"
           :total="total"
           style="margin-top:10px"
         ></el-pagination>
@@ -286,11 +288,16 @@ export default {
       pageCount: 0,
       currentPage: 1,
       pageSize: 20,
+      pageSizeList: [10, 20, 30, 50],
       cutType: -1, //分页类型
     };
   },
   methods: {
     //分页
+     handleSizeChange(val) {
+      this.pageSize = val;
+      this.GetRealdata();
+    },
     handleCurrentChange(currentPage) {
       this.currentPage = currentPage;
       switch (this.cutType) {
@@ -304,7 +311,7 @@ export default {
       // 
     },
     GetRealdata() {
-      ApiGetRealdata({ realdata: "" ,page:this.currentPage}).then(res => {
+      ApiGetRealdata({ realdata: "" ,page:this.currentPage,pagenum:this.pageSize}).then(res => {
         this.realdata = res.data.realdata;
         this.total = res.data.page_count;
       });
