@@ -87,9 +87,11 @@
     <div class="block" style="text-align: right">
         <el-pagination
           @current-change="handleCurrentChange"
+          @size-change="handleSizeChange"
           :current-page="currentPage"
           :page-size="pageSize"
-          layout="total, prev, pager, next, jumper"
+          :page-sizes="pageSizeList"
+          layout="total, sizes, prev, pager, next, jumper"
           :total="total"
           style="margin-top:10px"
         ></el-pagination>
@@ -103,7 +105,7 @@ export default {
     return {
       wellList: [],
       wellCategory: "-1",
-      wellStatus: "-1",
+      wellStatus: "",
       category: [
         {
           value: "-1",
@@ -121,10 +123,6 @@ export default {
       wellNumber: null,
       wellstatus: [
         {
-          value: "-1",
-          label: "全部"
-        },
-        {
           value: "0",
           label: "开井"
         },
@@ -140,11 +138,16 @@ export default {
       total: 0,
       currentPage: 1,
       pageSize: 20,
+      pageSizeList: [10, 20, 30, 50],
       cutType: -1, //分页类型
 
     };
   },
   methods: {
+     handleSizeChange(val) {
+      this.pageSize = val;
+      this.GetwellList();
+    },
     //分页
     handleCurrentChange(currentPage) {
       this.currentPage = currentPage;
@@ -159,7 +162,7 @@ export default {
       // 
     },
     GetwellList() {
-      ApiGetWellList({page:this.currentPage}).then(res => {
+      ApiGetWellList({page:this.currentPage,pagenum:this.pageSize}).then(res => {
         this.wellList = res.data.msg.well_list;
         this.total = res.data.msg.total;
       });
