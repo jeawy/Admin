@@ -1,17 +1,13 @@
 <template>
   <div id="alarmList">
-      <el-row class="row-bg" :sm="24" :lg="24">
-        <el-col class="col-bg" :span="3">
+      <el-row class="row-bg" :gutter="20">
+        <el-col class="col-bg">
           井名:
-        </el-col>
-        <el-col :span="3">
           <el-input class="input" v-model="wellName"></el-input>
         </el-col>
-        <el-col :span="3" class="col-bg type">
+        <el-col class="col-bg">
           告警类型:
-        </el-col>
-        <el-col :span="3">
-          <el-select v-model="alarmCategory" placeholder="请选择" style="width:130px;" filterable>
+          <el-select class="select" v-model="alarmCategory" placeholder="请选择" filterable>
             <el-option
               v-for="item in category"
               :key="item.value"
@@ -20,10 +16,8 @@
             ></el-option>
           </el-select>
         </el-col>
-        <el-col class="col-bg alarmtime" :span="3">
+        <el-col class="col-bg">
           告警时间:
-        </el-col>
-        <el-col :span="3" type="flex">
           <el-date-picker
             class="datePicker"
             v-model="alarmDatePicker"
@@ -33,16 +27,13 @@
             start-placeholder="开始时间"
             end-placeholder="结束时间"
             size="mini"
-            style="width:200px"
             :picker-options="pickerOptions"
             value-format="yyyy/MM/dd"
           ></el-date-picker>
         </el-col>
-        <el-col class="col-bg way" :span="3">
+        <el-col class="col-bg">
           产生方式:
-        </el-col>
-        <el-col :span="3">
-          <el-select v-model="productWay" placeholder="请选择" style="width:130px;" filterable>
+          <el-select class="select" v-model="productWay" placeholder="请选择" filterable>
             <el-option
               v-for="item in way"
               :key="item.value"
@@ -51,19 +42,13 @@
             ></el-option>
           </el-select>
         </el-col>
-      </el-row>
-      <el-row class="row-bg">
-        <el-col class="col-bg" :span="1">
+        <el-col class="col-bg">
           处置人:
-        </el-col>
-        <el-col :span="1">
           <el-input class="input" v-model="handleMan"></el-input>
         </el-col>
-        <el-col class="col-bg alarmstatus" :span="1">
+        <el-col class="col-bg">
           告警状态:
-        </el-col>
-        <el-col :span="2">
-          <el-select v-model="alarmStatus" placeholder="请选择" style="width:130px;" filterable>
+          <el-select class="select" v-model="alarmStatus" placeholder="请选择" filterable>
             <el-option
               v-for="item in status"
               :key="item.value"
@@ -72,10 +57,8 @@
             ></el-option>
           </el-select>
         </el-col>
-        <el-col class="col-bg processtime" :span="1">
+        <el-col class="col-bg">
           处置时间:
-        </el-col>
-        <el-col :span="4">
           <el-date-picker
             class="datePicker"
             v-model="handleDatePicker"
@@ -85,15 +68,14 @@
             start-placeholder="开始时间"
             end-placeholder="结束时间"
             size="mini"
-            style="width:200px"
             :picker-options="pickerOptions"
             value-format="yyyy/MM/dd"
           ></el-date-picker>
         </el-col>
-        <el-col :span="1">
-          <el-button type="primary" style="height:27.99px;margin-left:10px" @click="search()">点击查询</el-button>
+        <el-col>
+          <el-button type="primary" class="btn" @click="search()">点击查询</el-button>
         </el-col>
-        <el-col :span="1">
+        <el-col>
           <el-popover placement="right" trigger="click" width="250" v-model="visible">
             <el-row>
               <el-col :span="24">
@@ -161,20 +143,21 @@
               </el-col>
             </el-row>
             <div slot="reference">
-              <el-button type="primary" style="height:27.99px;margin-left:27px" @click="addAlarm()">添加告警</el-button>
+              <el-button type="primary" class="btn" @click="addAlarm()">添加告警</el-button>
             </div>
           </el-popover>
         </el-col>
       </el-row>
     <el-table
       :data="alarmList"
+      stripe
       :border="true"
       highlight-current-row
       style="width: 100%;"
       :header-cell-style="{color:'#212529',fontSize:'16px',fontWeight:400}"
       :row-style="{fontSize:'16px',color:'#212529;',fontWeight:400,}"
     >
-      <el-table-column type="index" width="60" label="序号" align="center"></el-table-column>
+      <el-table-column type="index" width="80" label="序号" align="center"></el-table-column>
       <el-table-column prop="well" width="120" label="井" align="center"></el-table-column>
       <el-table-column width="110" label="告警类型" align="center">
         <template slot-scope="scope">
@@ -190,7 +173,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="title" width="220" label="告警标题" align="center"></el-table-column>
-      <el-table-column width="110" label="产生方式" align="center">
+      <el-table-column width="120" label="产生方式" align="center">
         <template slot-scope="scope">
           <div v-if="scope.row.way==0">
             <span>系统自动</span>
@@ -202,10 +185,10 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="告警时间" width="150px" align="center">
+      <el-table-column label="告警时间" width="160px" align="center">
         <template slot-scope="scope">{{scope.row.date|dateTimeFormat}}</template>
       </el-table-column>
-      <el-table-column width="105" label="告警状态" align="center">
+      <el-table-column width="110" label="告警状态" align="center">
          <template slot-scope="scope">
           <el-select 
             v-model="scope.row.status" 
@@ -242,7 +225,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column width="95" label="告警处置" align="center">
+      <el-table-column width="100" label="告警处置" align="center">
         <template slot-scope="scope">
           <router-link
             style="cursor: pointer;color:blue"
@@ -250,8 +233,8 @@
           >处置详情</router-link>
         </template>
       </el-table-column>
-      <el-table-column prop="username" width="70" label="处置人" align="center"></el-table-column>
-      <el-table-column label="处置时间" width="150px" align="center">
+      <el-table-column prop="username" width="80" label="处置人" align="center"></el-table-column>
+      <el-table-column label="处置时间" width="160px" align="center">
         <template slot-scope="scope">{{scope.row.modify_date|dateTimeFormat}}</template>
       </el-table-column>
       <!-- <el-table-column prop="welltype" width="110" label="处置状态" align="center">
@@ -278,7 +261,7 @@
           </div>
         </template>
       </el-table-column> -->
-      <el-table-column label="操作" align="center" show-overflow>
+      <el-table-column label="操作" align="center" width="165px" show-overflow>
         <template slot-scope="scope">
           <el-tooltip effect="dark" content="修改告警状态" placement="top">
             <el-button
@@ -495,7 +478,7 @@ export default {
         this.total = res.data.msg.total;
       });
     },
-    // 运行状态格式化显示
+    //运行状态格式化显示
     Status: function(row, column) {
       switch (row.status) {
         case 0:
@@ -628,21 +611,19 @@ export default {
   .col-bg {
     padding:5px 2px 0 5px;
   }
-  .type{
-    margin-left:14px;
+  .input{
+    width:120px
+  }
+  .select{
+    width:140px
   }
   .datePicker{
     width:210px
   }
-  .input{
-    width:120px
-  }
-  .wellInfo{
-    margin-top:10px;
-    display:flex
-  }
-  .text{
-    width:100px;
+  .btn{
+   height:27.99px;
+   margin-left:10px;
+   margin-top:5px;
   }
   .cell-wellstatus{
     display: flex;

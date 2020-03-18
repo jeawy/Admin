@@ -80,7 +80,7 @@
            </div>
          </template>
       </el-table-column>
-      <el-table-column label="状态变动日期" align="center">
+      <el-table-column label="状态变动日期" align="center" width="220px">
         <template slot-scope="scope">{{scope.row.changed_time|dateTimeFormat}}</template>
       </el-table-column>
     </el-table>
