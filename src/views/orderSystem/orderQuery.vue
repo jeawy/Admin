@@ -1,11 +1,11 @@
 <template>
   <div id="orderList">
     <el-row style="margin-bottom:10px;">
-      <el-col :span="1">井名:</el-col>
-      <el-col :span="4">
+      <el-col :span="1"   style="margin-top:5px;">井名称:</el-col>
+      <el-col :span="3">
         <el-input class="input" v-model="wellName"></el-input>
       </el-col>
-      <el-col :span="2" style="margin-left:10px;">指令下发时间:</el-col>
+      <el-col :span="2" class="order" >指令下发时间:</el-col>
       <el-col :span="5">
         <el-date-picker
           v-model="orderTime"
@@ -19,8 +19,6 @@
       <el-col :span="3">
         <el-button type="primary" @click="OrderSearch()">点击查询</el-button>
       </el-col>
-      
-    
     </el-row>
     <el-table
       :data="orderList"
@@ -31,9 +29,9 @@
       :row-style="{fontSize:'16px',color:'#212529;',fontWeight:400,}"
     >
       <el-table-column type="index" label="序号" width="80px;" align="center"></el-table-column>
-      <el-table-column prop="wellname" label="井名称" align="center"></el-table-column>
-        <el-table-column prop="user" label="指令下发人" align="center" width="110px;"></el-table-column>
-         <el-table-column label="指令下发时间" align="center" width="110px;">
+      <el-table-column prop="wellname" label="井名称" align="center" width="110px;"></el-table-column>
+      <el-table-column prop="user" label="指令下发人" align="center" width="110px;"></el-table-column>
+      <el-table-column label="指令下发时间" align="center" width="150px;">
         <template slot-scope="scope">{{scope.row.date|dateTimeFormat}}</template>
       </el-table-column>
       <el-table-column
@@ -45,7 +43,7 @@
       ></el-table-column>
       <el-table-column prop="text" label="指令说明" align="center"></el-table-column>
       <el-table-column prop="order" label="指令代码" align="center"></el-table-column>
-      <el-table-column prop="status" label="状态" :formatter="Status" align="center"></el-table-column>
+      <el-table-column prop="status" label="状态" :formatter="Status" align="center" width="80px;"></el-table-column>
       <el-table-column label="执行日期" align="center">
         <template slot-scope="scope">{{scope.row.exe_date|dateTimeFormat}}</template>
       </el-table-column>
@@ -128,5 +126,10 @@ export default {
 #orderList {
   //   font-size: 12px;
   background-color: #f4f5f5;
+  .order{
+    margin-left:15px;
+    margin-top:5px;
+  }
+
 }
 </style>
