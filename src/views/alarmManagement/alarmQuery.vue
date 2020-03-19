@@ -143,9 +143,98 @@
               </el-col>
             </el-row>
             <div slot="reference">
-              <el-button type="primary" class="btn" @click="addAlarm()">添加告警</el-button>
+              <el-button type="primary" class="btn" v-if="disabled">添加告警</el-button>
             </div>
           </el-popover>
+        </el-col>
+        <el-col>
+          <el-button type="primary" class="btn" v-if="disabled" @click="dialog = true">告警设置</el-button> 
+          <el-drawer
+            title="告警设置"
+            :visible.sync="dialog"
+            direction="rtl"
+            style="margin-top:52px"
+            custom-class="drawer"
+            ref="drawer"
+            size="32%"
+            :modal="false"
+            >
+            <div class="drawer_content" style="margin-left:20px">
+              <el-row>
+                <span style="font-size:25px;font-weight:bold;">出现以下情况时系统自动告警</span>
+              </el-row>
+              <el-row style="height:30px"/>
+              <el-row>
+                <el-switch
+                  style="display: block"
+                  v-model="value1"
+                  active-color="#ff4949"
+                  inactive-color="#13ce66"
+                  active-text="停机"
+                  inactive-text="开机">
+                </el-switch>
+              </el-row>
+              <el-row style="height:30px"/>
+              <el-row>
+                <el-col :span="12">油压不在范围：
+                  <el-input v-model="oil_pressure1" style="width:40px"/> 至 <el-input v-model="oil_pressure2" style="width:40px"/>
+                </el-col>
+                <el-col :span="12">动液面不在范围：
+                  <el-input v-model="level1" style="width:40px"/> 至 <el-input v-model="level2" style="width:40px"/>
+                </el-col>
+              </el-row>
+              <el-row style="height:15px"/>
+              <el-row>
+                <el-col :span="12">日产量不在范围：
+                  <el-input v-model="output1" style="width:40px"/> 至 <el-input v-model="output2" style="width:40px"/>
+                </el-col>
+                <el-col :span="12">平衡度不在范围：
+                  <el-input v-model="balance1" style="width:40px"/> 至 <el-input v-model="balance2" style="width:40px"/>
+                </el-col>
+              </el-row>
+              <el-row style="height:15px"/>
+              <el-row>
+                <el-col :span="12">电压不在范围：
+                  <el-input v-model="voltage1" style="width:40px"/> 至 <el-input v-model="voltage2" style="width:40px"/>
+                </el-col>
+                <el-col :span="12">电流不在范围：
+                  <el-input v-model="electric_current1" style="width:40px"/> 至 <el-input v-model="electric_current2" style="width:40px"/>
+                </el-col>
+              </el-row>
+              <el-row style="height:15px"/>
+              <el-row>
+                <el-col :span="12">有功不在范围：
+                  <el-input v-model="active1" style="width:40px"/> 至 <el-input v-model="active2" style="width:40px"/>
+                </el-col>
+                <el-col :span="12">油温不在范围：
+                  <el-input v-model="oil_temperature1" style="width:40px"/> 至 <el-input v-model="oil_temperature2" style="width:40px"/>
+                </el-col>
+              </el-row>
+              <el-row style="height:15px"/>
+              <el-row>
+                <el-col :span="12">日耗电超出：
+                  <el-input v-model="power_consumption" style="width:40px"/>
+                </el-col>
+                <el-col :span="12">载荷不在范围：
+                  <el-input v-model="burden1" style="width:40px"/> 至 <el-input v-model="burden2" style="width:40px"/>
+                </el-col>
+              </el-row>
+              <el-row style="height:15px"/>
+              <el-row>
+                <el-col :span="12">频率不在范围：
+                  <el-input v-model="frequency1" style="width:40px"/> 至 <el-input v-model="frequency2" style="width:40px"/>
+                </el-col>
+                <el-col :span="12">套压不在范围：
+                  <el-input v-model="nesting_pressure1" style="width:40px"/> 至 <el-input v-model="nesting_pressure2" style="width:40px"/>
+                </el-col>
+              </el-row>
+              <el-row style="height:15px"/>
+              <div class="drawer_footer" style="margin-left:140px;margin-top:40px">
+                <el-button @click="cancel">取 消</el-button>
+                <el-button type="primary" @click="alarmSet">确 定</el-button>
+              </div>
+            </div>
+          </el-drawer>   
         </el-col>
       </el-row>
     <el-table
@@ -157,9 +246,9 @@
       :header-cell-style="{color:'#212529',fontSize:'16px',fontWeight:400}"
       :row-style="{fontSize:'16px',color:'#212529;',fontWeight:400,}"
     >
-      <el-table-column type="index" width="80" label="序号" align="center"></el-table-column>
-      <el-table-column prop="well" width="120" label="井" align="center"></el-table-column>
-      <el-table-column width="110" label="告警类型" align="center">
+      <el-table-column type="index" width="95" label="序号" align="center"></el-table-column>
+      <el-table-column prop="well" width="140" label="井" align="center"></el-table-column>
+      <el-table-column width="140" label="告警类型" align="center">
         <template slot-scope="scope">
           <div v-if="scope.row.category==0">
             开关井异常
@@ -172,8 +261,8 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="title" width="220" label="告警标题" align="center"></el-table-column>
-      <el-table-column width="120" label="产生方式" align="center">
+      <el-table-column prop="title" width="240" label="告警标题" align="center"></el-table-column>
+      <el-table-column width="140" label="产生方式" align="center">
         <template slot-scope="scope">
           <div v-if="scope.row.way==0">
             <span>系统自动</span>
@@ -185,13 +274,13 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="告警时间" width="160px" align="center">
+      <el-table-column label="告警时间" width="180px" align="center">
         <template slot-scope="scope">{{scope.row.date|dateTimeFormat}}</template>
       </el-table-column>
       <el-table-column width="110" label="告警状态" align="center">
          <template slot-scope="scope">
           <el-select 
-            v-model="scope.row.status" 
+            v-model="alarmStatus" 
             placeholder="请选择" 
             v-if="editing&&clickId === scope.row.id">
             <el-option
@@ -225,7 +314,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column width="100" label="告警处置" align="center">
+      <el-table-column width="110" label="告警处置" align="center">
         <template slot-scope="scope">
           <router-link
             style="cursor: pointer;color:blue"
@@ -233,8 +322,8 @@
           >处置详情</router-link>
         </template>
       </el-table-column>
-      <el-table-column prop="username" width="80" label="处置人" align="center"></el-table-column>
-      <el-table-column label="处置时间" width="160px" align="center">
+      <el-table-column prop="username" width="90" label="处置人" align="center"></el-table-column>
+      <el-table-column label="处置时间" width="180px" align="center">
         <template slot-scope="scope">{{scope.row.modify_date|dateTimeFormat}}</template>
       </el-table-column>
       <!-- <el-table-column prop="welltype" width="110" label="处置状态" align="center">
@@ -261,7 +350,7 @@
           </div>
         </template>
       </el-table-column> -->
-      <el-table-column label="操作" align="center" width="165px" show-overflow>
+      <el-table-column label="操作" align="center" width="165px" show-overflow v-if="disabled">
         <template slot-scope="scope">
           <el-tooltip effect="dark" content="修改告警状态" placement="top">
             <el-button
@@ -419,7 +508,32 @@ export default {
       clickId: null,
       iconShow: false,
       list:[],
-      Info:[]
+      Info:[],
+      dialog:false,
+      value1: true,
+      oil_pressure1:"",
+      oil_pressure2:"",
+      level1:"",
+      level2:"",
+      output1:"",
+      output2:"",
+      balance1:"",
+      balance2:"",
+      voltage1:"",
+      voltage2:"",
+      electric_current1:"",
+      electric_current2:"",
+      active1:"",
+      active2:"",
+      oil_temperature1:"",
+      oil_temperature2:"",
+      power_consumption:"",
+      burden1:"",
+      burden2:"",
+      frequency1:"",
+      frequency2:"",
+      nesting_pressure1:"",
+      nesting_pressure2:""
     };
   },
   methods: {
@@ -526,8 +640,6 @@ export default {
           this.editing = true;
           this.clickId = row.id;
         }
-      }else{
-        this.$message.error("您没有操作权限");
       }
     },
     //取消修改
@@ -540,7 +652,7 @@ export default {
     //删除告警
     deleteAlarm(id){
       if(this.disabled==true){
-        this.$confirm("是否删除该用户?", "提示", {
+        this.$confirm("是否删除该告警?", "提示", {
           confirmButtonText: "确认",
           cancelButtonText: "取消",
           type: "warning"
@@ -554,8 +666,6 @@ export default {
             }
           });
         });
-      }else{
-        this.$message.error("您没有操作权限");
       }
     },
     //保存修改
@@ -569,7 +679,7 @@ export default {
         ApiPutAlarm({
           method: "put",
           id: row.id,
-          status:row.status
+          status:this.alarmStatus
         }).then(({ data }) => {
           if (data.status === 0) {
             this.$message.success(data.msg);
@@ -581,12 +691,13 @@ export default {
         });
       });
     },
-    //告警
-    addAlarm(){
-      if(this.disabled == false){
-        this.visible = true
-        this.$message.error("您没有操作权限");
-      }
+    cancel() {
+      this.loading = false;
+      this.dialog = false;
+    },
+    alarmSet(){
+      this.loading = false;
+      this.dialog = false;
     }
   },
   created() {

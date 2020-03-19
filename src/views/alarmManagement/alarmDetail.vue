@@ -4,21 +4,22 @@
        <el-col :lg="12" class="left">
             <el-row :lg="24" class="top-item">
                 <el-card shadow="always">
-                    <div class="title">告警详情</div>
-                    <div class="text">告警产生时间:<span class="row-lg">{{alarmInfo.date|dateTimeFormat}}</span></div>
-                    <div class="text">告警标题:<span class="row-lg">{{alarmInfo.title}}</span></div>
-                    <div class="text">告警产生方式:
-                      <span class="row-lg" v-if="alarmInfo.way==0">系统自动</span>
-                      <span class="row-lg" v-if="alarmInfo.way==1">人为手动</span>
+                    <div class="title">告警详情：</div>
+                    <div style="display:flex">
+                      <div class="text">告警产生时间: <span class="row-lg">{{alarmInfo.date|dateTimeFormat}}</span></div>
+                      <div class="text" style="margin-left:80px;">告警产生方式:
+                        <span class="row-lg" v-if="alarmInfo.way==0">
+                          系统自动
+                          <svg-icon icon-class="xitong" />
+                        </span>
+                        <span class="row-lg" v-if="alarmInfo.way==1">
+                          人为手动
+                          <svg-icon icon-class="renwei" />
+                        </span>
+                      </div>
                     </div>
-                    <div class="text">告警状态:
-                      <span class="row-lg" v-if="alarmInfo.status==0">新增</span>
-                      <span class="row-lg" v-if="alarmInfo.status==1">忽略</span>
-                      <span class="row-lg" v-if="alarmInfo.status==2">关闭</span>
-                      <span class="row-lg" v-if="alarmInfo.status==3">误报</span>
-                      <span class="row-lg" v-if="alarmInfo.status==4">已处置</span>
-                    </div>
-                    <div class="text">告警类型：
+                    <div class="text">告警标题: <span class="row-lg">{{alarmInfo.title}}</span></div>
+                    <div class="text">告警类型:
                       <span class="row-lg" v-if="alarmInfo.category==0">
                         开关井异常
                       </span>
@@ -29,12 +30,34 @@
                         日产量告警
                       </span>
                     </div>
+                    <div class="text">告警状态:
+                      <span class="row-lg" v-if="alarmInfo.status==0">
+                        新增
+                        <svg-icon icon-class="xinzeng" />
+                      </span>
+                      <span class="row-lg" v-if="alarmInfo.status==1">
+                        忽略
+                        <svg-icon icon-class="hulve" />
+                      </span>
+                      <span class="row-lg" v-if="alarmInfo.status==2">
+                        关闭
+                        <svg-icon icon-class="guanbi" />
+                      </span>
+                      <span class="row-lg" v-if="alarmInfo.status==3">
+                        误报
+                        <svg-icon icon-class="wubao" />
+                      </span>
+                      <span class="row-lg" v-if="alarmInfo.status==4">
+                        已处置
+                        <svg-icon icon-class="yichuzhi" />
+                      </span>
+                    </div>
                 </el-card>
             </el-row>
             <el-row style="height:20px"></el-row>
             <el-row :lg="24" class="bottom-item">
                 <el-card shadow="always">
-                    <div class="title">告警处置过程</div>
+                    <div class="title">告警处置过程：</div>
                     <div class="text date">{{alarmInfo.date|dateTimeFormat}}</div>
                     <div class="text">
                       <span v-if="alarmInfo.way == 0"> 
@@ -47,20 +70,21 @@
                     <div v-if="alarmInfo.modify_date!==alarmInfo.date">
                       <div class="text date">{{alarmInfo.modify_date|dateTimeFormat}}</div>
                         <div class="text">
+                          <!-- <div>{{process}}</div> -->
                           <span v-if="alarmInfo.status == 0"> 
-                            {{alarmInfo.username}}将告警状态设置为【新增】
+                            {{alarmInfo.username}}将告警状态设置为【新增 <svg-icon icon-class="xinzeng" />】
                           </span>
                           <span v-if="alarmInfo.status == 1"> 
-                            {{alarmInfo.username}}将告警状态设置为【忽略】
+                            {{alarmInfo.username}}将告警状态设置为【忽略 <svg-icon icon-class="hulve" />】
                           </span>
                           <span v-if="alarmInfo.status == 2"> 
-                            {{alarmInfo.username}}将告警状态设置为【关闭】
+                            {{alarmInfo.username}}将告警状态设置为【关闭 <svg-icon icon-class="guanbi" />】
                           </span>
                           <span v-if="alarmInfo.status == 3"> 
-                            {{alarmInfo.username}}将告警状态设置为【误报】
+                            {{alarmInfo.username}}将告警状态设置为【误报 <svg-icon icon-class="wubao" />】
                           </span>
                           <span v-if="alarmInfo.status == 4"> 
-                            {{alarmInfo.username}}将告警状态设置为【已处置】
+                            {{alarmInfo.username}}将告警状态设置为【已处置 <svg-icon icon-class="yichuzhi" />】
                           </span>
                         </div>
                     </div>
@@ -84,12 +108,13 @@
           </template>
           <div>
             <div v-for="(item,index) of comment" :key="index">
-              <div class="text">
+              <div style="text">
                 <span>{{item.user.username}}</span>
                 <span class="commentDate">{{item.date|dateTimeFormat}}</span>
-                <el-button type="text" style="margin-left:10px" @click="deleteComment(item.id)">删除</el-button>
+                <el-button type="text" style="margin-left:10px" @click="deleteComment(item.id)" v-if="authority">删除</el-button>
               </div>
-              <div class="content">{{item.content}}</div>
+              <div>{{item.content}}</div>
+              <el-divider></el-divider>
             </div>
           </div>
         </el-card>
@@ -136,7 +161,8 @@ export default {
       ],
       commentContent:"",
       authority:false,
-      comment:[]
+      comment:[],
+      process:""
     };
   },
   methods: {
@@ -144,6 +170,7 @@ export default {
     GetalarmDetail() {
       ApiAlarmDetail({id: this.$route.params.id}).then(({data}) => {
         this.alarmInfo = data.msg;
+        this.process = data.msg.process;
         this.comment = data.msg.comment
       });
     },
@@ -158,7 +185,7 @@ export default {
     //删除评论
     deleteComment(id){
       if(this.authority == true){
-        this.$confirm("是否删除该用户?", "提示", {
+        this.$confirm("是否删除该评论?", "提示", {
           confirmButtonText: "确认",
           cancelButtonText: "取消",
           type: "warning"
@@ -170,8 +197,6 @@ export default {
             }
           });
         });
-      }else{
-        this.$message.error("您没有操作权限");
       }
     },
     //提交评论
@@ -208,10 +233,10 @@ export default {
   .home-header {
     .text{
       font-size:15px;
-      margin-top:10px
+      margin-top:12px
     }
     .row-lg{
-      margin-left:10px
+      margin-left:8px
     }
     .left {
       .title{
@@ -228,22 +253,18 @@ export default {
       }
       .top-item {
         .el-card {
-          height: 260px;
+          height: 220px;
         }
       }
       .bottom-item {
         .el-card {
-          height: 320px;
+          height: 360px;
         }
       }
     }
     .right {
       .el-card {
         height: 600px;
-      }
-      .content{
-        border: beige 2px solid;
-        padding:5px;
       }
       .comment{
         margin-top:10px;
