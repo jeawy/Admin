@@ -56,7 +56,8 @@
             </el-row>
             <el-row style="height:20px"></el-row>
             <el-row :lg="24" class="bottom-item">
-                <el-card shadow="always">
+                <el-card shadow="always" :body-style="{overflowY:'scroll',height:'170px'}">
+                  <template slot="header" type="flex">
                     <div class="title">告警处置过程：</div>
                     <div class="text date">{{alarmInfo.date|dateTimeFormat}}</div>
                     <div class="text">
@@ -67,27 +68,29 @@
                         {{alarmInfo.username}}手动创建了告警
                       </span>
                     </div>
-                    <div v-if="alarmInfo.modify_date!==alarmInfo.date">
-                      <div class="text date">{{alarmInfo.modify_date|dateTimeFormat}}</div>
-                        <div class="text">
-                          <!-- <div>{{process}}</div> -->
-                          <span v-if="alarmInfo.status == 0"> 
-                            {{alarmInfo.username}}将告警状态设置为【新增 <svg-icon icon-class="xinzeng" />】
-                          </span>
-                          <span v-if="alarmInfo.status == 1"> 
-                            {{alarmInfo.username}}将告警状态设置为【忽略 <svg-icon icon-class="hulve" />】
-                          </span>
-                          <span v-if="alarmInfo.status == 2"> 
-                            {{alarmInfo.username}}将告警状态设置为【关闭 <svg-icon icon-class="guanbi" />】
-                          </span>
-                          <span v-if="alarmInfo.status == 3"> 
-                            {{alarmInfo.username}}将告警状态设置为【误报 <svg-icon icon-class="wubao" />】
-                          </span>
-                          <span v-if="alarmInfo.status == 4"> 
-                            {{alarmInfo.username}}将告警状态设置为【已处置 <svg-icon icon-class="yichuzhi" />】
-                          </span>
-                        </div>
-                    </div>
+                    <!-- <div v-if="alarmInfo.modify_date!==alarmInfo.date"> -->
+                      <!-- <div class="text date">{{alarmInfo.modify_date|dateTimeFormat}}</div> -->
+                    <div class="processTitle">处置详情</div>
+                  </template>
+                  <div class="processContent">
+                    <div v-html="process">{{process}}</div>
+                      <!-- <span v-if="alarmInfo.status == 0"> 
+                        {{alarmInfo.username}}将告警状态设置为【新增 <svg-icon icon-class="xinzeng" />】
+                      </span>
+                      <span v-if="alarmInfo.status == 1"> 
+                        {{alarmInfo.username}}将告警状态设置为【忽略 <svg-icon icon-class="hulve" />】
+                      </span>
+                      <span v-if="alarmInfo.status == 2"> 
+                        {{alarmInfo.username}}将告警状态设置为【关闭 <svg-icon icon-class="guanbi" />】
+                      </span>
+                      <span v-if="alarmInfo.status == 3"> 
+                        {{alarmInfo.username}}将告警状态设置为【误报 <svg-icon icon-class="wubao" />】
+                      </span>
+                      <span v-if="alarmInfo.status == 4"> 
+                        {{alarmInfo.username}}将告警状态设置为【已处置 <svg-icon icon-class="yichuzhi" />】
+                      </span> -->
+                    <!-- </div> -->
+                  </div>
                 </el-card>
             </el-row>
       </el-col>
@@ -169,6 +172,7 @@ export default {
     //告警详情
     GetalarmDetail() {
       ApiAlarmDetail({id: this.$route.params.id}).then(({data}) => {
+        console.log(data)
         this.alarmInfo = data.msg;
         this.process = data.msg.process;
         this.comment = data.msg.comment
@@ -259,6 +263,15 @@ export default {
       .bottom-item {
         .el-card {
           height: 360px;
+        }
+        .processTitle{
+          font-size:18px;
+          font-weight: bold;
+          margin-top:15px;
+        }
+        .processContent{
+          font-size:15px;
+          margin-top:10px
         }
       }
     }
