@@ -251,13 +251,13 @@
       <el-table-column width="140" label="告警类型" align="center">
         <template slot-scope="scope">
           <div v-if="scope.row.category==0">
-            开关井异常
+            {{scope.row.category|alarmCategory}}
           </div>
           <div v-if="scope.row.category==1">
-            动液面异常
+            {{scope.row.category|alarmCategory}}
           </div>
           <div v-if="scope.row.category==2">
-            日产量告警
+            {{scope.row.category|alarmCategory}}
           </div>
         </template>
       </el-table-column>
@@ -265,11 +265,11 @@
       <el-table-column width="140" label="产生方式" align="center">
         <template slot-scope="scope">
           <div v-if="scope.row.way==0">
-            <span>系统自动</span>
+            <span>{{scope.row.way|alarmWay}}</span>
             <svg-icon icon-class="xitong" />
           </div>
           <div v-if="scope.row.way==1">
-            <span>人为手动</span>
+            <span>{{scope.row.way|alarmWay}}</span>
             <svg-icon icon-class="renwei" />
           </div>
         </template>
@@ -292,23 +292,23 @@
           </el-select>
           <span v-if="!editing||clickId !== scope.row.id">
             <div v-if="scope.row.status==0">
-              <span>新增</span>
+              <span>{{scope.row.status|alarmStatus}}</span>
               <svg-icon icon-class="xinzeng" />
             </div>
             <div v-if="scope.row.status==1">
-              <span>忽略</span>
+              <span>{{scope.row.status|alarmStatus}}</span>
               <svg-icon icon-class="hulve" />
             </div>
             <div v-if="scope.row.status==2">
-              <span>关闭</span>
+              <span>{{scope.row.status|alarmStatus}}</span>
               <svg-icon icon-class="guanbi" />
             </div>
             <div v-if="scope.row.status==3">
-              <span>误报</span>
+              <span>{{scope.row.status|alarmStatus}}</span>
               <svg-icon icon-class="wubao" />
             </div>
             <div v-if="scope.row.status==4">
-              <span>已处置</span>
+              <span>{{scope.row.status|alarmStatus}}</span>
               <svg-icon icon-class="yichuzhi" />
             </div>
           </span>

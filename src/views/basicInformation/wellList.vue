@@ -61,10 +61,10 @@
       <el-table-column label="类型" width="130" align="center">
         <template slot-scope="scope">
            <div v-if="scope.row.well_type==0">
-             抽油机
+             {{scope.row.well_type|welltype}}
            </div>
            <div v-if="scope.row.well_type==1">
-             螺杆泵
+             {{scope.row.well_type|welltype}}
            </div>
          </template>
       </el-table-column>

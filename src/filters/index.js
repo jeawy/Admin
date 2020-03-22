@@ -55,6 +55,62 @@ export function dtuStatus(code) {
         break;
     }
 }
+// 油井类别格式化显示
+export function welltype(code) {
+  switch (code) {
+    case 0:
+      return "抽油井";
+      break;
+    case 1:
+      return "螺杆泵";
+      break;
+  }
+}
+// 告警方式格式化显示
+export function alarmWay(code) {
+  switch (code) {
+    case 0:
+      return "系统自动";
+      break;
+    case 1:
+      return "人为手动";
+      break;
+  }
+}
+// 告警类型格式化显示
+export function alarmCategory(code) {
+  switch (code) {
+    case 0:
+      return "开关井异常";
+      break;
+    case 1:
+      return "动液面异常";
+      break;
+    case 2:
+      return "日产量告警";
+      break;
+  }
+}
+// 告警状态格式化显示
+export function alarmStatus(code) {
+  switch (code) {
+    case 0:
+      return "新增";
+      break;
+    case 1:
+      return "忽略";
+      break;
+    case 2:
+      return "关闭";
+      break;
+    case 3:
+      return "误报";
+      break;
+    case 4:
+      return "已处置";
+      break;
+  }
+}
 // 项目工作流格式化
 export function projectStatus(code) {
   switch (code) {
