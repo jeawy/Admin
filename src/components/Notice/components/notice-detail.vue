@@ -14,7 +14,7 @@
         style="margin-right:20px;"
       >标记为已读</el-button>
       <el-radio v-model="ifRead" label="1" @change="searchNotice()" style="margin-right:5px;" >已读</el-radio>
-      <el-radio v-model="ifRead" label="2" @change="searchNotice()">未读</el-radio>
+      <el-radio v-model="ifRead" label="0" @change="searchNotice()">未读</el-radio>
     </div>
 
     <el-table
@@ -31,7 +31,7 @@
              
             <el-row>
               <el-form-item label="通知内容:">
-                <span v-html="props.row.content"></span>
+                <span>{{ props.row.title }}</span>
               </el-form-item>
             </el-row>
             <el-row>
@@ -39,56 +39,18 @@
                 <span>{{ props.row.date|dateFormat }}</span>
               </el-form-item>
             </el-row>
-           
             <el-row>
               <el-form-item label="是否已读:">
                 <span>{{ props.row.read |isRead }}</span>
               </el-form-item>
             </el-row>
-            <el-row>
-              <el-form-item label="紧急程度:">
-                <span>{{ props.row.urgency_level |urgencyLevel}}</span>
-              </el-form-item>
-            </el-row>
-          
           </el-form>
         </template>
       </el-table-column>
       <el-table-column type="selection" width="30"></el-table-column>
        
       <el-table-column label="通知" :min-width="100" show-overflow-tooltip>
-        <template slot-scope="scope">
-           <el-tooltip
-            v-if="scope.row.urgency_level == 0"
-            class="item"
-            effect="dark"
-            content="一般"
-            placement="top"
-          >
-            <svg-icon v-if="scope.row.urgency_level == 0" icon-class="urgency1"></svg-icon>
-          </el-tooltip>
-          <el-tooltip
-            v-if="scope.row.urgency_level == 1"
-            class="item"
-            effect="dark"
-            content="紧急"
-            placement="top"
-          >
-            <svg-icon v-if="scope.row.urgency_level == 1" icon-class="urgency2"></svg-icon>
-          </el-tooltip>
-          <el-tooltip
-            v-if="scope.row.urgency_level == 2"
-            class="item"
-            effect="dark"
-            content="特急"
-            placement="top"
-          >
-            <svg-icon v-if="scope.row.urgency_level == 2" icon-class="urgency3"></svg-icon>
-          </el-tooltip>
-          <svg-icon v-if="scope.row.read == 0" icon-class="notice-close" />
-          <svg-icon v-if="scope.row.read == 1" icon-class="notice-open" />
-          <span @click="handelClickNoticeItem(scope.row)">{{scope.row.title}}</span>
-        </template>
+        <template slot-scope="scope">{{scope.row.title}}</template>
       </el-table-column>
      
       <el-table-column label="时间" :min-width="40">
@@ -115,7 +77,7 @@ export default {
   props: ["notice"],
   data() {
     return {
-      ifRead: "2",
+      ifRead: "0",
       currentPage: 1,
       pageSize: 20,
       pageSizeList: [20, 30, 50, 100],
@@ -180,8 +142,9 @@ export default {
         read: row.read
       }).then(({ data }) => {
         if (data.status === 0) {
-          //this.$message.success(data.msg);
-          this.$emit("getNoticeDetail");
+          // this.$message.success(data.msg);
+          // this.$emit("getNoticeDetail");
+          this.searchNotice()
         } else {
           //this.$message.error(data.msg);
         }
@@ -195,10 +158,10 @@ export default {
         read: 1
       }).then(({ data }) => {
         if (data.status === 0) {
-          //this.$message.success(data.msg);
+          // this.$message.success(data.msg);
           this.$emit("getNoticeDetail");
         } else {
-          //this.$message.error(data.msg);
+          // this.$message.error(data.msg);
         }
       });
     },
@@ -207,11 +170,11 @@ export default {
       let noti = {
         read: this.ifRead
       };
-       if (this.ifRead == 1) {
+      if (this.ifRead == 1) {
         this.$store.dispatch('notice/get_Notice',noti )
       } else {
-        if (this.ifRead == 2) {
-        this.$store.dispatch('notice/get_Notice')
+        if (this.ifRead == 0) {
+        this.$store.dispatch('notice/get_Notice',noti)
         }
       }
     },
@@ -261,6 +224,5 @@ export default {
 .demo-table-expand .el-form-item {
   margin-right: 0;
   margin-bottom: 0;
-  width: 50%;
 }
 </style> 

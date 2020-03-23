@@ -105,8 +105,7 @@ import { mapState } from "vuex";
 export default {
   name: "Notice",
   created() {
-    // this.getNoticeDetail();
-    this.clockRecord();
+    this.getNoticeDetail();
   },
   components: {
     noticeDetail,
@@ -170,51 +169,6 @@ export default {
     }
   },
   methods: {
-    //打卡
-    clock() {
-      if (this.active++ > 2) this.active = 0;
-      let data = {status:""};
-      //console.log(this.dateHour);
-      // if (this.dateHour < 9) {
-      //   data = { status: 0 };
-      // }
-      // if (this.dateHour >= 18) {
-      //   data = { status: 1 };
-      //   this.clockClose = true;
-      //   this.active = 2;
-      // }
-      HTTP.clockIn(data)
-        .then(({ data }) => {
-          if (data.status === 0) {
-            this.$message.success(data.msg);
-
-            this.clockRecord();
-          } else {
-            this.$message.error(data.msg);
-          }
-        })
-        .catch(res => {});
-    },
-    //打卡记录
-    clockRecord() {
-      function dateFormat(dateVal) {
-        return new Date(dateVal).toLocaleDateString();
-      }
-      // HTTP.getClockRecord({ user_id: this.id }).then(({ data }) => {
-      //   if (data.status === 0) {
-      //     this.clockRed = [...data.msg];
-      //     // this.clockRed.forEach(item => {
-      //     //   if (dateFormat(item.date * 1000) === this.date) {
-      //     //   }else{
-      //     //     if(this.dateHour <9){
-      //     //       this.clockClose = false;
-      //     //       this.active = 1;
-      //     //     }
-      //     //   }
-      //     // });
-      //   }
-      // });
-    },
     handleClick(tab, event) {
       //  console.log(tab, event);
     },
@@ -256,7 +210,8 @@ export default {
     //获取当前用户收到的通知
     getNoticeDetail() {
       this.$store.dispatch("notice/get_Notice", {
-        userid: this.$store.state.login.userInfo.id
+        userid: this.$store.state.login.userInfo.id,
+        read:0
       });
     },
 
