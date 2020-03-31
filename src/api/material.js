@@ -1,13 +1,13 @@
 import AXIOS from '@/utils/request'
 export function getMaterial(params) {
-  return AXIOS.get('/material/material/', { params })
+    return AXIOS.get('api/material/material/', { params })
 }
 export function addMaterial(data) {
-  return AXIOS.post('/material/material/', data)
+    return AXIOS.post('api/material/material/', data)
 }
 export function delMaterial(data) {
-  return AXIOS.post('/material/material/?delete', data)
+    return AXIOS.post('api/material/material/?delete', data)
 }
 export function putMaterial(data) {
-  return AXIOS.post('/material/material/?put', data)
+    return AXIOS.post('api/material/material/?put', data)
 }

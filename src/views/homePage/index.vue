@@ -269,6 +269,7 @@ export default {
           </router-link>
         </el-card>
       </el-col>
+      
       <el-col :sm="12" :lg="6">
         <el-card class="home-header-item2" shadow="always">
           <router-link :to="{name:'comprehensiveQuery'}">
@@ -278,6 +279,7 @@ export default {
           </router-link>
         </el-card>
       </el-col>
+       
       <el-col :sm="12" :lg="6">
         <el-card class="home-header-item3" shadow="always">
           <router-link :to="{name:'alarmQuery'}">
@@ -287,13 +289,17 @@ export default {
           </router-link>
         </el-card>
       </el-col>
+      
       <el-col :sm="12" :lg="6">
         <el-card class="home-header-item4" shadow="always">
-          <p class="text-light">统计分析</p>
-          <img class="statisticsImage"
-            src="@/assets/statistics.png" alt="">
+          <router-link :to="{name:'alarmQuery'}">
+            <div class="text-light">设备状态</div>
+            <img class="statisticsImage"
+              src="@/assets/statistics.png" alt="">
+          </router-link>
         </el-card>
       </el-col>
+      -->
     </el-row>
     <el-row class="home-header" :gutter="15">
       <el-col :lg="12">
