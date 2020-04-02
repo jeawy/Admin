@@ -345,7 +345,7 @@ export default {
                   <el-col :lg="24">
                     <el-card shadow="always">
                       <chart ref="well-status" chart-id="well-status" />
-                      <div class="prompt-text">开井：{{this.openCount}} 关井：{{this.stopCount}}</div>
+                      <div class="prompt-text">开井：{{this.openCount}} 关井：{{this.stopCount}} 总计：{{this.stopCount+this.openCount}} </div>
                       <el-progress
                         style="margin-top:10px"
                         color="#28a745"

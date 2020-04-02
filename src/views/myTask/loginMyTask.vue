@@ -9,7 +9,7 @@
       label-position="left"
     >
       <div class="title-container">
-        <h3 class="title">wefxs</h3>
+        <h3 class="title">机采井智能管理平台</h3>
       </div>
 
       <el-form-item prop="username">

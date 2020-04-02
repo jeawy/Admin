@@ -9,7 +9,7 @@
       label-position="left"
     >
       <div class="title-container">
-        <h3 class="title">wefxs</h3>
+        <h3 class="title">机采井智能管理平台</h3>
       </div>
 
       <el-form-item prop="username">
@@ -53,6 +53,7 @@
         style="width:100%;margin-bottom:30px; height:37px;"
         @click.native.prevent="handleLogin"
       >{{loading?'登录中&hellip;':'登录'}}</el-button>
+      <!--
       <el-row :gutter="15">
         <el-col :span="12" class="link">
           <router-link to="/signup">申请账号</router-link>
@@ -61,6 +62,7 @@
           <router-link to="/forgot">找回密码</router-link>
         </el-col>
       </el-row>
+      -->
     </el-form>
   </div>
 </template>
