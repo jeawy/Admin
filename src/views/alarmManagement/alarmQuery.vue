@@ -143,12 +143,12 @@
               </el-col>
             </el-row>
             <div slot="reference">
-              <el-button type="primary" class="btn" v-if="disabled">添加告警</el-button>
+              <el-button type="primary" icon="el-icon-plus" class="btn" v-if="disabled">添加告警</el-button>
             </div>
           </el-popover>
         </el-col>
         <el-col>
-          <el-button type="primary" class="btn" v-if="disabled" @click="dialog = true">告警设置</el-button> 
+          <el-button type="primary" class="btn" v-if="disabled" icon="el-icon-setting" @click="dialog = true">告警设置</el-button> 
           <el-drawer
             title="告警设置"
             :visible.sync="dialog"
