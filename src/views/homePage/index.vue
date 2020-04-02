@@ -299,7 +299,6 @@ export default {
           </router-link>
         </el-card>
       </el-col>
-      -->
     </el-row>
     <el-row class="home-header" :gutter="15">
       <el-col :lg="12">
