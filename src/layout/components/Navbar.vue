@@ -4,6 +4,7 @@
         <hamburger id="hamburger-container" :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
         <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
       </div>
+      <span class="well">机采井智能管理平台</span>
       <div class="right-menu">
         <template v-if="device!=='mobile'">
           <screenfull id="screenfull" class="right-menu-item hover-effect" />
@@ -71,6 +72,10 @@ import Settings from './Settings'
 </script>
 
 <style lang="scss" scoped>
+   .well{
+     font-size: 25px;
+    color: #101010;
+   }
   .navbar {
     display: flex;
     justify-content: space-between;
