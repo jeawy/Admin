@@ -24,7 +24,7 @@
       <el-table-column prop="adjustment5" label="建议调整量5(米)" width="150px" align="center"></el-table-column>
       <el-table-column prop="active" label="有功(千瓦)" width="100px" align="center"></el-table-column>
       <el-table-column prop="electric_current" label="电流(安培)" width="120px" align="center"></el-table-column>
-      <el-table-column prop="rush_times" label="冲次(次/分)/转速(转/分)" width="200px" align="center"></el-table-column>
+      <el-table-column prop="rush_times" label="冲次(次/分)/转速(转/分)" width="120px" align="center"></el-table-column>
       <el-table-column prop="stroke" label="冲程(米)" align="center"></el-table-column>
       <el-table-column prop="oil_pressure" label="油压(兆帕)" width="100px" align="center"></el-table-column>
       <el-table-column prop="nesting_pressure" label="套压(兆帕)" width="100px" align="center"></el-table-column>
