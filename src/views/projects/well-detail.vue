@@ -123,7 +123,11 @@
                 style="height:27.99px;margin-left: -5px;"
                 type="primary"
               />
-              <a target="__blank" href>点击查看更多点位数据</a>
+              <!-- <a target="__blank" href="/p144/p144/?">点击查看更多点位数据</a> -->
+               <!-- <router-link
+            style="cursor: pointer;"
+            :to="{name:'comprehensiveQuery',}"
+          >点击查看更多点位数据</router-link> -->
             </div>
           </el-row>
           <el-row>

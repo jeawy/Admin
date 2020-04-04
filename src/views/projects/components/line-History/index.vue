@@ -23,8 +23,13 @@ export default {
   methods: {
     //搜索日产量折线图
     getOutputChart(id, date) {
-      function dataFormat(dateVal) {
-        return dayjs(dateVal).format("MM/DD");
+     function dataFormat(params) {
+        if (params) {
+          params *= 1000;
+          return dayjs(params).format("MM/DD");
+        } else {
+          return "";
+        }
       }
       let lines = {};
       lines = {

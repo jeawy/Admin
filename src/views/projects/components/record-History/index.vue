@@ -9,11 +9,11 @@
       :header-cell-style="{color:'#212529',fontSize:'16px',fontWeight:400}"
       :row-style="{fontSize:'16px',color:'#212529;',fontWeight:400,}"
     >
-      <el-table-column type="index" width="80" label="序号" align="center"></el-table-column>
-      <el-table-column prop="name" label="井号" width="100px" align="center"></el-table-column>
+      <el-table-column type="index" label="序号" align="center"></el-table-column>
+      <el-table-column prop="name" label="井号"  align="center"></el-table-column>
       <el-table-column prop="status" label="开/关井" :formatter="Status" width="100px" align="center"></el-table-column>
        <el-table-column prop="time" label="时间" width="180px" align="center"></el-table-column>
-      <el-table-column prop="last" label="持续时间(小时)" width="150px" align="center"></el-table-column>
+      <el-table-column prop="last" label="持续时间(小时)"  align="center"></el-table-column>
     </el-table>
   </div>
 </template>

@@ -12,7 +12,7 @@
         :header-cell-style="{color:'#212529',fontSize:'16px',fontWeight:400}"
         :row-style="{fontSize:'16px',color:'#212529;',fontWeight:400,}"
       >
-        <el-table-column type="index"  label="序号" align="center"></el-table-column>
+        <el-table-column type="index"  label="序号" align="center" width="80px"></el-table-column>
         <!-- <el-table-column label="井号" width="100px" align="center"></el-table-column> -->
         <el-table-column label="上报时间"  align="center">
           <template slot-scope="scope">{{scope.row.time|dateFormat}}</template>
