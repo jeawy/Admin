@@ -212,7 +212,7 @@ import tableHistory from './components/table-history'
 import lineHistory from './components/line-history'
 import tableRecord from './components/table-record'
 import barchartHistory from './components/barchart-history';
-import { ApiGetRealdata,ApiGetHistorydata } from "@/api/realdata";
+import { ApiGetRealdata  } from "@/api/realdata";
 export default {
   // components: {tableHistory, lineHistory ,barchartHistory,tableRecord},
   data() {
@@ -348,7 +348,8 @@ export default {
         page: this.currentPage,
         well_type: this.wellCategory,
         number: this.wellNumber,
-        status: this.wellStatus
+        status: this.wellStatus,
+        realdata: ""
       };
       ApiGetRealdata(data).then(res => {
         this.realdata = res.data.realdata;
@@ -362,7 +363,8 @@ export default {
         well_type: this.wellCategory,
         number: this.wellNumber,
         status: this.wellStatus,
-        print: "null"
+        print: "null",
+        realdata: ""
       };
       ApiGetRealdata(data).then(({ data }) => {
         this.uploadVisible = true;
