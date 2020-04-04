@@ -58,6 +58,7 @@
       <el-table-column prop="factory" label="厂" width="130" align="center"></el-table-column>
       <el-table-column prop="mine" label="矿" width="130" align="center"></el-table-column>
       <el-table-column prop="depth" label="泵深(米)" width="130" align="center"></el-table-column>
+      <el-table-column prop="depth" label="油藏中深" width="130" align="center"></el-table-column>
       <el-table-column label="类型" width="130" align="center">
         <template slot-scope="scope">
            <div v-if="scope.row.well_type==0">

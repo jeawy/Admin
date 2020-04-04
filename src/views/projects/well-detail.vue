@@ -92,7 +92,7 @@
               <div>小平衡块重量1(Kn)：{{wellDetail.weight_1_small_balance?wellDetail.weight_1_small_balances:"-"}}</div>
               <div>曲柄重量1(Kn)：{{wellDetail.weight_1_crank?wellDetail.weight_1_crank:"-"}}</div>
               <div>油套温度(度)：{{wellDetail.oil_jacket_temperature?wellDetail.oil_jacket_temperature:"-"}}</div>
-              <div>抽油机运行状态：{{wellDetail.run_status?wellDetail.run_status:"-"}}</div>
+              <div>油藏中深： -</div>
               <div>偏置角：{{wellDetail.offset_angle?wellDetail.offset_angle:"-"}}</div>
             </el-col>
           </el-row>
