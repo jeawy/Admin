@@ -80,6 +80,7 @@
       <el-table-column label="开/关井时间" width="150px" align="center">
         <template slot-scope="scope">{{scope.row.changed_time|dateTimeFormat}}</template>
       </el-table-column>
+      <el-table-column prop="last_time" label="持续时长" width="90px" align="center"></el-table-column>
       <el-table-column label="历史数据" width="60px" align="center">
         <template slot-scope="scope">
           <router-link
@@ -108,7 +109,7 @@
       <el-table-column prop="oil_pressure" label="油压(兆帕)" width="70px" align="center"></el-table-column>
       <el-table-column prop="nesting_pressure" label="套压(兆帕)" width="70px" align="center"></el-table-column>
       <el-table-column prop="sunken" label="沉没度(米)" width="80px" align="center"></el-table-column>
-      <el-table-column prop="sunken" label="运行时长" width="90px" align="center"></el-table-column>
+      
       <el-table-column prop="watery" label="含水" align="center"></el-table-column>
       <el-table-column prop="oil_temperature" label="油温" align="center"></el-table-column>
       <el-table-column prop="address" label="电压" align="center"></el-table-column>
