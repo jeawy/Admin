@@ -27,11 +27,13 @@
                     style="vertical-align: middle;"
                     v-if="wellDetail.status == 1"
                   />-->
-                  <div>{{wellDetail.well_type}}</div>
+                  <div v-if="wellDetail.well_type == 0" style="margin-top:10px;">井类别：抽油机</div>
+                   <div v-if="wellDetail.well_type == 1"  style="margin-top:10px;">井类别：螺杆泵</div>
                    <div v-if="wellDetail.status == 0">开机时间:{{wellDetail.changed_date|dateTimeFormat}}</div>
                    <div v-if="wellDetail.status == 1">关机时间:{{wellDetail.changed_date|dateTimeFormat}}</div>
                   <div>最大/小载荷:</div>
                   <div>配产：</div>
+                   
                 </el-row>
               </div>
             </el-col>
