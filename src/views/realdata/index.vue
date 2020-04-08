@@ -90,10 +90,12 @@
           <div @click="history(scope.row.wellid,scope.row.name,scope.row.factory,scope.row.mine,scope.row.status,scope.row.welltype)">历史数据</div>
         </template> -->
       </el-table-column>
-      <el-table-column prop="frequency" label="频率(Hz)" width="60px" align="center"></el-table-column>
+      
       <el-table-column prop="level" label="动液面(米)" width="80px" align="center"></el-table-column>
       <el-table-column prop="output" label="产量(吨)" align="center"></el-table-column>
       <el-table-column prop="power_consumption" label="日耗电(千瓦时)" width="80px" align="center"></el-table-column>
+      <el-table-column prop="sunken" label="沉没度(米)" width="80px" align="center"></el-table-column>
+      <el-table-column prop="frequency" label="频率(Hz)" width="60px" align="center"></el-table-column>
       <el-table-column prop="balance" label="平衡度(米)" width="80px" align="center"></el-table-column>
       <el-table-column prop="adjustment1" label="建议调整量1(米)" width="90px" align="center"></el-table-column>
       <el-table-column prop="adjustment2" label="建议调整量2(米)" width="90px" align="center"></el-table-column>
@@ -106,7 +108,7 @@
       <el-table-column prop="stroke" label="冲程(米)" align="center" width="70px"></el-table-column>
       <el-table-column prop="oil_pressure" label="油压(兆帕)" width="70px" align="center"></el-table-column>
       <el-table-column prop="nesting_pressure" label="套压(兆帕)" width="70px" align="center"></el-table-column>
-      <el-table-column prop="sunken" label="沉没度(米)" width="80px" align="center"></el-table-column>
+      
       
       <el-table-column prop="watery" label="含水" align="center"></el-table-column>
       <el-table-column prop="oil_temperature" label="油温" align="center"></el-table-column>
@@ -286,8 +288,8 @@ export default {
         total: 0,
       pageCount: 0,
       currentPage: 1,
-      pageSize: 20,
-      pageSizeList: [10, 20, 30, 50],
+      pageSize: 50,
+      pageSizeList: [10,  30, 50, 100],
       cutType: -1, //分页类型
     };
   },

@@ -138,10 +138,9 @@ export default {
       ],
       total: 0,
       currentPage: 1,
-      pageSize: 20,
-      pageSizeList: [10, 20, 30, 50],
-      cutType: -1, //分页类型
-
+      pageSize: 50,
+      pageSizeList: [10,  30, 50, 100],
+      cutType: -1, //分页类型 
     };
   },
   methods: {
