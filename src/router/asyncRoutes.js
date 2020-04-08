@@ -92,6 +92,27 @@ export default function asyncRoutes(params) {
             }, ]
         },
         {
+            path: '/power',
+            component: Layout,
+            redirect: 'noRedirect',
+            alwaysShow: true,
+            meta: {
+                title: '能耗管理',
+                icon: 'power',
+            },
+            children: [{
+                path: 'power',
+                name: 'power',
+                component: () =>
+                    import ('@/views/deviceStatus'),
+                meta: {
+                    title: '能耗概览',
+                    icon: 'power',
+                },
+                // hidden: true
+            }]
+        },
+        {
             path: '/deviceStatus',
             component: Layout,
             redirect: 'noRedirect',
@@ -122,15 +143,45 @@ export default function asyncRoutes(params) {
                 icon: 'alarmManagement'
             },
             children: [{
-                path: 'alarmQuery',
-                name: 'alarmQuery',
-                component: () =>
-                    import ('@/views/alarmManagement/alarmQuery'),
-                meta: {
-                    title: '告警查询',
-                    icon: 'alarmQuery'
+                    path: 'alarmQuery',
+                    name: 'alarmQuery',
+                    component: () =>
+                        import ('@/views/alarmManagement/alarmQuery'),
+                    meta: {
+                        title: '泵况告警',
+                        icon: 'alarmQuery'
+                    }
+                },
+                {
+                    path: 'alarmQuery',
+                    name: 'alarmQuery',
+                    component: () =>
+                        import ('@/views/alarmManagement/alarmQuery'),
+                    meta: {
+                        title: '结蜡告警',
+                        icon: 'alarmQuery'
+                    }
+                },
+                {
+                    path: 'alarmQuery',
+                    name: 'alarmQuery',
+                    component: () =>
+                        import ('@/views/alarmManagement/alarmQuery'),
+                    meta: {
+                        title: '生产告警',
+                        icon: 'alarmQuery'
+                    }
+                }, {
+                    path: 'alarmQuery',
+                    name: 'alarmQuery',
+                    component: () =>
+                        import ('@/views/alarmManagement/alarmQuery'),
+                    meta: {
+                        title: '设备告警',
+                        icon: 'alarmQuery'
+                    }
                 }
-            }]
+            ]
         },
         {
             path: '/checking-in',

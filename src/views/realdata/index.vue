@@ -71,9 +71,7 @@
               <!-- <img src="@/assets/off.png"/> -->
            </div>
          </template>
-      </el-table-column>
-      <el-table-column prop="factory" label="厂" align="center"></el-table-column>
-      <el-table-column prop="mine" label="矿" align="center"></el-table-column>
+      </el-table-column> 
       <el-table-column label="上报时间" width="150px" align="center">
         <template slot-scope="scope">{{scope.row.time|dateTimeFormat}}</template>
       </el-table-column>
