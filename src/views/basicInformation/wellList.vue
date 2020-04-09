@@ -1,5 +1,5 @@
 <template>
-  <div id="wellList">
+  <div id="wellList" width = 100%>
       <el-row class="row-bg">
         <el-col :span="2" class="col-bg">
           井类别:
@@ -48,27 +48,6 @@
       <el-table-column type="index" width="130" label="序号" align="center"></el-table-column>
       <el-table-column prop="number" label="井号" width="130" align="center"></el-table-column>
       <el-table-column label="井名" width="200" align="center">
-        <template slot-scope="scope">
-          <router-link
-            style="cursor: pointer;"
-            :to="{name:'well-detail',params:{id:scope.row.id},query:{type:scope.row.pro_type}}"
-          >{{scope.row.name}}</router-link>
-        </template>
-      </el-table-column>
-      <el-table-column prop="factory" label="厂" width="130" align="center"></el-table-column>
-      <el-table-column prop="mine" label="矿" width="130" align="center"></el-table-column>
-      <el-table-column prop="depth" label="泵深(米)" width="130" align="center"></el-table-column>
-      <el-table-column prop="depth" label="油藏中深" width="130" align="center"></el-table-column>
-      <el-table-column label="类型" width="130" align="center">
-        <template slot-scope="scope">
-           <div v-if="scope.row.well_type==0">
-             {{scope.row.well_type|welltype}}
-           </div>
-           <div v-if="scope.row.well_type==1">
-             {{scope.row.well_type|welltype}}
-           </div>
-         </template>
-      </el-table-column>
       <el-table-column  label="状态" width="130" align="center">
          <template slot-scope="scope">
            <div v-if="scope.row.status==0" class="cell-wellstatus">
@@ -84,6 +63,35 @@
       <el-table-column label="状态变动日期" align="center" width="220px">
         <template slot-scope="scope">{{scope.row.changed_time|dateTimeFormat}}</template>
       </el-table-column>
+      <el-table-column prop="belongs" label="归属" width="200" align="center"></el-table-column>
+        <template slot-scope="scope">
+          <router-link
+            style="cursor: pointer;"
+            :to="{name:'well-detail',params:{id:scope.row.id},query:{type:scope.row.pro_type}}"
+          >{{scope.row.name}}</router-link>
+        </template>
+      </el-table-column>
+      
+      <el-table-column prop="depth" label="泵深(米)" width="130" align="center"></el-table-column>
+      <el-table-column prop="depth" label="油藏中深" width="130" align="center"></el-table-column>
+      <el-table-column label="类型" width="130" align="center">
+        <template slot-scope="scope">
+           <div v-if="scope.row.well_type==0">
+             {{scope.row.well_type|welltype}}
+           </div>
+           <div v-if="scope.row.well_type==1">
+             {{scope.row.well_type|welltype}}
+           </div>
+         </template>
+      </el-table-column>
+      <el-table-column prop="rod" label="光杆规范" width="130" align="center"></el-table-column>
+      <el-table-column prop="cover" label="套管规范" width="130" align="center"></el-table-column>
+      <el-table-column prop="pipe" label="油管规范" width="130" align="center"></el-table-column>
+      <el-table-column prop="machine_type" label="机型" width="130" align="center"></el-table-column>
+      <el-table-column prop="machine" label="电机" width="130" align="center"></el-table-column>
+      <el-table-column prop="crank" label="曲柄" width="130" align="center"></el-table-column>
+      <el-table-column prop="box" label="配电箱" width="130" align="center"></el-table-column>
+      
     </el-table>
     <div class="block" style="text-align: right">
         <el-pagination
