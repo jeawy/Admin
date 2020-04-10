@@ -36,31 +36,29 @@
           <router-link style="cursor: pointer;" :to="{name:'well-detail',params:{id:scope.row.id},query:{type:scope.row.pro_type}}">{{scope.row.name}}</router-link>
         </template>
       </el-table-column>
-        <el-table-column label="状态" width="130" align="center">
-          <template slot-scope="scope">
-            <div v-if="scope.row.status==0" class="cell-wellstatus">
-              <span class="well-status">{{scope.row.status|wellStatus}}</span>
-              <svg-icon icon-class="wellon" />
-            </div>
-            <div v-if="scope.row.status==1" class="cell-wellstatus">
-              <span class="well-status">{{scope.row.status|wellStatus}}</span>
-              <svg-icon icon-class="welloff" />
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column label="状态变动日期" align="center" width="220px">
-          <template slot-scope="scope">{{scope.row.changed_time|dateTimeFormat}}</template>
-        </el-table-column>
-        <el-table-column prop="belongs" label="归属" width="230" align="center">
-          <template slot-scope="scope">
-            <div style="width:100%;height:100%;" v-if="!scope.row.cascader" @click="updateBelongs(scope.row)">{{scope.row.belongs||'-'}}</div>
-            <div v-else @click="well_id = scope.row.id">
-              <el-cascader :options="depts" v-model="scope.row.belongs" type="text" :props="props" @change="handleChange"></el-cascader>
-            </div>
-          </template>
-        </el-table-column>
-        
-
+      <el-table-column label="状态" width="130" align="center">
+        <template slot-scope="scope">
+          <div v-if="scope.row.status==0" class="cell-wellstatus">
+            <span class="well-status">{{scope.row.status|wellStatus}}</span>
+            <svg-icon icon-class="wellon" />
+          </div>
+          <div v-if="scope.row.status==1" class="cell-wellstatus">
+            <span class="well-status">{{scope.row.status|wellStatus}}</span>
+            <svg-icon icon-class="welloff" />
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态变动日期" align="center" width="220px">
+        <template slot-scope="scope">{{scope.row.changed_time|dateTimeFormat}}</template>
+      </el-table-column>
+      <el-table-column prop="belongs" label="归属" width="230" align="center">
+        <template slot-scope="scope">
+          <div style="width:100%;height:100%;" v-if="!scope.row.cascader" @click="updateBelongs(scope.row)">{{scope.row.belongs||'-'}}</div>
+          <div v-else @click="well_id = scope.row.id">
+            <el-cascader :options="depts" v-model="scope.row.belongs" type="text" :props="props" @change="handleChange"></el-cascader>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column prop="depth" label="泵深(米)" width="130" align="center"></el-table-column>
       <el-table-column prop label="油藏中深" width="130" align="center"></el-table-column>
       <el-table-column label="类型" width="130" align="center">
