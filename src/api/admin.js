@@ -5,6 +5,9 @@ export function getDept(params) {
         params
     })
 }
+
+
+
 //查询属于该用户部门的所有用户信息
 export function getDeptUsers(params) {
     return AXIOS.get('api/dept/dept/?02', {

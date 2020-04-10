@@ -3,6 +3,12 @@ import AXIOS from '@/utils/request'
 export function getWellDetail(params) {
     return AXIOS.get('api/well/well/', { params })
 }
+
+//井的归属修改
+export function putWellDetail(data) {
+    return AXIOS.put('api/well/well/', data)
+}
+
 //查看月耗电量
 export function viewPowersMonth(params) {
     return AXIOS.get('api/stats/consuption/', { params })
