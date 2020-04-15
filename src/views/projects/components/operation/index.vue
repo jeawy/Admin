@@ -61,7 +61,7 @@
           <el-input-number v-model="freguencyModal.freguency" :precision="1" :step="0.1" ></el-input-number>
         </el-form-item>
         <div class="butn">
-          <el-button @click="cancel">取消</el-button>
+          <el-button @click="cancelFreguency">取消</el-button>
           <el-button type="primary" @click="freguencyForm('freguencyModal')">确认</el-button>
         </div>
       </el-form>
@@ -69,7 +69,7 @@
     <el-dialog title="自动调参" :visible.sync="dialogVisible2" width="380px">
       <span>确定执行自动调参</span>
       <div class="butn">
-        <el-button @click="cancel">取消</el-button>
+        <el-button @click="cancelAuto">取消</el-button>
         <el-button type="primary" @click="autoFreguency()">确认</el-button>
       </div>
     </el-dialog>
@@ -126,7 +126,7 @@
           ></el-input-number>
         </el-form-item>
         <div class="butn">
-          <el-button @click="cancel">取消</el-button>
+          <el-button @click="cancelParam">取消</el-button>
           <el-button type="primary" @click="paramForm('paramModal')">确认</el-button>
         </div>
       </el-form>
@@ -140,7 +140,7 @@
           <el-input-number v-model="readdataBtn.dataOutput" :precision="0" :step="1"></el-input-number>
         </el-form-item>
         <div class="butn">
-          <el-button @click="cancel">取消</el-button>
+          <el-button @click="cancelRealdata">取消</el-button>
           <el-button type="primary" @click="realdataForm('readdataBtn')">确认</el-button>
         </div>
       </el-form>
@@ -151,7 +151,7 @@
         <el-input  v-model="anyOrderModal.anyOrder" placeholder="请输入内容" style="width:300px;"></el-input>
         </el-form-item>
         <div class="butn">
-          <el-button @click="cancel">取消</el-button>
+          <el-button @click="cancelAnyOrde">取消</el-button>
           <el-button type="primary" @click="anyOrderForm('anyOrderModal')">确认</el-button>
         </div>
       </el-form>
@@ -473,8 +473,37 @@ export default {
           break;
       }
     },
-    cancel() {
+    cancelFreguency() {
       this.dialogVisible1 = false;
+       this.freguencyModal= { freguency: 0} 
+    },
+     cancelAuto() {
+      this.dialogVisible2 = false;
+    },
+    cancelParam() {
+      this.dialogVisible3 = false;
+      this.paramModal = {
+        container: 0,
+        stroke: 0,
+        pumptype: 0,
+        pumphanging: 0,
+        banlence: 0,
+        outerDiameter: 0,
+        permanentMagnetMotorRatedPower: 0,
+        asynchronous_motor_rated_power: 0,
+        machineTyper: null
+      };
+    },
+    cancelRealdata() {
+      this.dialogVisible4 = false;
+      this.readdataBtn = {
+        realLevel: 0,
+        dataOutput: 0
+      };
+    },
+    cancelAnyOrde() {
+      this.dialogVisible5 = false;
+      this.$refs["any-order-modal"].resetFields();
     }
   },
 
