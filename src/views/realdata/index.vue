@@ -50,7 +50,7 @@
     >
       <el-table-column type="index" width="60" label="序号" align="center"></el-table-column>
       <el-table-column prop="welltype" label="井类别" align="center"></el-table-column>
-     <el-table-column label="井号" width="120" align="center">
+     <el-table-column label="井号" width="170" align="center">
         <template slot-scope="scope">
           <router-link
             style="cursor: pointer;"

@@ -11,3 +11,4 @@ export function ApiGetHistorydata(params) {
 export function ApiGetElectdata(params) {
     return AXIOS.get('api/p144/p144/', { params })
 }
+
