@@ -6,24 +6,40 @@
       <el-col :sm="12" > 
            
         <el-card>
+          <!-- 功率利用率 -->
+          <div class="header-top">
+              <div style="display: flex;align-items: center;justify-content: center;">
+                <div style="width:20px;height:20px;background:red;border-radius:5px"></div>
+                <div style="padding-left:5px">功率利用率：&ge;20%</div>
+              </div>
+              <div style="display: flex;align-items: center;justify-content: center;padding-left:5px;">
+                <div style="width:20px;height:20px;background:yellow;border-radius:5px"></div>
+                <div style="padding-left:5px">功率利用率：&lt;20%</div>
+              </div>
+          </div>
           <BarChart @click-item="handleClickChart" ref="rated_power" chart-id="rated_power" style="height:450px" />
         </el-card>
       </el-col>
 
       <el-col :sm="12">
-        <el-card body-style="padding-top:0px;"> 
+        <el-card > 
+          <!-- 频率 -->
          <div class="header-top">
               <div style="display: flex;align-items: center;justify-content: center;">
                 <div style="width:20px;height:20px;background:red;border-radius:5px"></div>
-                <div style="padding-left:5px">频率:>80</div>
+                <div style="padding-left:5px">频率：>80</div>
               </div>
               <div style="display: flex;align-items: center;justify-content: center;padding-left:5px;">
                 <div style="width:20px;height:20px;background:orange;border-radius:5px"></div>
                 <div style="padding-left:5px">频率：60-80</div>
               </div>
               <div style="display: flex;align-items: center;justify-content: center;padding-left:5px;">
+                <div style="width:20px;height:20px;background:rgb(180,180,0);border-radius:5px"></div>
+                <div style="padding-left:5px">频率：40-60</div> 
+              </div>
+              <div style="display: flex;align-items: center;justify-content: center;padding-left:5px;">
                 <div style="width:20px;height:20px;background:yellow;border-radius:5px"></div>
-                <div style="padding-left:5px">频率&lt;60</div>
+                <div style="padding-left:5px">频率：&lt;40</div> 
               </div>
           </div>
           <BarChart @click-item="handleClickChart" ref="frequency" chart-id="frequency" style="height:450px" />
@@ -31,16 +47,39 @@
       </el-col>                   
     </el-row>
     </div>
+
     <div style="margin-top:10px">
     <el-row :gutter="10">
       <el-col :sm="12">
         <el-card>
+          <!-- 平衡率 -->
+          <div class="header-top">
+              <div style="display: flex;align-items: center;justify-content: center;">
+                <div style="width:20px;height:20px;background:red;border-radius:5px"></div>
+                <div style="padding-left:5px">平衡率：&ge;80%</div>
+              </div>
+              <div style="display: flex;align-items: center;justify-content: center;padding-left:5px;">
+                <div style="width:20px;height:20px;background:yellow;border-radius:5px"></div>
+                <div style="padding-left:5px">平衡率：&lt;80%</div>
+              </div>
+          </div>
          <BarChart @click-item="handleClickChart" ref="balance" chart-id="balance" />
         </el-card>
       </el-col>
 
       <el-col :sm="12">
          <el-card>
+           <!-- 系统效率 -->
+           <div class="header-top">
+              <div style="display: flex;align-items: center;justify-content: center;">
+                <div style="width:20px;height:20px;background:red;border-radius:5px"></div>
+                <div style="padding-left:5px">系统效率：&ge;20%</div>
+              </div>
+              <div style="display: flex;align-items: center;justify-content: center;padding-left:5px;">
+                <div style="width:20px;height:20px;background:yellow;border-radius:5px"></div>
+                <div style="padding-left:5px">系统效率：&lt;20%</div>
+              </div>
+          </div>
           <BarChart @click-item="handleClickChart" ref="system_efficiency" chart-id="system_efficiency" />
         </el-card>
       </el-col>
@@ -155,7 +194,7 @@ export default {
             ],
             series: [
             {
-                name: "效率",
+                name: "功率利用率",
                 type: "bar",
                 barWidth: 30,
                 barMaxWidth: 50,
@@ -171,6 +210,17 @@ export default {
                                 color: 'black',
                                 fontSize: 10
                             }
+                        },
+                        color:function(params){
+                          // 功率利用率低于20% 黄色展示
+                          if (params.data<0.2){
+                            return 'yellow';
+                          }
+                          // 大于20% 红色展示
+                          else{
+                            return 'red'
+                          }
+                    
                         }
                     }
                 }, 
@@ -257,16 +307,20 @@ export default {
                             }
                         },
                         color:function (params){
-                        if (params.data<40){
-                            return 'yellow'
+                        // 频率小于40 
+                        if (params.data>80){
+                          return 'red'
                         }
-                        else if(params.data>50){
-                            return 'red'
-                        }
-                        else{
+                        else if(params.data<80 && params.data>=60){
                           return 'orange'
                         }
-
+                        else if(params.data<60 && params.data>=40){
+                          return 'rgb(180,180,0)'
+                        }
+                        else{
+                          return 'yellow'
+                        }
+                       
                     }
                     }
                 }, 
@@ -348,7 +402,17 @@ export default {
                                 color: 'black',
                                 fontSize: 10
                             }
+                        },
+                        color:function (params){
+                        // 系统效率低于20%  展示为黄色
+                        if (params.data<0.2){
+                            return 'yellow'
                         }
+                        else{
+                          return 'red'
+                        }
+                    }
+                        
                     }
                 }, 
             }
@@ -429,7 +493,17 @@ export default {
                                 color: 'black',
                                 fontSize: 10
                             }
+                            
+                        },
+                        color:function (params){
+                        // 系统效率低于20%  展示为黄色
+                        if (params.data<0.2){
+                            return 'yellow'
                         }
+                        else{
+                          return 'red'
+                        }
+                    }
                     }
                 }, 
             }
