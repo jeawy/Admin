@@ -17,5 +17,3 @@ tests/**/coverage/
 *.njsproj
 *.sln
 *.mp4
-vue.config.js
-.env.production
