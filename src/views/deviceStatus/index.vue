@@ -3,25 +3,37 @@
   <div id="home-page" ref="drawer-parent">
     <div>
     <el-row :gutter="10">
-      <el-col :sm="12" >    
+      <el-col :sm="12" > 
+           
         <el-card>
           <BarChart @click-item="handleClickChart" ref="rated_power" chart-id="rated_power" style="height:450px" />
         </el-card>
       </el-col>
 
       <el-col :sm="12">
-        <el-card>
-          <BarChart @click-item="handleClickChart" ref="frequency" chart-id="frequency" style="height:450px" />
-          <div style="display:flex">
-            aaa
+        <el-card body-style="padding-top:0px;"> 
+         <div class="header-top">
+              <div style="display: flex;align-items: center;justify-content: center;">
+                <div style="width:20px;height:20px;background:red;border-radius:5px"></div>
+                <div style="padding-left:5px">频率:>80</div>
+              </div>
+              <div style="display: flex;align-items: center;justify-content: center;padding-left:5px;">
+                <div style="width:20px;height:20px;background:orange;border-radius:5px"></div>
+                <div style="padding-left:5px">频率：60-80</div>
+              </div>
+              <div style="display: flex;align-items: center;justify-content: center;padding-left:5px;">
+                <div style="width:20px;height:20px;background:yellow;border-radius:5px"></div>
+                <div style="padding-left:5px">频率&lt;60</div>
+              </div>
           </div>
+          <BarChart @click-item="handleClickChart" ref="frequency" chart-id="frequency" style="height:450px" />
         </el-card>
-      </el-col>
+      </el-col>                   
     </el-row>
     </div>
     <div style="margin-top:10px">
     <el-row :gutter="10">
-      <el-col :sm="12">    
+      <el-col :sm="12">
         <el-card>
          <BarChart @click-item="handleClickChart" ref="balance" chart-id="balance" />
         </el-card>
@@ -450,6 +462,15 @@ export default {
 
 <style lang="scss">
 #home-page {
+  .header-top {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    bottom:-35px;
+    z-index: 100;
+  }
+
   font-size: 12px;
   background-color: #f4f5f5;
   /* height: calc(100vh - 84px); */
