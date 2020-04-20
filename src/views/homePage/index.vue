@@ -398,12 +398,12 @@ export default {
                   <el-col style="height:15px"></el-col>
                   <el-col :lg="24">
                     <el-card shadow="always">
-                      <router-link :to="{name:'deviceStatus'}">
+                      <router-link :to="{name:'power'}">
                         <div style="display:flex">
                           <img
                               style="width: 80px;height: 82px;margin-top:10px"
                               src="@/assets/work.jpg" alt="">
-                          <div class="prompt-text" style="margin-left:20px;margin-top:30px">工况诊断</div>
+                          <div class="prompt-text" style="margin-left:20px;margin-top:30px">能耗管理</div>
                         </div>
                       </router-link>
                     </el-card>
