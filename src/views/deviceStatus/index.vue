@@ -133,6 +133,8 @@ export default {
             well_name.push(item.well_name)
             frequency.push(item.frequency)
             rated_power.push(item.rated_power)
+            balance.push(item.balance)
+            console.log(item.balance)
             system_efficiency.push(item.system_efficiency)
             this.well_ids.push(item.well_id)
           });
@@ -213,7 +215,7 @@ export default {
                         },
                         color:function(params){
                           // 功率利用率低于20% 黄色展示
-                          if (params.data<0.2){
+                          if (params.data<20){
                             return 'yellow';
                           }
                           // 大于20% 红色展示
@@ -404,8 +406,8 @@ export default {
                             }
                         },
                         color:function (params){
-                        // 系统效率低于20%  展示为黄色
-                        if (params.data<0.2){
+                        // 平衡率20%  展示为黄色
+                        if (params.data<80){
                             return 'yellow'
                         }
                         else{
@@ -497,7 +499,7 @@ export default {
                         },
                         color:function (params){
                         // 系统效率低于20%  展示为黄色
-                        if (params.data<0.2){
+                        if (params.data<20){
                             return 'yellow'
                         }
                         else{
