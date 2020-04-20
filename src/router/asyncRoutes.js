@@ -104,7 +104,7 @@ export default function asyncRoutes(params) {
                 path: 'power',
                 name: 'power',
                 component: () =>
-                    import ('@/views/deviceStatus'),
+                    import ('@/views/power'),
                 meta: {
                     title: '能耗概览',
                     icon: 'power',
