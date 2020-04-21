@@ -134,7 +134,6 @@ export default {
             frequency.push(item.frequency)
             rated_power.push(item.rated_power)
             balance.push(item.balance)
-            console.log(item.balance)
             system_efficiency.push(item.system_efficiency)
             this.well_ids.push(item.well_id)
           });
@@ -154,6 +153,13 @@ export default {
                 trigger: "axis",
                 axisPointer: {
                     type: "shadow"
+                },
+                formatter:function(params){
+                 var tip = "";
+                 let marker = params[0].marker;
+                 tip = params[0].axisValue+'<br />';
+                 tip  = tip + marker+'功率利用率:'+params[0].value+'%';
+                 return tip;
                 }
             },
             grid: {
@@ -246,7 +252,8 @@ export default {
                 trigger: "axis",
                 axisPointer: {
                     type: "shadow"
-                }
+                },
+                
             },
             grid: {
                 left: "3%",
@@ -290,7 +297,7 @@ export default {
             ],
             series: [
             {
-                name: "效率",
+                name: "频率",
                 type: "bar",
                 barWidth: 30,
                 barMaxWidth: 50,
@@ -346,6 +353,14 @@ export default {
                 trigger: "axis",
                 axisPointer: {
                     type: "shadow"
+                },
+
+                formatter:function(params){
+                 var tip = "";
+                 let marker = params[0].marker;
+                 tip = params[0].axisValue+'<br />';
+                 tip  = tip + marker+'平衡率:'+params[0].value+'%';
+                 return tip;
                 }
             },
             grid: {
@@ -395,6 +410,7 @@ export default {
                 barCategoryGap: "30%",
                 barGap: "0%",
                 data: balance,
+                valueType:"percent",
                 itemStyle: {
                     normal: {
                         label: {
@@ -403,7 +419,7 @@ export default {
                             textStyle: { //数值样式
                                 color: 'black',
                                 fontSize: 10
-                            }
+                            },
                         },
                         color:function (params){
                         // 平衡率20%  展示为黄色
@@ -437,6 +453,13 @@ export default {
                 trigger: "axis",
                 axisPointer: {
                     type: "shadow"
+                },
+                formatter:function(params){
+                 var tip = "";
+                 let marker = params[0].marker;
+                 tip = params[0].axisValue+'<br />';
+                 tip  = tip + marker+'系统效率:'+params[0].value+'%';
+                 return tip;
                 }
             },
             grid: {
