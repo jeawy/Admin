@@ -831,6 +831,7 @@ export default {
           if (data.status === 0) {
             this.uploadVisible = true
             this.path = data.path
+            
             this.multiSelect = []
             this.name = []
           }

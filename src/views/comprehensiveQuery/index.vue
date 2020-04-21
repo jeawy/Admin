@@ -283,7 +283,7 @@ export default {
       };
       ApiGetRealdata(data).then(({ data }) => {
         this.uploadVisible = true;
-        this.path = data.file;
+        this.path = data.path;
       });
     },
     // 导出Excel
