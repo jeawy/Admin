@@ -223,7 +223,7 @@ export default {
         ],
         chargerid: [
           {
-            required: true,
+            required: false,
 
             trigger: "blur",
 
