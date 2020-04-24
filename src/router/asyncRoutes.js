@@ -89,6 +89,16 @@ export default function asyncRoutes(params) {
                     title: '油井列表',
                     icon: 'wellList'
                 }
+            },
+            {
+                path: 'new-built',
+                name: 'new-built',
+                component: () =>
+                    import ('@/views/basicInformation/new-built'),
+                meta: {
+                    title: '新建',
+                    icon: 'wellList'
+                }
             }, ]
         },
         {

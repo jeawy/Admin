@@ -3,3 +3,7 @@ import AXIOS from '@/utils/request'
 export function ApiGetWellList(params) {
     return AXIOS.get('api/well/well/?list', { params })
 }
+//添加油井
+export function ApiAddWell(data) {
+    return AXIOS.post('/api/well/well/', data)
+}
