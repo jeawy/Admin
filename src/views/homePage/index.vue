@@ -1,6 +1,7 @@
 <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&amp;ak=KOmVjPVUAey1G2E8zNhPiuQ6QiEmAwZu&amp;__ec_v__=20190126"></script>
 <script>
 import Chart from "@/components/ECharts/PieChart";
+import LineChart from "@/components/ECharts/LineMarker";
 import BarChart from "@/components/ECharts/BarMarker";
 import BaiduMap from "@/components/ECharts/BaiduMap";
 import { ApiGetHomedata } from "@/api/homeData";
@@ -9,7 +10,8 @@ export default {
   components: {
     Chart,
     BarChart,
-    BaiduMap
+    BaiduMap,
+    LineChart
   },
   data() {
     return {
@@ -20,7 +22,62 @@ export default {
       openPercentage:0,
       total:'',
       wellid:0,
-      wellId:[]
+      wellId:[],
+      alarmStatus:"",
+      time:"",
+      default: {
+        date:[],
+        beginDate: '',
+        endDate: ''
+      },
+      pickerOptions: {
+        shortcuts: [
+          {
+            text: "今天",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              picker.$emit("pick", [start, end]);
+            }
+          },
+          {
+            text: "昨天",
+            onClick(picker) {
+              // const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24);
+              picker.$emit("pick", [start, start]);
+            }
+          },
+          {
+            text: "最近一周",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit("pick", [start, end]);
+            }
+          },
+          {
+            text: "最近一个月",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit("pick", [start, end]);
+            }
+          },
+          {
+            text: "自定义",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit("pick", [start, end]);
+            }
+          }
+        ]
+      }
     };
   },
   methods: {
@@ -41,29 +98,55 @@ export default {
             level.push(item.level)
             this.wellId.push(item.well.id)
         });
-        let chart = [
-        {
-          name: "开井",
-          value: res.data.open_count
-        },
-        {
-          name: "关井",
-          value: res.data.stop_count
-        }
+        //开关井状态
+        let chart1 = [
+          {
+            name: "开井",
+            value: res.data.open_count
+          },
+          {
+            name: "关井",
+            value: res.data.stop_count
+          }
         ];
+        //告警汇总
+        let chart2 = [
+          {
+            name: "新增",
+            value: 10
+          },
+          {
+            name: "忽略",
+            value: 20
+          },
+          {
+            name: "关闭",
+            value: 30
+          },
+          {
+            name: "误报",
+            value: 40
+          },
+          {
+            name: "已处置",
+            value: 50
+          }
+        ]
         this.$nextTick(()=>{
-          this.$refs["well-status"].initChart("", chart);
+          this.$refs["well-status"].initChart("", chart1);
+          this.$refs["alarm-summary"].initChart("", chart2);
         });
+        //产量柱状图
         let option1 = {
             title: {
             text: "产量TOP20",
             textStyle: {
                 //---主标题内容样式
                 color: "#000",
-                fontSize:20
+                fontSize:16
                 // height:"50px"
             },
-            padding:[20,18], //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
+            padding:[5,18], //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
             },
             tooltip: {
                 trigger: "axis",
@@ -73,7 +156,7 @@ export default {
             },
             grid: {
                 left: "3%",
-                top: "20%",
+                top: "12%",
                 height:370,
                 containLabel: true
             },
@@ -83,7 +166,6 @@ export default {
             xAxis: [
             {
                 name:'井号',
-                nameTextStyle:{fontSize:16},
                 type: "category",
                 triggerEvent:true,
                 data: wellName,
@@ -107,7 +189,6 @@ export default {
                 axisLabel:{
                     fontSize:14,
                 },
-                nameTextStyle:{fontSize:16},
                 }
             ],
             series: [
@@ -134,84 +215,182 @@ export default {
             }
             ]
         };
+        //液面高度柱状图
         let option2 = {
-        title: {
-          text: "液面高度",
-          textStyle: {
-            //---主标题内容样式
-            color: "#000",
-            fontSize:20
-            // height:"50px"
-          },
-          padding: [1,18] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
-        },
-        tooltip: {
-          trigger: "axis",
-          axisPointer: {
-            type: "shadow"
-          }
-        },
-        legend: {
-            data:[]
-        },
-        grid: {
-          left: "3%",
-          bottom: "3%",
-          height:370,
-          containLabel: true
-        },
-        xAxis: [
-          {
-            name:'井号',
-            type: "category",
-            nameTextStyle:{fontSize:16},
-            data: wellName,
-            axisLabel: {
-              fontSize:14,
-              show: true, //---是否显示
-              inside: false, //---是否朝内
-              interval: 0,
-              rotate:45,
-              margin: 5
-            }
-          }
-        ],
-        yAxis: [
-          {
-            type: "value",
-            name:"米",
-            splitLine:{show:false},
-            axisLabel:{
-                fontSize:14,
+          title: {
+            text: "液面高度",
+            textStyle: {
+              //---主标题内容样式
+              color: "#000",
+              fontSize:16
+              // height:"50px"
             },
-            nameTextStyle:{fontSize:16},
-          }
-        ],
-        series: [
-          {
-            type: "bar",
-            barWidth: 30,
-            barMaxWidth: 50,
-            barCategoryGap: "30%",
-            barGap: "0%",
-            data: level,
-            itemStyle: {
-                normal: {
-                    label: {
-                        show: true, //开启显示
-                        position: 'top', //在上方显示
-                        textStyle: { //数值样式
-                            color: 'black',
-                            fontSize: 10
-                        }
-                    }
-                }
-            }, 
-          }
-        ]
+            padding: [1,18] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
+          },
+          tooltip: {
+            trigger: "axis",
+            axisPointer: {
+              type: "shadow"
+            }
+          },
+          legend: {
+              data:[]
+          },
+          grid: {
+            left: "3%",
+            top:"12%",
+            bottom: "3%",
+            height:370,
+            containLabel: true
+          },
+          xAxis: [
+            {
+              name:'井号',
+              type: "category",
+              data: wellName,
+              axisLabel: {
+                fontSize:14,
+                show: true, //---是否显示
+                inside: false, //---是否朝内
+                interval: 0,
+                rotate:45,
+                margin: 5
+              }
+            }
+          ],
+          yAxis: [
+            {
+              type: "value",
+              name:"米",
+              splitLine:{show:false},
+              axisLabel:{
+                  fontSize:14,
+              },
+            }
+          ],
+          series: [
+            {
+              type: "bar",
+              barWidth: 30,
+              barMaxWidth: 50,
+              barCategoryGap: "30%",
+              barGap: "0%",
+              data: level,
+              itemStyle: {
+                  normal: {
+                      label: {
+                          show: true, //开启显示
+                          position: 'top', //在上方显示
+                          textStyle: { //数值样式
+                              color: 'black',
+                              fontSize: 10
+                          }
+                      }
+                  }
+              }, 
+            }
+          ]
         };
+        //平衡率曲线图
+        let option3 = {
+          title: {
+            text: "平衡率"
+          },
+          grid: {
+            left: "6%"
+          },
+          tooltip: {
+            trigger: "axis"
+          },
+          legend: {//图例
+            data: ["井号1", "CTCC", "CUCC"],// 名字
+            tooltip: {
+              show: true,
+            },
+          },
+          xAxis: {
+            type: "category",
+            name: "时间",
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+          },
+          yAxis: {
+            type: "value",
+            name: "平衡率",
+            axisLabel: {
+              fontSize: 14
+            }
+          },
+          series: [
+            {
+              name: "井号1",
+              smooth: true, //光滑
+              data: [820, 932, 901, 934, 1290, 1330, 1320],
+              type: "line",
+              itemStyle: {
+                normal: {
+                  label: {
+                    show: false, //开启显示
+                    position: "top", //在上方显示
+                    textStyle: {
+                      //数值样式
+                      color: "black",
+                      fontSize: 16
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        };
+        //有功曲线图
+        let option4 = {
+          title: {
+            text: "有功"
+          },
+          grid: {
+            left: "6%"
+          },
+          tooltip: {
+            trigger: "axis"
+          },
+          xAxis: {
+            type: "category",
+            name: "时间",
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+          },
+          yAxis: {
+            type: "value",
+            name: "有功",
+            axisLabel: {
+              fontSize: 14
+            }
+          },
+          series: [
+            {
+              name: "功率",
+              smooth: true, //光滑
+              data: [820, 932, 901, 934, 1290, 1330, 1320],
+              type: "line",
+              itemStyle: {
+                normal: {
+                  label: {
+                    show: false, //开启显示
+                    position: "top", //在上方显示
+                    textStyle: {
+                      //数值样式
+                      color: "black",
+                      fontSize: 16
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
         this.$refs["ouput"].initChart(option1);
         this.$refs["level"].initChart(option2);
+        this.$refs["balance-rate"].initChart(option3);
+        this.$refs["power"].initChart(option4);
         })
     },
     chart_reload(days){
@@ -237,23 +416,65 @@ export default {
             break;
        }
     },
-    getlocation() {
-      let customOption = {
-      };
-      this.$nextTick(() => {
-        this.$refs["location"].initChart(customOption);
-      });
-    },
+    // getlocation() {
+    //   let customOption = {
+    //   };
+    //   this.$nextTick(() => {
+    //     this.$refs["location"].initChart(customOption);
+    //   });
+    // },
+    //点击柱状图
     handleClickChart(params) {
       this.wellid = this.wellId[params.dataIndex]
       this.$router.push({name:'well-detail',params:{id:this.wellid},query:{type:params.pro_type}});
     },
+    //点击饼图
+    ClickChart(params){
+      this.alarmStatus = params.name
+      this.$router.push({name:'deviceAlarm',params:{name:this.alarmStatus},query:{type:params.pro_type}});
+      console.log(this.alarmStatus)
+    },
+    //根据时间搜索平衡率和有功曲线图
+    search(){
+      console.log("搜索功能")
+    },
+    getDateRange(dateNow,intervalDays,bolPastTime){        
+      let oneDayTime = 24 * 60 * 60 * 1000;        
+      let list = [];        
+      let lastDay;         
+      if(bolPastTime == true){            
+        lastDay = new Date(dateNow.getTime() - intervalDays * oneDayTime);            
+        list.push(this.formateDate(lastDay));            
+        list.push(this.formateDate(dateNow));        
+      }else{            
+        lastDay = new Date(dateNow.getTime() + intervalDays * oneDayTime);            
+        list.push(this.formateDate(dateNow));            
+        list.push(this.formateDate(lastDay));        
+      }        
+      return list;     
+    },
+    formateDate(time){        
+      let year = time.getFullYear()        
+      let month = time.getMonth() + 1        
+      let day = time.getDate()         
+      if (month < 10) {         
+        month = '0' + month        
+      }         
+      if (day < 10) {          
+        day = '0' + day        
+        }         
+      return year + '-' + month + '-' + day + ''      
+    }
   },
   created() {
     this.homeData(1);
-  },
-  mounted() {
-    this.getlocation();
+    var date1 = new Date();
+    var list = this.getDateRange(date1,6,true)
+    this.default.beginDate = list[0] 
+    this.default.endDate = list[1] 
+    this.default.date.push(this.default.beginDate) 
+    this.default.date.push(this.default.endDate)
+    console.log(this.default.date)
   }
 };
 </script>
@@ -292,7 +513,7 @@ export default {
       
       <el-col :sm="12" :lg="6">
         <el-card class="home-header-item4" shadow="always">
-          <router-link :to="{name:'alarmQuery'}">
+          <router-link :to="{name:'deviceStatus'}">
             <div class="text-light">设备状态</div>
             <img class="statisticsImage"
               src="@/assets/statistics.png" alt="">
@@ -326,10 +547,16 @@ export default {
                 </div>
               </div>
               <div>
-                <BarChart @click-item="handleClickChart" ref="ouput" chart-id="output" style="height:450px" />
+                <BarChart @click-item="handleClickChart" ref="ouput" chart-id="output" style="height:420px" />
               </div>
-              <div style="margin-top:50px">
-                <BarChart @click-item="handleClickChart" ref="level" chart-id="level" style="height:450px" />
+              <div style="margin-top:20px">
+                <BarChart @click-item="handleClickChart" ref="level" chart-id="level" style="height:420px" />
+              </div>
+            </el-card>
+            <el-col style="height:15px"></el-col>
+            <el-card shadow="always" style="height:355px">
+              <div>
+                油井关联图
               </div>
             </el-card>
           </el-col>
@@ -353,9 +580,9 @@ export default {
                       ></el-progress>
                     </el-card>
                   </el-col>
-                  <el-col style="height:10px"></el-col>
+                  <el-col style="height:15px"></el-col>
                   <el-col :lg="24">
-                    <el-card shadow="always" style="height:200px">
+                    <el-card shadow="always" style="height:255px">
                       <div>
                         <div class="prompt-text">告警</div>
                         <strong style="color:black;font-size:15px">29 已处理 (40%)</strong>
@@ -367,14 +594,7 @@ export default {
                         ></el-progress>
                       </div>
                       <div style="margin-top:10px">
-                        <div class="prompt-text">工况诊断</div>
-                        <strong style="color:black;font-size:15px">24 已完成 (20%)</strong>
-                        <el-progress
-                          style="margin-top:10px"
-                          color="#28a745"
-                          :stroke-width="10"
-                          :percentage="20"
-                        ></el-progress>
+                       <chart @click-item="ClickChart" ref="alarm-summary" chart-id="alarm-summary" />
                       </div>
                     </el-card>
                   </el-col>
@@ -383,12 +603,12 @@ export default {
               <el-col :lg="12">
                 <el-row class="right-item">
                   <el-col :lg="24">
-                    <el-card shadow="always">
+                    <el-card shadow="always" style="height:160px">
                       <div style="display:flex">
                         <img
-                            style="width: 76px;height: 74px;margin-top:10px"
+                            style="width: 76px;height: 74px;margin-top:25px"
                             src="@/assets/output.jpg" alt="">
-                        <div style="margin-left:20px;margin-top:10px">
+                        <div style="margin-left:20px;margin-top:25px">
                           <div class="prompt-text">总产油量：(吨)</div>
                           <div style="font-size:25px;margin-top:8px;">{{this.total}}</div>
                         </div>
@@ -397,26 +617,26 @@ export default {
                   </el-col>
                   <el-col style="height:15px"></el-col>
                   <el-col :lg="24">
-                    <el-card shadow="always">
+                    <el-card shadow="always" style="height:160px">
                       <router-link :to="{name:'power'}">
                         <div style="display:flex">
                           <img
-                              style="width: 80px;height: 82px;margin-top:10px"
+                              style="width: 80px;height: 82px;margin-top:25px"
                               src="@/assets/work.jpg" alt="">
-                          <div class="prompt-text" style="margin-left:20px;margin-top:30px">能耗管理</div>
+                          <div class="prompt-text" style="margin-left:20px;margin-top:50px">能耗管理</div>
                         </div>
                       </router-link>
                     </el-card>
                   </el-col>
                   <el-col style="height:15px"></el-col>
                   <el-col :lg="24">
-                    <el-card shadow="always">
+                    <el-card shadow="always" style="height:160px">
                       <router-link :to="{name:'wellList'}">
                         <div style="display:flex">
                           <img
-                              style="width: 82px;height: 78px;margin-top:10px"
+                              style="width: 82px;height: 78px;margin-top:25px"
                               src="@/assets/info.jpg" alt="">
-                          <div class="prompt-text" style="margin-left:20px;margin-top:30px">基础信息</div>
+                          <div class="prompt-text" style="margin-left:20px;margin-top:50px">基础信息</div>
                         </div>
                       </router-link>
                     </el-card>
@@ -428,12 +648,33 @@ export default {
           <el-col :lg="24" style="height:15px" />
           <el-col>
             <el-card shadow="always">
-              <div class="card-header">
-                <h4 style="font-size:17px">油井位置分布</h4>
-              </div>
-              <div>
-                <BaiduMap ref="location" chart-id="location" />
-              </div>
+              <el-row>
+                <el-col :sm="10" style="margin-top:5px">
+                  <span style="font-size:15px">时间：</span>
+                  <el-date-picker
+                    v-model="time"
+                    type="daterange"
+                    style="width:200px"
+                    :picker-options="pickerOptions"
+                    :default-value="this.default.date"
+                    range-separator="-"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    align="right"
+                    size="mini"
+                    value-format="yyyy-MM-dd"
+                  ></el-date-picker>
+                </el-col>
+                <el-col :sm="3">
+                  <el-button
+                    @click="search()"
+                    icon="el-icon-search"
+                    style="height:27.99px;margin-top:5px"
+                    type="primary"/>
+                </el-col>
+              </el-row>
+              <LineChart ref="balance-rate" chart-id="balance-rate" style="height: 350px;margin-top:20px"/>
+              <LineChart ref="power" chart-id="power" style="height: 350px"/>
             </el-card>
           </el-col>
         </el-row>
@@ -477,7 +718,7 @@ export default {
     margin-bottom: 15px;
     .left {
       .el-card {
-        height: 1012px;
+        height: 950px;
       }
       .btn-group{
         display: flex;

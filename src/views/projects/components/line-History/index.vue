@@ -1,8 +1,10 @@
 <template>
   <div id="lineHistory">
-    <LineChart ref="output_chart" chart-id="output_chart" />
-    <LineChart ref="output_liquid" chart-id="output_liquid" />
-    <LineChart ref="ele-chart" chart-id="ele-chart" />
+    <LineChart ref="output_chart" chart-id="output_chart" style="height:350px"/>
+    <LineChart ref="output_liquid" chart-id="output_liquid" style="height:350px"/>
+    <LineChart ref="ele-chart" chart-id="ele-chart" style="height:350px"/>
+    <LineChart ref="power-chart" chart-id="power-chart" style="height:350px"/>
+    <LineChart ref="balance-chart" chart-id="balance-chart" style="height:350px"/>
   </div>
 </template>
 
@@ -201,12 +203,114 @@ export default {
       };
       this.$refs["ele-chart"].initChart(customOption);
       })
+    },
+    //获取有功曲线图
+    getPowerChart(){
+      let power = {
+        title: {
+          text: "有功"
+        },
+        tooltip: {
+          trigger: "axis"
+        },
+        xAxis: {
+          type: "category",
+          name: "时间",
+          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        },
+        yAxis: {
+          type: "value",
+          name: "有功",
+          axisLabel: {
+            fontSize: 14
+          }
+        },
+        series: [
+          {
+            name: "功率",
+            smooth: true, //光滑
+            data: [820, 932, 901, 934, 1290, 1330, 1320],
+            type: "line",
+            itemStyle: {
+              normal: {
+                label: {
+                  show: false, //开启显示
+                  position: "top", //在上方显示
+                  textStyle: {
+                    //数值样式
+                    color: "black",
+                    fontSize: 16
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+      this.$nextTick(()=>{
+        this.$refs["power-chart"].initChart(power);
+      });
+    },
+    //获取平衡率曲线图
+    getBalanceChart(){
+      let balance = {
+        title: {
+          text: "平衡率"
+        },
+        tooltip: {
+          trigger: "axis"
+        },
+        legend: {//图例
+          data: ["井号1"],// 名字
+          tooltip: {
+            show: true,
+          },
+        },
+        xAxis: {
+          type: "category",
+          name: "时间",
+          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        },
+        yAxis: {
+          type: "value",
+          name: "平衡率",
+          axisLabel: {
+            fontSize: 14
+          }
+        },
+        series: [
+          {
+            name: "井号1",
+            smooth: true, //光滑
+            data: [820, 932, 901, 934, 1290, 1330, 1320],
+            type: "line",
+            itemStyle: {
+              normal: {
+                label: {
+                  show: false, //开启显示
+                  position: "top", //在上方显示
+                  textStyle: {
+                    //数值样式
+                    color: "black",
+                    fontSize: 16
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+      this.$nextTick(()=>{
+        this.$refs["balance-chart"].initChart(balance);
+      });
     }
 
   },
   mounted() {
     // this.getOutputChart();
     this.getEleChart();
+    this.getPowerChart();
+    this.getBalanceChart()
   }
 };
 </script>

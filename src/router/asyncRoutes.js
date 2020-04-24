@@ -143,39 +143,39 @@ export default function asyncRoutes(params) {
                 icon: 'alarmManagement'
             },
             children: [{
-                    path: 'alarmQuery',
-                    name: 'alarmQuery',
+                    path: 'pumpAlarm',
+                    name: 'pumpAlarm',
                     component: () =>
-                        import ('@/views/alarmManagement/alarmQuery'),
+                        import ('@/views/alarmManagement/pumpAlarm'),
                     meta: {
                         title: '泵况告警',
                         icon: 'alarmQuery'
                     }
                 },
                 {
-                    path: 'alarmQuery',
-                    name: 'alarmQuery',
+                    path: 'waxAlarm',
+                    name: 'waxAlarm',
                     component: () =>
-                        import ('@/views/alarmManagement/alarmQuery'),
+                        import ('@/views/alarmManagement/waxAlarm'),
                     meta: {
                         title: '结蜡告警',
                         icon: 'alarmQuery'
                     }
                 },
                 {
-                    path: 'alarmQuery',
-                    name: 'alarmQuery',
+                    path: 'productAlarm',
+                    name: 'productAlarm',
                     component: () =>
-                        import ('@/views/alarmManagement/alarmQuery'),
+                        import ('@/views/alarmManagement/productAlarm'),
                     meta: {
                         title: '生产告警',
                         icon: 'alarmQuery'
                     }
                 }, {
-                    path: 'alarmQuery',
-                    name: 'alarmQuery',
+                    path: 'deviceAlarm/全部',
+                    name: 'deviceAlarm',
                     component: () =>
-                        import ('@/views/alarmManagement/alarmQuery'),
+                        import ('@/views/alarmManagement/deviceAlarm'),
                     meta: {
                         title: '设备告警',
                         icon: 'alarmQuery'

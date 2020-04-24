@@ -67,7 +67,7 @@ export default {
         legend: {
           orient: 'vertical',
           x: 'left',
-          data:['开井','关井']
+          data:chartData.name
         },
         series: [
           {

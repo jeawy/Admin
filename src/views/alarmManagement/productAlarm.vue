@@ -701,7 +701,7 @@ export default {
     }
   },
   created() {
-    this.GetalarmList();
+    this.GetalarmList()
   }
 };
 </script>

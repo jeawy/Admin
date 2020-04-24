@@ -59,7 +59,17 @@ export default [{
                 title: '告警详情',
                 icon: 'tree',
             }
-        }]
+        },{
+            path: 'deviceAlarm/:name',
+            name: 'deviceAlarm',
+            component: () =>
+                import ('@/views/alarmManagement/deviceAlarm'),
+            meta: {
+                title: '设备告警',
+                icon: 'tree',
+            }
+        }
+    ]
     },
     {
         path: '/projects',
