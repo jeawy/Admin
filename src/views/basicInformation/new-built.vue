@@ -283,18 +283,20 @@
       </el-row>
        <div class="btn">
         <el-button @click="cancel">取消</el-button>
-        <el-button type="primary" @click="submitForm('addwellForm',)">新建</el-button>
+        <el-button type="primary" @click="submitForm('addwellForm',)">{{id?'修改':'新建'}}</el-button>
       </div>
     </el-form>
+   
   </div>
 </template>
 <script>
 
-import { ApiAddWell,ApiGetWellList } from "@/api/wellList";
+import { ApiAddWell,ApiGetWellList ,ApiAlterWell} from "@/api/wellList";
 import { getDept } from "@/api/admin";
 export default {
   data() {
     return {
+       id: this.$route.params.id || "",
       depts: [],
       addwellForm: {},
       statuslist: [
@@ -356,6 +358,13 @@ export default {
       };
     }
   },
+  mounted() {
+    //  this.addwellForm = {
+    //     name: this.name,
+    //     belongs:this.belongs
+    //   };
+    //   console.log( this.addwellForm)
+  },
   methods: {
     getDeptList() {
       getDept().then(res => {
@@ -373,7 +382,155 @@ export default {
     },
      
     submitForm(addwellForm) {
-       let wellparams = {};
+        if (this.id) {
+          let wellparams = {};
+        wellparams = {
+          well_id: this.id,
+          dept_id: this.addwellForm.belongs,
+          number: this.addwellForm.number,
+          name: this.addwellForm.name,
+          status: this.addwellForm.status,
+          well_type: this.addwellForm.well_type,
+          depth: this.addwellForm.depth,
+          ip:this.addwellForm.ip,
+          rod:this.addwellForm.rod,
+          cover:this.addwellForm.cover,
+           pipe:this.addwellForm.pipe,
+          machine_type:this.addwellForm.machine_type,
+          machine:this.addwellForm.machine,
+           crank:this.addwellForm.crank,
+          box:this.addwellForm.box,
+          rated_power:this.addwellForm.rated_power,
+           motor_power:this.addwellForm.motor_power,
+          motor_type:this.addwellForm.motor_type,
+          big_balance_num:this.addwellForm.big_balance_num,
+           small_balance_num:this.addwellForm.small_balance_num,
+          size_1_big_balance:this.addwellForm.size_1_big_balance,
+          size_2_big_balance:this.addwellForm.size_2_big_balance,
+           size_1_small_balance:this.addwellForm.size_1_small_balance,
+          size_2_small_balance:this.addwellForm.size_2_small_balance,
+          weight_1_big_balance:this.addwellForm.weight_1_big_balance,
+           weight_2_big_balance:this.addwellForm.weight_2_big_balance,
+          weight_1_small_balance:this.addwellForm.weight_1_small_balance,
+          weight_2_small_balance:this.addwellForm.weight_2_small_balance,
+          size_1_crank:this.addwellForm.size_1_crank,
+          pump_diameter:this.addwellForm.pump_diameter,
+          tubing_outer_diameter:this.addwellForm.tubing_outer_diameter,
+          casing_inner_diameter:this.addwellForm.casing_inner_diameter,
+          pump_hang:this.addwellForm.pump_hang,
+          watery:this.addwellForm.watery,
+        };
+        if (wellparams.dept_id == undefined) {
+          delete wellparams.dept_id ;
+        }
+        if (wellparams.number == undefined) {
+          delete wellparams.number ;
+        }
+         if (wellparams.name == undefined) {
+          delete wellparams.name ;
+        }
+         if (wellparams.status == undefined) {
+          delete wellparams.status ;
+        }
+         if (wellparams.well_type == undefined) {
+          delete wellparams.well_type ;
+        }
+        if (wellparams.depth == undefined) {
+          delete wellparams.depth ;
+        }
+         if (wellparams.ip == undefined) {
+          delete wellparams.ip ;
+        }
+        if (wellparams.rod == undefined) {
+          delete wellparams.rod ;
+        }
+        if (wellparams.cover == undefined) {
+          delete wellparams.cover ;
+        }
+         if (wellparams.pipe == undefined) {
+          delete wellparams.pipe ;
+        }
+        if (wellparams.machine_type == undefined) {
+          delete wellparams.machine_type ;
+        }
+        if (wellparams.machine == undefined) {
+          delete wellparams.machine ;
+        }
+         if (wellparams.crank == undefined) {
+          delete wellparams.crank ;
+        }
+         if (wellparams.box == undefined) {
+          delete wellparams.box ;
+        }
+        if (wellparams.rated_power == undefined) {
+          delete wellparams.rated_power ;
+        }
+        if (wellparams.motor_power == undefined) {
+          delete wellparams.motor_power ;
+        }
+         if (wellparams.motor_type == undefined) {
+          delete wellparams.motor_type ;
+        }
+        if (wellparams.big_balance_num == undefined) {
+          delete wellparams.big_balance_num ;
+        }
+        if (wellparams.small_balance_num == undefined) {
+          delete wellparams.small_balance_num ;
+        }
+         if (wellparams.size_1_big_balance == undefined) {
+          delete wellparams.size_1_big_balance ;
+        }
+        if (wellparams.size_2_big_balance == undefined) {
+          delete wellparams.size_2_big_balance ;
+        }
+         if (wellparams.size_1_small_balance == undefined) {
+          delete wellparams.size_1_small_balance ;
+        }
+         if (wellparams.size_2_small_balance == undefined) {
+          delete wellparams.size_2_small_balance ;
+        }
+        if (wellparams.weight_1_big_balance == undefined) {
+          delete wellparams.weight_1_big_balance ;
+        }
+        if (wellparams.weight_2_big_balance == undefined) {
+          delete wellparams.weight_2_big_balance ;
+        }
+        if (wellparams.weight_1_small_balance == undefined) {
+          delete wellparams.weight_1_small_balance ;
+        }
+         if (wellparams.weight_2_small_balance == undefined) {
+          delete wellparams.weight_2_small_balance ;
+        }
+        if (wellparams.size_1_crank == undefined) {
+          delete wellparams.size_1_crank ;
+        }
+         if (wellparams.pump_diameter == undefined) {
+          delete wellparams.pump_diameter ;
+        }
+         if (wellparams.tubing_outer_diameter == undefined) {
+          delete wellparams.tubing_outer_diameter ;
+        }
+        if (wellparams.casing_inner_diameter == undefined) {
+          delete wellparams.casing_inner_diameter ;
+        }
+         if (wellparams.pump_hang == undefined) {
+          delete wellparams.pump_hang ;
+        }
+        if (wellparams.watery == undefined) {
+          delete wellparams.watery ;
+        }
+        ApiAlterWell(wellparams).then(({ data }) => {
+          if (data.status === 0) {
+            this.$message.success(data.msg);
+          this.addwellForm={};
+          } else {
+            this.$message.error(data.msg);
+           this.addwellForm={};
+          }
+        });
+        }
+        else{
+          let wellparams = {};
         wellparams = {
           dept_id: this.addwellForm.belongs,
           number: this.addwellForm.number,
@@ -517,6 +674,8 @@ export default {
            this.addwellForm={};
           }
         });
+        }
+       
     },
     cancel() {
        this.$refs["addwellForm"].resetFields();
@@ -531,7 +690,7 @@ export default {
   created() {
     this.getDeptList();
   },
-  mounted() {}
+  
 };
 </script>
 <style lang="scss">

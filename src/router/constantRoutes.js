@@ -92,6 +92,29 @@ export default [{
         }]
     },
     {
+        path: '/basicInformation',
+        component: Layout,
+        redirect: 'noRedirect',
+        meta: {
+          title: '基础信息',
+          icon: 'tree-basicInformation',
+        },
+        hidden: true,
+        children: [{
+            path: 'new-built/:id',
+            name: 'alter-built',
+            component: () =>
+                import ('@/views/basicInformation/new-built'),
+            meta: {
+                title: '新建',
+                icon: 'wellList',
+                // roles: 'manage_well'
+            }
+        },
+       
+      ]
+      },
+    {
         path: '/404',
         component: () =>
             import ('@/views/404'),
