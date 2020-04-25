@@ -97,7 +97,8 @@ export default function asyncRoutes(params) {
                     import ('@/views/basicInformation/new-built'),
                 meta: {
                     title: '新建',
-                    icon: 'wellList'
+                    icon: 'wellList',
+                    roles: 'manage_well'
                 }
             }, ]
         },
