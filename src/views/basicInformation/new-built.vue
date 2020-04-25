@@ -1,6 +1,6 @@
 <template>
   <div id="built">
-    <el-form :model="addwellForm" status-icon ref="addGiftsForm" label-width="90px">
+    <el-form :model="addwellForm" status-icon ref="addwellForm" label-width="90px">
       <el-row :gutter="15">
         <el-col :sm="6">
           <el-form-item label="归属:" prop="belongs">
@@ -282,7 +282,7 @@
        
       </el-row>
        <div class="btn">
-        <!-- <el-button @click="cancel">取消</el-button> -->
+        <el-button @click="cancel">取消</el-button>
         <el-button type="primary" @click="submitForm('addwellForm',)">新建</el-button>
       </div>
     </el-form>
@@ -508,22 +508,19 @@ export default {
         if (wellparams.watery == undefined) {
           delete wellparams.watery ;
         }
-        // console.log('11111')
-        // console.log(wellparams)
         ApiAddWell(wellparams).then(({ data }) => {
           if (data.status === 0) {
             this.$message.success(data.msg);
-            // this.GetwellList();
+          this.addwellForm={};
           } else {
             this.$message.error(data.msg);
-         
-            // this.GetwellList();
+           this.addwellForm={};
           }
         });
     },
-    // cancel() {
-      
-    // },
+    cancel() {
+       this.$refs["addwellForm"].resetFields();
+    },
       GetwellList () {
       ApiGetWellList().then(res => {
         this.wellList = res.data.msg.well_list;
@@ -541,6 +538,7 @@ export default {
 #built {
   //   font-size: 12px;
   background-color: #f4f5f5;
+  height: 100%;
   .row-bg-top {
     align-items: center;
     padding: 10px;
@@ -553,8 +551,8 @@ export default {
   }
   .btn {
   text-align: right;
-  margin-top: 25px;;
-  margin-right:110px;
+  margin-top: 0px;;
+  margin-right:60px;
 }
 }
 </style>
