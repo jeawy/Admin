@@ -4,7 +4,7 @@ import Chart from "@/components/ECharts/PieChart";
 import LineChart from "@/components/ECharts/LineMarker";
 import BarChart from "@/components/ECharts/BarMarker";
 import BaiduMap from "@/components/ECharts/BaiduMap";
-import { ApiGetHomedata } from "@/api/homeData";
+import { ApiGetHomedata,ApiGetBalance } from "@/api/homeData";
 export default {
   name: "HomePage",
   components: {
@@ -77,10 +77,13 @@ export default {
             }
           }
         ]
-      }
+      },
+      balanceList:[],
+      click:false
     };
   },
   methods: {
+    //获取首页数据
     homeData(days){
       let data = {days:days};
       ApiGetHomedata(data).then(res => {
@@ -93,10 +96,10 @@ export default {
         this.openPercentage = chartData.open_percentage
         this.total = chartData.total
         chartData.results.forEach(item => {
-            wellName.push(item.well.name)
-            output.push(item.output)
-            level.push(item.level)
-            this.wellId.push(item.well.id)
+          wellName.push(item.well.name)
+          output.push(item.output)
+          level.push(item.level)
+          this.wellId.push(item.well.id)
         });
         //开关井状态
         let chart1 = [
@@ -291,57 +294,6 @@ export default {
             }
           ]
         };
-        //平衡率曲线图
-        let option3 = {
-          title: {
-            text: "平衡率"
-          },
-          grid: {
-            left: "6%"
-          },
-          tooltip: {
-            trigger: "axis"
-          },
-          legend: {//图例
-            data: ["井号1", "CTCC", "CUCC"],// 名字
-            tooltip: {
-              show: true,
-            },
-          },
-          xAxis: {
-            type: "category",
-            name: "时间",
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-          },
-          yAxis: {
-            type: "value",
-            name: "平衡率",
-            axisLabel: {
-              fontSize: 14
-            }
-          },
-          series: [
-            {
-              name: "井号1",
-              smooth: true, //光滑
-              data: [820, 932, 901, 934, 1290, 1330, 1320],
-              type: "line",
-              itemStyle: {
-                normal: {
-                  label: {
-                    show: false, //开启显示
-                    position: "top", //在上方显示
-                    textStyle: {
-                      //数值样式
-                      color: "black",
-                      fontSize: 16
-                    }
-                  }
-                }
-              }
-            }
-          ]
-        };
         //有功曲线图
         let option4 = {
           title: {
@@ -387,10 +339,9 @@ export default {
             }
           ]
         }
+        this.$refs["power"].initChart(option4);
         this.$refs["ouput"].initChart(option1);
         this.$refs["level"].initChart(option2);
-        this.$refs["balance-rate"].initChart(option3);
-        this.$refs["power"].initChart(option4);
         })
     },
     chart_reload(days){
@@ -423,6 +374,111 @@ export default {
     //     this.$refs["location"].initChart(customOption);
     //   });
     // },
+    //根据时间搜索平衡率和有功曲线图
+    getChart(){
+      var date1 = new Date()
+      var list = this.getDateRange(date1,6,true)
+      let date = ""
+      if(this.click == true){
+        date = this.time[0] + "-" + this.time[1]
+      }else{
+        date = list[0] + "-" + list[1]
+      }
+      let data = {
+        daterange:date
+      }
+      ApiGetBalance(data).then(({data}) =>{
+        let dataList = []
+        let wellName = []
+        let series = []
+        let time_list = []
+        let balance_list = []
+        dataList = data.msg.map(item =>{
+          return item.list
+        })
+        wellName = data.msg.map(item =>{
+          return item.well_name
+        })
+        for(let i = 0; i<dataList.length; i++){
+          this.balanceList = dataList[i]
+          time_list = this.balanceList.map(item =>{
+            return item.date
+          })
+          balance_list = this.balanceList.map(item =>{
+            return item.balance
+          })
+          let item = {
+            name: wellName[i],
+            smooth: true, //光滑
+            data: balance_list,
+            type: "line"
+          };
+          series.push(item);
+          //平衡率曲线图
+          let option3 = {
+            title: {
+              text: "平衡率"
+            },
+            grid: {
+              left: "6%"
+            },
+            // legend: {//图例
+            //   data: wellName,// 名字
+            //   tooltip: {
+            //     show: true,
+            //   },
+            // },
+            tooltip: {
+              trigger: "axis",
+              position: function(point, params, dom, rect, size) {
+                //其中point为当前鼠标的位置，size中有两个属性：viewSize和contentSize
+                var x = point[0]; //
+                var y = point[1];
+                var viewWidth = size.viewSize[0];
+                var viewHeight = size.viewSize[1];
+                var boxWidth = size.contentSize[0];
+                var boxHeight = size.contentSize[1];
+                var posX = 0; //x坐标位置
+                var posY = 0; //y坐标位置
+                if (x < boxWidth) {
+                  //左边放不开
+                  posX = x + 10;
+                } else {
+                  //左边放的下
+                  posX = x - boxWidth;
+                }
+                if (y < boxHeight) {
+                  //上边放不开
+                  posY = 5;
+                } else {
+                  //上边放得下
+                  posY = y - boxHeight;
+                }
+                return [posX, posY];
+              }
+            },
+            xAxis: {
+              type: "category",
+              name: "时间",
+              data: time_list
+            },
+            yAxis: {
+              type: "value",
+              name: "平衡率",
+              axisLabel: {
+                fontSize: 14
+              }
+            },
+            series: series
+          };
+          this.$refs["balance-rate"].initChart(option3);
+          }
+      })
+    },
+    search(){
+      this.click = true
+      this.getChart()
+    },
     //点击柱状图
     handleClickChart(params) {
       this.wellid = this.wellId[params.dataIndex]
@@ -432,12 +488,8 @@ export default {
     ClickChart(params){
       this.alarmStatus = params.name
       this.$router.push({name:'deviceAlarm',params:{name:this.alarmStatus},query:{type:params.pro_type}});
-      console.log(this.alarmStatus)
     },
-    //根据时间搜索平衡率和有功曲线图
-    search(){
-      console.log("搜索功能")
-    },
+    //获取近一周时间的函数
     getDateRange(dateNow,intervalDays,bolPastTime){        
       let oneDayTime = 24 * 60 * 60 * 1000;        
       let list = [];        
@@ -453,6 +505,7 @@ export default {
       }        
       return list;     
     },
+    //格式化时间
     formateDate(time){        
       let year = time.getFullYear()        
       let month = time.getMonth() + 1        
@@ -463,18 +516,19 @@ export default {
       if (day < 10) {          
         day = '0' + day        
         }         
-      return year + '-' + month + '-' + day + ''      
+      return year + '/' + month + '/' + day + ''      
     }
   },
   created() {
     this.homeData(1);
+    this.getChart();
     var date1 = new Date();
     var list = this.getDateRange(date1,6,true)
     this.default.beginDate = list[0] 
     this.default.endDate = list[1] 
     this.default.date.push(this.default.beginDate) 
     this.default.date.push(this.default.endDate)
-    console.log(this.default.date)
+    // console.log(this.default.date)
   }
 };
 </script>
@@ -503,7 +557,7 @@ export default {
        
       <el-col :sm="12" :lg="6">
         <el-card class="home-header-item3" shadow="always">
-          <router-link :to="{name:'alarmQuery'}">
+          <router-link :to="{name:'deviceAlarm'}">
             <div class="text-light">告警查询</div>
             <img class="queryImage"
                 src="@/assets/warning.png" alt="">
@@ -662,7 +716,7 @@ export default {
                     end-placeholder="结束日期"
                     align="right"
                     size="mini"
-                    value-format="yyyy-MM-dd"
+                    value-format="yyyy/MM/dd"
                   ></el-date-picker>
                 </el-col>
                 <el-col :sm="3">

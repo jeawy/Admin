@@ -124,7 +124,7 @@ export default {
      */
     initChart(customOption = {}) {
       let option = Object.assign({}, DefaultOption, customOption);
-      this.chart.setOption(option);
+      this.chart.setOption(option,true);
       this.chart.hideLoading()
     }
   }

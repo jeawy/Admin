@@ -3,3 +3,7 @@ import AXIOS from '@/utils/request'
 export function ApiGetHomedata(params) {
     return AXIOS.get('api/', { params })
 }
+//获取平衡率
+export function ApiGetBalance(params) {
+    return AXIOS.get('/api/realdata/balance/', { params })
+}
