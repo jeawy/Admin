@@ -7,3 +7,7 @@ export function ApiGetHomedata(params) {
 export function ApiGetBalance(params) {
     return AXIOS.get('/api/realdata/balance/', { params })
 }
+//获取首页告警
+export function ApiGetAlarm(params) {
+    return AXIOS.get('/api/warning/stat/', { params })
+}

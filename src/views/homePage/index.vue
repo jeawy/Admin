@@ -4,14 +4,16 @@ import Chart from "@/components/ECharts/PieChart";
 import LineChart from "@/components/ECharts/LineMarker";
 import BarChart from "@/components/ECharts/BarMarker";
 import BaiduMap from "@/components/ECharts/BaiduMap";
-import { ApiGetHomedata,ApiGetBalance } from "@/api/homeData";
+import GraphChart from "@/components/ECharts/GraphChart";
+import { ApiGetHomedata,ApiGetBalance,ApiGetAlarm } from "@/api/homeData";
 export default {
   name: "HomePage",
   components: {
     Chart,
     BarChart,
     BaiduMap,
-    LineChart
+    LineChart,
+    GraphChart
   },
   data() {
     return {
@@ -24,12 +26,7 @@ export default {
       wellid:0,
       wellId:[],
       alarmStatus:"",
-      time:"",
-      default: {
-        date:[],
-        beginDate: '',
-        endDate: ''
-      },
+      time:[],
       pickerOptions: {
         shortcuts: [
           {
@@ -79,7 +76,8 @@ export default {
         ]
       },
       balanceList:[],
-      click:false
+      click:false,
+      length:0
     };
   },
   methods: {
@@ -112,32 +110,8 @@ export default {
             value: res.data.stop_count
           }
         ];
-        //告警汇总
-        let chart2 = [
-          {
-            name: "新增",
-            value: 10
-          },
-          {
-            name: "忽略",
-            value: 20
-          },
-          {
-            name: "关闭",
-            value: 30
-          },
-          {
-            name: "误报",
-            value: 40
-          },
-          {
-            name: "已处置",
-            value: 50
-          }
-        ]
         this.$nextTick(()=>{
           this.$refs["well-status"].initChart("", chart1);
-          this.$refs["alarm-summary"].initChart("", chart2);
         });
         //产量柱状图
         let option1 = {
@@ -377,7 +351,7 @@ export default {
     //根据时间搜索平衡率和有功曲线图
     getChart(){
       var date1 = new Date()
-      var list = this.getDateRange(date1,6,true)
+      var list = this.getDateRange(date1,7,true)
       let date = ""
       if(this.click == true){
         date = this.time[0] + "-" + this.time[1]
@@ -393,22 +367,35 @@ export default {
         let series = []
         let time_list = []
         let balance_list = []
+        let name = ""
         dataList = data.msg.map(item =>{
           return item.list
         })
         wellName = data.msg.map(item =>{
           return item.well_name
         })
-        for(let i = 0; i<dataList.length; i++){
-          this.balanceList = dataList[i]
-          time_list = this.balanceList.map(item =>{
-            return item.date
-          })
-          balance_list = this.balanceList.map(item =>{
-            return item.balance
-          })
+        if(dataList == ""){
+          this.length = dataList.length + 1
+        }else{
+          this.length = dataList.length
+        }
+        for(let i = 0; i<this.length; i++){
+          if(dataList == ""){
+            time_list = [];
+            balance_list = [];
+            name = ""
+          }else{
+            this.balanceList = dataList[i]
+            time_list = this.balanceList.map(item =>{
+              return item.date
+            })
+            balance_list = this.balanceList.map(item =>{
+              return item.balance
+            })
+            name = wellName[i]
+          }
           let item = {
-            name: wellName[i],
+            name: name,
             smooth: true, //光滑
             data: balance_list,
             type: "line"
@@ -479,6 +466,53 @@ export default {
       this.click = true
       this.getChart()
     },
+    //油井关联图
+    getWellGraph(){
+      let customOption = {
+      };
+      this.$nextTick(() => {
+        this.$refs["well-graph"].initChart(customOption);
+      });
+    },
+    //点击油井关联图中的某一项
+    handleGraph(params){
+      console.log("1111")
+      console.log(params)
+    },
+    //获取首页告警
+    getAlarm(){
+      ApiGetAlarm().then(({data}) =>{
+        console.log(data)
+        let alarmList = []
+        alarmList = data.msg
+        //告警汇总
+        let chart2 = [
+          {
+            name: "忽略",
+            value: alarmList[1].num
+          },
+          {
+            name: "关闭",
+            value: alarmList[2].num
+          },
+          {
+            name: "误报",
+            value: alarmList[3].num
+          },
+          {
+            name: "已处置",
+            value: alarmList[4].num
+          },
+          {
+            name: "新增",
+            value: alarmList[0].num
+          },
+        ]
+        this.$nextTick(()=>{
+          this.$refs["alarm-summary"].initChart("", chart2);
+        });
+      })
+    },
     //点击柱状图
     handleClickChart(params) {
       this.wellid = this.wellId[params.dataIndex]
@@ -521,14 +555,13 @@ export default {
   },
   created() {
     this.homeData(1);
+    this.getWellGraph();
     this.getChart();
+    this.getAlarm();
     var date1 = new Date();
-    var list = this.getDateRange(date1,6,true)
-    this.default.beginDate = list[0] 
-    this.default.endDate = list[1] 
-    this.default.date.push(this.default.beginDate) 
-    this.default.date.push(this.default.endDate)
-    // console.log(this.default.date)
+    var list = this.getDateRange(date1,7,true)
+    this.time[0] = list[0]
+    this.time[1] = list[1]
   }
 };
 </script>
@@ -608,9 +641,12 @@ export default {
               </div>
             </el-card>
             <el-col style="height:15px"></el-col>
-            <el-card shadow="always" style="height:355px">
+            <el-card shadow="always" style="height:500px">
               <div>
                 油井关联图
+              </div>
+              <div>
+                <GraphChart @click-item="handleGraph" ref="well-graph" chart-id="well-graph" style="height:420px"/>
               </div>
             </el-card>
           </el-col>
@@ -703,14 +739,13 @@ export default {
           <el-col>
             <el-card shadow="always">
               <el-row>
-                <el-col :sm="10" style="margin-top:5px">
+                <el-col :sm="9" :lg="10" style="margin-top:5px">
                   <span style="font-size:15px">时间：</span>
                   <el-date-picker
                     v-model="time"
                     type="daterange"
                     style="width:200px"
                     :picker-options="pickerOptions"
-                    :default-value="this.default.date"
                     range-separator="-"
                     start-placeholder="开始日期"
                     end-placeholder="结束日期"
