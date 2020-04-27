@@ -10,7 +10,7 @@
 
 <script>
 import LineChart from "@/components/ECharts/LineMarker";
-import { getHistoryData } from "@/api/welldetail";
+import { getHistoryData,viewPowersMonth } from "@/api/welldetail";
 import { ApiGetElectdata} from "@/api/realdata";
 import dayjs from "dayjs";
 export default {
@@ -252,38 +252,41 @@ export default {
       });
     },
     //获取平衡率曲线图
-    getBalanceChart(){
-      let balance = {
-        title: {
-          text: "平衡率"
-        },
-        tooltip: {
-          trigger: "axis"
-        },
-        legend: {//图例
-          data: ["井号1"],// 名字
-          tooltip: {
-            show: true,
+    getBalanceChart(id,date){
+      viewPowersMonth({id:id,daily:"",daterange:date}).then(({data}) =>{
+        let balance = [];
+        let dates_list = [];
+        data.msg.forEach(item => {
+          dates_list.push(item.date);
+          balance.push(item.balance);
+        });
+        let option3 = {
+          title: {
+            text: "平衡度 ",
           },
-        },
-        xAxis: {
-          type: "category",
-          name: "时间",
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-        },
-        yAxis: {
-          type: "value",
-          name: "平衡率",
-          axisLabel: {
-            fontSize: 14
-          }
-        },
-        series: [
-          {
-            name: "井号1",
+          tooltip: {
+            trigger: "axis"
+          },
+          legend: {
+            data: []
+          },
+          xAxis: {
+            name: "时间",
+            type: "category",
+            triggerEvent: true, //为标签添加触发事件
+            data: dates_list
+          },
+          yAxis: {
+            type: "value",
+            minInterval: 0.3,
+            name: "米",
+            axisLabel: { fontSize: 14 },
+          },
+          series: {
+            name: "平衡度",
             smooth: true, //光滑
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
             type: "line",
+            data: balance,
             itemStyle: {
               normal: {
                 label: {
@@ -298,13 +301,12 @@ export default {
               }
             }
           }
-        ]
-      }
-      this.$nextTick(()=>{
-        this.$refs["balance-chart"].initChart(balance);
-      });
+        };
+        this.$nextTick(()=>{
+          this.$refs["balance-chart"].initChart(option3);
+        })
+      })
     }
-
   },
   mounted() {
     // this.getOutputChart();

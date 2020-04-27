@@ -110,11 +110,11 @@
             <div class="selectTime">
               <span>时间范围</span>
               <el-date-picker
-                style="width:350px;"
+                style="width:250px;"
                 v-model="time"
                 type="daterange"
                 :picker-options="pickerOptions"
-                range-separator="至"
+                range-separator="-"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
                 align="right"
@@ -122,7 +122,7 @@
               <el-button
                 @click="search()"
                 icon="el-icon-search"
-                style="height:27.99px;margin-left: -5px;"
+                style="height:27.99px;"
                 type="primary"
               />
               <!-- <a target="__blank" href="/p144/p144/?">点击查看更多点位数据</a> -->
@@ -220,7 +220,7 @@ export default {
           }
         ]
       },
-      time: {}
+      time: []
     };
   },
   methods: {
@@ -341,6 +341,10 @@ export default {
         this.$route.params.id,
         dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
       );
+      this.$refs["lineHistory"].getBalanceChart(
+        this.$route.params.id,
+        dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
+      );
       this.$refs["tableHistory"].getHistoryData(
         this.$route.params.id,
         dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
@@ -370,6 +374,9 @@ export default {
         this.$refs["lineHistory"].getOutputChart(this.$route.params.id);
       });
       this.$nextTick(() => {
+        this.$refs["lineHistory"].getBalanceChart(this.$route.params.id);
+      });
+      this.$nextTick(() => {
         this.$refs["lineHistory"].getEleChart(this.$route.params.id);
       });
       this.$nextTick(() => {
@@ -381,10 +388,43 @@ export default {
       this.$nextTick(() => {
         this.$refs["relMeasure"].getMeasureData(this.$route.params.id);
       });
+    },
+    //获取近300天时间的函数
+    getDateRange(dateNow,intervalDays,bolPastTime){        
+      let oneDayTime = 24 * 60 * 60 * 1000;        
+      let list = [];        
+      let lastDay;         
+      if(bolPastTime == true){            
+        lastDay = new Date(dateNow.getTime() - intervalDays * oneDayTime);            
+        list.push(this.formateDate(lastDay));            
+        list.push(this.formateDate(dateNow));        
+      }else{            
+        lastDay = new Date(dateNow.getTime() + intervalDays * oneDayTime);            
+        list.push(this.formateDate(dateNow));            
+        list.push(this.formateDate(lastDay));        
+      }        
+      return list;     
+    },
+    //格式化时间
+    formateDate(time){        
+      let year = time.getFullYear()        
+      let month = time.getMonth() + 1        
+      let day = time.getDate()         
+      if (month < 10) {         
+        month = '0' + month        
+      }         
+      if (day < 10) {          
+        day = '0' + day        
+        }         
+      return year + '/' + month + '/' + day + ''      
     }
   },
   created() {
     this.getWellDetails();
+    var date = new Date();
+    var list = this.getDateRange(date,300,true)
+    this.time[0] = list[0]
+    this.time[1] = list[1]
   },
   mounted() {
     this.getPowerMonth();
