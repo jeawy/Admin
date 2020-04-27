@@ -91,13 +91,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="rod" label="光杆规范" width="130" align="center"></el-table-column>
-      <el-table-column prop="cover" label="套管规范" width="130" align="center"></el-table-column>
-      <el-table-column prop="pipe" label="油管规范" width="130" align="center"></el-table-column>
-      <el-table-column prop="machine_type" label="机型" width="130" align="center"></el-table-column>
-      <el-table-column prop="machine" label="电机" width="130" align="center"></el-table-column>
-      <el-table-column prop="crank" label="曲柄" width="130" align="center"></el-table-column>
-      <el-table-column prop="box" label="配电箱" width="130" align="center"></el-table-column>
-      <el-table-column :key="18" label="操作" align="center" width="110px;">
+       <el-table-column :key="18" label="操作" align="center" width="130px;">
         <template slot-scope="scope">
           <el-tooltip effect="dark" content="修改" placement="top">
             <router-link
@@ -115,13 +109,20 @@
               <el-button
                 @click="deleteWell(scope.row.id)"
                 icon="el-icon-delete"
-                style="color:red;margin-left:10px;"
+                style="color:red;margin-left:20px;"
                 type="text"
                   v-if="$store.state.login.userInfo.auth.manage_well"
               />
             </el-tooltip>
         </template>
       </el-table-column>
+      <el-table-column prop="cover" label="套管规范" width="130" align="center"></el-table-column>
+      <el-table-column prop="pipe" label="油管规范" width="130" align="center"></el-table-column>
+      <el-table-column prop="machine_type" label="机型" width="130" align="center"></el-table-column>
+      <el-table-column prop="machine" label="电机" width="130" align="center"></el-table-column>
+      <el-table-column prop="crank" label="曲柄" width="130" align="center"></el-table-column>
+      <el-table-column prop="box" label="配电箱" width="130" align="center"></el-table-column>
+     
     </el-table>
     <div class="block" style="text-align: right">
       <el-pagination
