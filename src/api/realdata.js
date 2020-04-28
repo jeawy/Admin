@@ -3,6 +3,10 @@ import AXIOS from '@/utils/request'
 export function ApiGetRealdata(params) {
     return AXIOS.get('api/realdata/realdata/', { params })
 }
+// 获取功耗
+export function ApiGetPower(params) {
+    return AXIOS.get('/api/realdata/realdata/?active', { params })
+}
 //获取历史数据
 export function ApiGetHistorydata(params) {
     return AXIOS.get('api/clientdata/clientdata/', { params })
@@ -11,4 +15,5 @@ export function ApiGetHistorydata(params) {
 export function ApiGetElectdata(params) {
     return AXIOS.get('api/p144/p144/', { params })
 }
+
 

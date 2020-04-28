@@ -6,6 +6,8 @@ import BarChart from "@/components/ECharts/BarMarker";
 import BaiduMap from "@/components/ECharts/BaiduMap";
 import GraphChart from "@/components/ECharts/GraphChart";
 import { ApiGetHomedata,ApiGetBalance,ApiGetAlarm } from "@/api/homeData";
+import { ApiGetPower } from "@/api/realdata";
+import dayjs from "dayjs";
 export default {
   name: "HomePage",
   components: {
@@ -268,52 +270,6 @@ export default {
             }
           ]
         };
-        //有功曲线图
-        let option4 = {
-          title: {
-            text: "有功"
-          },
-          grid: {
-            left: "6%"
-          },
-          tooltip: {
-            trigger: "axis"
-          },
-          xAxis: {
-            type: "category",
-            name: "时间",
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-          },
-          yAxis: {
-            type: "value",
-            name: "有功",
-            axisLabel: {
-              fontSize: 14
-            }
-          },
-          series: [
-            {
-              name: "功率",
-              smooth: true, //光滑
-              data: [820, 932, 901, 934, 1290, 1330, 1320],
-              type: "line",
-              itemStyle: {
-                normal: {
-                  label: {
-                    show: false, //开启显示
-                    position: "top", //在上方显示
-                    textStyle: {
-                      //数值样式
-                      color: "black",
-                      fontSize: 16
-                    }
-                  }
-                }
-              }
-            }
-          ]
-        }
-        this.$refs["power"].initChart(option4);
         this.$refs["ouput"].initChart(option1);
         this.$refs["level"].initChart(option2);
         })
@@ -341,11 +297,12 @@ export default {
             break;
        }
     },
-    // getlocation() {
+    //油井关联图
+    // getWellGraph(){
     //   let customOption = {
     //   };
     //   this.$nextTick(() => {
-    //     this.$refs["location"].initChart(customOption);
+    //     this.$refs["well-graph"].initChart(customOption);
     //   });
     // },
     //根据时间搜索平衡率和有功曲线图
@@ -368,11 +325,9 @@ export default {
         let time_list = []
         let balance_list = []
         let name = ""
-        dataList = data.msg.map(item =>{
-          return item.list
-        })
-        wellName = data.msg.map(item =>{
-          return item.well_name
+        data.msg.forEach(item =>{
+          dataList.push(item.list)
+          wellName.push(item.well_name)
         })
         if(dataList == ""){
           this.length = dataList.length + 1
@@ -407,7 +362,7 @@ export default {
               text: "平衡率"
             },
             grid: {
-              left: "6%"
+              left: "8%"
             },
             // legend: {//图例
             //   data: wellName,// 名字
@@ -461,28 +416,94 @@ export default {
           this.$refs["balance-rate"].initChart(option3);
           }
       })
+      let data1 = {}
+      if(this.click == true){
+        data1 = {
+          active:"",
+          daterange:this.time[0] + "-" + this.time[1]
+        }
+      }else{
+        data1 = {active:""}
+      }
+      ApiGetPower(data1).then(({data}) =>{
+        //时间戳转换函数
+        function dateFormat(date) {
+          if (date) {
+            date *= 1000
+            return dayjs(date).format('YYYY/MM/DD HH:mm')
+          } else {
+            return ''
+          }
+        }
+        let dataList = data.msg
+        let wellName = []
+        let series = []
+        let active_list = []
+        let dates_list = []
+        if(dataList == ""){
+          this.length = dataList.length + 1
+        }else{
+          this.length = dataList.length
+        }
+        for (let i = 0;i < this.length; i++){ 
+          if(dataList == ""){
+            active_list = []
+            wellName = []
+            dates_list = []
+          }else{
+            for(let j = 0 ; j < dataList[i].length;j++){
+              if(dataList !== ""){
+                active_list.push(dataList[i][j].active)
+                wellName.push(dataList[i][j].well_name)
+                dates_list.push(dateFormat(dataList[0][j].time));
+              }
+            }
+          }
+          let item = {
+            name: wellName[0],
+            smooth: true, //光滑
+            data: active_list,
+            type: "line"
+          };
+          series.push(item);
+          active_list = []
+          wellName = []
+          let option4 = {
+            title: {
+              text: "有功"
+            },
+            grid: {
+              left: "8%"
+            },
+            tooltip: {
+              trigger: "axis"
+            },
+            xAxis: {
+              type: "category",
+              name: "时间",
+              data: dates_list
+            },
+            yAxis: {
+              type: "value",
+              name: "有功",
+              axisLabel: {
+                fontSize: 14
+              }
+            },
+            series:series
+          }
+          dates_list = []
+          this.$refs["power"].initChart(option4);
+        }
+      })
     },
     search(){
       this.click = true
       this.getChart()
     },
-    //油井关联图
-    getWellGraph(){
-      let customOption = {
-      };
-      this.$nextTick(() => {
-        this.$refs["well-graph"].initChart(customOption);
-      });
-    },
-    //点击油井关联图中的某一项
-    handleGraph(params){
-      console.log("1111")
-      console.log(params)
-    },
     //获取首页告警
     getAlarm(){
       ApiGetAlarm().then(({data}) =>{
-        console.log(data)
         let alarmList = []
         alarmList = data.msg
         //告警汇总
@@ -523,6 +544,11 @@ export default {
       this.alarmStatus = params.name
       this.$router.push({name:'deviceAlarm',params:{name:this.alarmStatus},query:{type:params.pro_type}});
     },
+    //点击油井关联图中的某一项
+    clickGraph(params){
+      console.log("111")
+      console.log(params)
+    },
     //获取近一周时间的函数
     getDateRange(dateNow,intervalDays,bolPastTime){        
       let oneDayTime = 24 * 60 * 60 * 1000;        
@@ -555,7 +581,7 @@ export default {
   },
   created() {
     this.homeData(1);
-    this.getWellGraph();
+    // this.getWellGraph();
     this.getChart();
     this.getAlarm();
     var date1 = new Date();
@@ -645,9 +671,9 @@ export default {
               <div>
                 油井关联图
               </div>
-              <div>
-                <GraphChart @click-item="handleGraph" ref="well-graph" chart-id="well-graph" style="height:420px"/>
-              </div>
+              <!-- <div>
+                <GraphChart  @click-item="clickGraph" ref="well-graph" chart-id="well-graph" style="height:420px"/>
+              </div> -->
             </el-card>
           </el-col>
         </el-row>
@@ -736,7 +762,7 @@ export default {
             </el-row>
           </el-col>
           <el-col :lg="24" style="height:15px" />
-          <el-col>
+          <el-col :lg="24">
             <el-card shadow="always">
               <el-row>
                 <el-col :sm="9" :lg="10" style="margin-top:5px">
