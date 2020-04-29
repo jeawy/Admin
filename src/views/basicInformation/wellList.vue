@@ -27,6 +27,23 @@
           ></el-option>
         </el-select>
       </el-col>
+       <el-col :span="2" class="col-bg">
+          变动日期:
+        </el-col>
+        <el-col :span="4" type="flex">
+          <el-date-picker
+            v-model="wellDatePicker"
+            type="daterange"
+            align="right"
+            range-separator="-"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
+            size="mini"
+            style="width:200px"
+            :picker-options="pickerOptions"
+            value-format="yyyy/MM/dd"
+          ></el-date-picker>
+        </el-col>
       <el-col :span="5">
         <el-button type="primary" style="height:27.99px;margin-left:10px" @click="searchWell()">点击查询</el-button>
       </el-col>
@@ -39,9 +56,9 @@
       :header-cell-style="{color:'#212529',fontSize:'16px',fontWeight:400}"
       :row-style="{fontSize:'16px',color:'#212529;',fontWeight:400,}"
     >
-      <el-table-column type="index" width="130" label="序号" align="center"></el-table-column>
-      <el-table-column prop="number" label="井号" width="130" align="center"></el-table-column>
-      <el-table-column label="井名" width="200" align="center">
+      <el-table-column type="index" width="80px" label="序号" align="center"></el-table-column>
+      <el-table-column prop="number" label="井号" width="80px;" align="center"></el-table-column>
+      <el-table-column label="井名" width="120" align="center">
         <template slot-scope="scope">
           <router-link
             style="cursor: pointer;"
@@ -49,7 +66,7 @@
           >{{scope.row.name}}</router-link>
         </template>
       </el-table-column>
-      <el-table-column label="状态" width="130" align="center">
+      <el-table-column label="状态" width="90px" align="center">
         <template slot-scope="scope">
           <div v-if="scope.row.status==0" class="cell-wellstatus">
             <span class="well-status">{{scope.row.status|wellStatus}}</span>
@@ -61,7 +78,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="状态变动日期" align="center" width="220px">
+      <el-table-column label="状态变动日期" align="center" width="160px">
         <template slot-scope="scope">{{scope.row.changed_time|dateTimeFormat}}</template>
       </el-table-column>
       <el-table-column prop="belongs" label="归属" width="230" align="center">
@@ -82,20 +99,19 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="depth" label="泵深(米)" width="130" align="center"></el-table-column>
-      <el-table-column prop label="油藏中深" width="130" align="center"></el-table-column>
-      <el-table-column label="类型" width="130" align="center">
+      <el-table-column prop="depth" label="泵深(米)" width="100" align="center"></el-table-column>
+      <el-table-column prop label="油藏中深" width="100" align="center"></el-table-column>
+      <el-table-column label="类型" width="90" align="center">
         <template slot-scope="scope">
           <div v-if="scope.row.well_type==0">{{scope.row.well_type|welltype}}</div>
           <div v-if="scope.row.well_type==1">{{scope.row.well_type|welltype}}</div>
         </template>
       </el-table-column>
-      <el-table-column prop="rod" label="光杆规范" width="130" align="center"></el-table-column>
-       <el-table-column :key="18" label="操作" align="center" width="130px;">
+       <el-table-column :key="18" label="操作" align="center" width="110px;">
         <template slot-scope="scope">
           <el-tooltip effect="dark" content="修改" placement="top">
             <router-link
-              :to="{name:'alter-built',params:{id:scope.row.id,name:scope.row.name,belongs:scope.row.belongs},query:{type:scope.row.pro_type}}"
+              :to="{name:'alter-built',params:{id:scope.row},query:{type:scope.row.pro_type}}"
             >
               <el-button
                 class="el-icon-edit"
@@ -116,6 +132,7 @@
             </el-tooltip>
         </template>
       </el-table-column>
+      <el-table-column prop="rod" label="光杆规范" width="130" align="center"></el-table-column>
       <el-table-column prop="cover" label="套管规范" width="130" align="center"></el-table-column>
       <el-table-column prop="pipe" label="油管规范" width="130" align="center"></el-table-column>
       <el-table-column prop="machine_type" label="机型" width="130" align="center"></el-table-column>
@@ -151,6 +168,7 @@ export default {
       depts: [],
       wellCategory: "-1",
       wellStatus: "",
+       wellDatePicker: "",
       category: [
         {
           value: "-1",
@@ -180,6 +198,40 @@ export default {
           label: "已移除"
         }
       ],
+           pickerOptions: {
+          shortcuts: [{
+            text: '今天',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              picker.$emit('pick', [start, end]);
+            }
+          },{
+            text: '昨天',
+            onClick(picker) {
+              // const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24);
+              picker.$emit('pick', [start, start]);
+            }
+          },{
+            text: '最近7日',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近30日',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+        },
       total: 0,
       currentPage: 1,
       pageSize: 50,
@@ -213,6 +265,7 @@ export default {
       this.wellList = [...this.wellList];
     },
     handleChange(val) {
+      console.log(val)
       putWellDetail({ well_id: this.well_id, dept_id: val[3] }).then(res => {
         if (res.status === 200) {
           this.$message.success("修改成功");
@@ -285,7 +338,8 @@ export default {
         page: this.currentPage,
         well_type: this.wellCategory,
         wellno: this.wellNumber,
-        status: this.wellStatus
+        status: this.wellStatus,
+        daterange:this.wellDatePicker[0]+'-'+this.wellDatePicker[1],
       };
       ApiGetWellList(data).then(res => {
         this.wellList = res.data.msg.well_list;

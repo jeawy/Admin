@@ -96,7 +96,7 @@ export default function asyncRoutes(params) {
                 component: () =>
                     import ('@/views/basicInformation/new-built'),
                 meta: {
-                    title: '新建',
+                    title: '添加油井信息',
                     icon: 'wellList',
                     roles: 'manage_well'
                 }

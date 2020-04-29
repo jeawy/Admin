@@ -241,7 +241,7 @@
       </el-row>
       <el-row :gutter="15" style="margin-top:10px;">
         <el-col :sm="6">
-          <el-form-item label="曲柄尺寸1:" prop="size_1_crank">
+          <el-form-item label="曲柄尺寸1:" prop="size_1_crank" label-width="130px;">
             <el-input-number v-model="addwellForm.size_1_crank" style="width:160px;" :precision="2"></el-input-number>
           </el-form-item>
         </el-col>
@@ -282,11 +282,10 @@
        
       </el-row>
        <div class="btn">
-        <el-button @click="cancel">取消</el-button>
+        <el-button @click="cancel">清空</el-button>
         <el-button type="primary" @click="submitForm('addwellForm',)">{{id?'修改':'新建'}}</el-button>
       </div>
     </el-form>
-   
   </div>
 </template>
 <script>
@@ -297,6 +296,9 @@ export default {
   data() {
     return {
        id: this.$route.params.id || "",
+        // name: this.$route.params.name ,
+        //  belongs: this.$route.params.belongs,
+        //  well_type:this.$route.params.well_type,
       depts: [],
       addwellForm: {},
       statuslist: [
@@ -340,7 +342,9 @@ export default {
   computed: {
     props() {
       return {
+         ActiveRow: {},
         expandTrigger: "hover",
+        emitPath: false,
         value: "id",
         label: "name",
         lazy: false,
@@ -359,11 +363,18 @@ export default {
     }
   },
   mounted() {
-    //  this.addwellForm = {
-    //     name: this.name,
-    //     belongs:this.belongs
-    //   };
-    //   console.log( this.addwellForm)
+     this.ActiveRow = {
+        ...this.id
+      }
+      // if(this.ActiveRow.well_type==1){
+      //   this.ActiveRow.well_type="螺杆泵"
+      // }else  if(this.ActiveRow.well_type==0){
+      //   this.ActiveRow.well_type="抽油机"
+      // }
+     this.addwellForm = {
+        ...this.ActiveRow,
+      };
+   
   },
   methods: {
     getDeptList() {
@@ -382,10 +393,15 @@ export default {
     },
      
     submitForm(addwellForm) {
-        if (this.id) {
+        if (this.id.id) {
+          // if(this.addwellForm.well_type=" 螺杆泵"){
+          //   this.addwellForm.well_type=1
+          // }else  if(this.addwellForm.well_type=" 抽油机"){
+          //   this.addwellForm.well_type=0
+          // }
           let wellparams = {};
         wellparams = {
-          well_id: this.id,
+          well_id: this.id.id,
           dept_id: this.addwellForm.belongs,
           number: this.addwellForm.number,
           name: this.addwellForm.name,
@@ -420,6 +436,7 @@ export default {
           pump_hang:this.addwellForm.pump_hang,
           watery:this.addwellForm.watery,
         };
+        console.log(wellparams)
         if (wellparams.dept_id == undefined) {
           delete wellparams.dept_id ;
         }
@@ -522,10 +539,10 @@ export default {
         ApiAlterWell(wellparams).then(({ data }) => {
           if (data.status === 0) {
             this.$message.success(data.msg);
-          this.addwellForm={};
+          // this.addwellForm={};
           } else {
             this.$message.error(data.msg);
-           this.addwellForm={};
+          //  this.addwellForm={};
           }
         });
         }
@@ -668,10 +685,10 @@ export default {
         ApiAddWell(wellparams).then(({ data }) => {
           if (data.status === 0) {
             this.$message.success(data.msg);
-          this.addwellForm={};
+          // this.addwellForm={};
           } else {
             this.$message.error(data.msg);
-           this.addwellForm={};
+          //  this.addwellForm={};
           }
         });
         }
