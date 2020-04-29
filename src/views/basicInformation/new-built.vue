@@ -363,17 +363,17 @@ export default {
     }
   },
   mounted() {
-     this.ActiveRow = {
-        ...this.id
-      }
-      // if(this.ActiveRow.well_type==1){
-      //   this.ActiveRow.well_type="螺杆泵"
-      // }else  if(this.ActiveRow.well_type==0){
-      //   this.ActiveRow.well_type="抽油机"
-      // }
-     this.addwellForm = {
-        ...this.ActiveRow,
-      };
+    //  this.ActiveRow = {
+    //     ...this.id
+    //   }
+    //   // if(this.ActiveRow.well_type==1){
+    //   //   this.ActiveRow.well_type="螺杆泵"
+    //   // }else  if(this.ActiveRow.well_type==0){
+    //   //   this.ActiveRow.well_type="抽油机"
+    //   // }
+    //  this.addwellForm = {
+    //     ...this.ActiveRow,
+    //   };
    
   },
   methods: {
