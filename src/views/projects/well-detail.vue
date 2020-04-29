@@ -341,6 +341,10 @@ export default {
         this.$route.params.id,
         dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
       );
+      this.$refs["lineHistory"].getPowerChart(
+        this.$route.params.id,
+        dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
+      );
       this.$refs["lineHistory"].getBalanceChart(
         this.$route.params.id,
         dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
@@ -370,8 +374,18 @@ export default {
           });
         }
       );
+      var date = new Date();
+      var list = this.getDateRange(date,300,true)
+      this.time[0] = list[0]
+      this.time[1] = list[1]
       this.$nextTick(() => {
         this.$refs["lineHistory"].getOutputChart(this.$route.params.id);
+      });
+      this.$nextTick(() => {
+        this.$refs["lineHistory"].getPowerChart(
+          this.$route.params.id,
+          list[0] + "-" + list[1]
+        );
       });
       this.$nextTick(() => {
         this.$refs["lineHistory"].getBalanceChart(this.$route.params.id);

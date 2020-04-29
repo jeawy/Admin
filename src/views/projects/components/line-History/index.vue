@@ -11,7 +11,7 @@
 <script>
 import LineChart from "@/components/ECharts/LineMarker";
 import { getHistoryData,viewPowersMonth } from "@/api/welldetail";
-import { ApiGetElectdata} from "@/api/realdata";
+import { ApiGetElectdata,ApiGetPower} from "@/api/realdata";
 import dayjs from "dayjs";
 export default {
   name: "lineHistory",
@@ -205,51 +205,72 @@ export default {
       })
     },
     //获取有功曲线图
-    getPowerChart(){
-      let power = {
-        title: {
-          text: "有功"
-        },
-        tooltip: {
-          trigger: "axis"
-        },
-        xAxis: {
-          type: "category",
-          name: "时间",
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-        },
-        yAxis: {
-          type: "value",
-          name: "有功",
-          axisLabel: {
-            fontSize: 14
-          }
-        },
-        series: [
-          {
-            name: "功率",
-            smooth: true, //光滑
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
-            type: "line",
-            itemStyle: {
-              normal: {
-                label: {
-                  show: false, //开启显示
-                  position: "top", //在上方显示
-                  textStyle: {
-                    //数值样式
-                    color: "black",
-                    fontSize: 16
+    getPowerChart(id,date){
+      function dateFormat(date) {
+        if (date) {
+          date *= 1000
+          return dayjs(date).format('YYYY/MM/DD HH:mm')
+        } else {
+          return ''
+        }
+      }
+      ApiGetPower({
+        active:"",
+        well_id:id,
+        daterange:date
+      }).then(({data}) =>{
+        console.log(data)
+        let active = [];
+        let dates_list = [];
+        data.msg.forEach(item => {
+          dates_list.push(dateFormat(item.time));
+          active.push(item.active);
+        });
+        let power = {
+          title: {
+            text: "有功"
+          },
+          tooltip: {
+            trigger: "axis"
+          },
+          xAxis: {
+            type: "category",
+            name: "时间",
+            data: dates_list
+          },
+          yAxis: {
+            type: "value",
+            name: "有功",
+            axisLabel: {
+              fontSize: 14
+            }
+          },
+          series: [
+            {
+              name: "功率",
+              smooth: true, //光滑
+              data: active,
+              type: "line",
+              itemStyle: {
+                normal: {
+                  label: {
+                    show: false, //开启显示
+                    position: "top", //在上方显示
+                    textStyle: {
+                      //数值样式
+                      color: "black",
+                      fontSize: 16
+                    }
                   }
                 }
               }
             }
-          }
-        ]
-      }
-      this.$nextTick(()=>{
-        this.$refs["power-chart"].initChart(power);
-      });
+          ]
+        }
+        this.$nextTick(()=>{
+          this.$refs["power-chart"].initChart(power);
+        });
+      })
     },
     //获取平衡率曲线图
     getBalanceChart(id,date){
@@ -309,10 +330,7 @@ export default {
     }
   },
   mounted() {
-    // this.getOutputChart();
     this.getEleChart();
-    this.getPowerChart();
-    this.getBalanceChart()
   }
 };
 </script>
