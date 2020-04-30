@@ -297,14 +297,14 @@ export default {
             break;
        }
     },
-    //油井关联图
-    // getWellGraph(){
-    //   let customOption = {
-    //   };
-    //   this.$nextTick(() => {
-    //     this.$refs["well-graph"].initChart(customOption);
-    //   });
-    // },
+    // 油井关联图
+    getWellGraph(){
+      let customOption = {
+      };
+      this.$nextTick(() => {
+        this.$refs["well-graph"].initChart(customOption);
+      });
+    },
     //根据时间搜索平衡率和有功曲线图
     getChart(){
       var date1 = new Date()
@@ -581,7 +581,7 @@ export default {
   },
   created() {
     this.homeData(1);
-    // this.getWellGraph();
+    this.getWellGraph();
     this.getChart();
     this.getAlarm();
     var date1 = new Date();
@@ -668,12 +668,12 @@ export default {
             </el-card>
             <el-col style="height:15px"></el-col>
             <el-card shadow="always" style="height:500px">
-              <div>
-                油井关联图
+              <div style="font-weight: bold;font-size:15px">
+                油井架构图
               </div>
-              <!-- <div>
+              <div>
                 <GraphChart  @click-item="clickGraph" ref="well-graph" chart-id="well-graph" style="height:420px"/>
-              </div> -->
+              </div>
             </el-card>
           </el-col>
         </el-row>

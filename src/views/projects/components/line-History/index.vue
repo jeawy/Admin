@@ -219,7 +219,6 @@ export default {
         well_id:id,
         daterange:date
       }).then(({data}) =>{
-        console.log(data)
         let active = [];
         let dates_list = [];
         data.msg.forEach(item => {

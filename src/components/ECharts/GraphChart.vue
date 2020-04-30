@@ -7,82 +7,82 @@ import resize from "./mixins/resize";
 var title = [
     // 第零层
     {
-        label: 'api',
+        label: 'root',
         warn: 5,
         error: 8,
         value: 2
     },
     // 第一层
     {
-        label: 'grpc',
+        label: 'leaf11',
         warn: 5,
         error: 8,
         value: 5
     },
     {
-        label: 'cache',
+        label: 'leaf12',
         warn: 5,
         error: 8,
         value: 7
     },
     {
-        label: 'reco_rpc',
+        label: 'leaf13',
         warn: 5,
         error: 8,
         value: 7
     },
     {
-        label: 'kafka',
+        label: 'leaf14',
         warn: 5,
         error: 8,
         value: 7
     },
     // 第二层
     {
-        label: 'grpc2',
+        label: 'leaf21',
         warn: 5,
         error: 8,
         value: 2
     },
     {
-        label: 'cache2',
+        label: 'leaf22',
         warn: 5,
         error: 8,
         value: 2
     },
     {
-        label: 'leaf2',
+        label: 'leaf23',
         warn: 5,
         error: 8,
         value: 2
     },
     {
-        label: 'kafka2',
+        label: 'leaf24',
         warn: 5,
         error: 8,
         value: 2
     },
     {
-        label: 'ad2',
+        label: 'leaf25',
         warn: 5,
         error: 8,
         value: 2
     },
     // 第三层
     {
-        label: 'grpc3',
+        label: 'leaf31',
         warn: 5,
         error: 8,
         value: 2
     },
     {
-        label: 'cache3',
+        label: 'leaf32',
         warn: 5,
         error: 8,
         value: 2
     },
     {
-        label: 'kafka3',
+        label: 'leaf33',
         warn: 5,
         error: 8,
         value: 2
@@ -128,7 +128,7 @@ let DefaultOption = {
             //formatter: "{b} <br/>{a} : {c} h "
         },
         layout: 'none',
-        symbolSize: 10,
+        symbolSize: 70,
         roam: false,
         label: {
             normal: {
@@ -160,6 +160,7 @@ let DefaultOption = {
                 y: 0,
                 value: title[0],
                 symbolSize: 50,
+                symbol : 'roundRect',
                 itemStyle: {
                     normal: {
                         color:colorFunction(title[0]),
@@ -173,6 +174,7 @@ let DefaultOption = {
                 y: 200,
                 value: title[1],
                 symbolSize: 50,
+                symbol : 'roundRect',
                 itemStyle: {
                     normal: {
                         color:colorFunction(title[1]),
@@ -185,6 +187,7 @@ let DefaultOption = {
                 y: 200,
                 value: title[2],
                 symbolSize: 50,
+                symbol : 'roundRect',
                 itemStyle: {
                     normal: {
                         color:colorFunction(title[2]),
@@ -197,6 +200,7 @@ let DefaultOption = {
                 y: 200,
                 value: title[3],
                 symbolSize: 50,
+                symbol : 'roundRect',
                 itemStyle: {
                     normal: {
                         color:colorFunction(title[3]),
@@ -209,6 +213,7 @@ let DefaultOption = {
                 y: 200,
                 value: title[4],
                 symbolSize: 50,
+                symbol : 'roundRect',
                 itemStyle: {
                     normal: {
                         color:colorFunction(title[4]),
@@ -222,6 +227,7 @@ let DefaultOption = {
                 y: 400,
                 value: title[5],
                 symbolSize: 50,
+                symbol : 'roundRect',
                 itemStyle: {
                     normal: {
                         color:colorFunction(title[5]),
@@ -233,6 +239,7 @@ let DefaultOption = {
                 x: 150,
                 y: 400,
                 value: title[6],
+                symbol : 'roundRect',
                 symbolSize: 50,
                 itemStyle: {
                     normal: {
@@ -246,6 +253,7 @@ let DefaultOption = {
                 y: 400,
                 value: title[7],
                 symbolSize: 50,
+                symbol : 'roundRect',
                 itemStyle: {
                     normal: {
                         color:colorFunction(title[7]),
@@ -258,6 +266,7 @@ let DefaultOption = {
                 y: 400,
                 value: title[8],
                 symbolSize: 50,
+                symbol : 'roundRect',
                 itemStyle: {
                     normal: {
                         color:colorFunction(title[8]),
@@ -270,6 +279,7 @@ let DefaultOption = {
                 y: 400,
                 value: title[9],
                 symbolSize: 50,
+                symbol : 'roundRect',
                 itemStyle: {
                     normal: {
                         color:colorFunction(title[9]),
@@ -283,6 +293,7 @@ let DefaultOption = {
                 y: 600,
                 value: title[10],
                 symbolSize: 50,
+                symbol : 'roundRect',
                 itemStyle: {
                     normal: {
                         color:colorFunction(title[10]),
@@ -295,6 +306,7 @@ let DefaultOption = {
                 y: 600,
                 value: title[11],
                 symbolSize: 50,
+                symbol : 'roundRect',
                 itemStyle: {
                     normal: {
                         color:colorFunction(title[11]),
@@ -307,6 +319,7 @@ let DefaultOption = {
                 y: 600,
                 value: title[12],
                 symbolSize: 50,
+                symbol : 'roundRect',
                 itemStyle: {
                     normal: {
                         color:colorFunction(title[12]),
@@ -545,7 +558,7 @@ let DefaultOption = {
             normal: {
                 opacity: 0.9,
                 color: '#53B5EA',
-                type: 'dashed',
+                type: 'linear',
                 width: 1
             }
         }
