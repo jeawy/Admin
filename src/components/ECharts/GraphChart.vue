@@ -142,8 +142,8 @@ let DefaultOption = {
                 },
             }
         },
-        edgeSymbol: ['circle', 'arrow'],
-        edgeSymbolSize: [4, 10],
+        // edgeSymbol: ['circle', 'arrow'],
+        // edgeSymbolSize: [4, 10],
         edgeLabel: {
             normal: {
                 textStyle: {
@@ -159,8 +159,10 @@ let DefaultOption = {
                 x: 300,
                 y: 0,
                 value: title[0],
-                symbolSize: 50,
-                symbol : 'roundRect',
+                symbolSize: [80, 40],
+                symbol : 'Rect',
+                height:20,
+                width:50,
                 itemStyle: {
                     normal: {
                         color:colorFunction(title[0]),
@@ -173,8 +175,8 @@ let DefaultOption = {
                 x: 0,
                 y: 200,
                 value: title[1],
-                symbolSize: 50,
-                symbol : 'roundRect',
+                symbolSize: [80, 40],
+                symbol : 'Rect',
                 itemStyle: {
                     normal: {
                         color:colorFunction(title[1]),
@@ -183,11 +185,11 @@ let DefaultOption = {
             },
             {
                 name: title[2].label,
-                x: 150,
+                x: 170,
                 y: 200,
                 value: title[2],
-                symbolSize: 50,
-                symbol : 'roundRect',
+                symbolSize:[80, 40],
+                symbol : 'Rect',
                 itemStyle: {
                     normal: {
                         color:colorFunction(title[2]),
@@ -199,8 +201,8 @@ let DefaultOption = {
                 x: 350,
                 y: 200,
                 value: title[3],
-                symbolSize: 50,
-                symbol : 'roundRect',
+                symbolSize: [80, 40],
+                symbol : 'Rect',
                 itemStyle: {
                     normal: {
                         color:colorFunction(title[3]),
@@ -212,8 +214,8 @@ let DefaultOption = {
                 x: 600,
                 y: 200,
                 value: title[4],
-                symbolSize: 50,
-                symbol : 'roundRect',
+                symbolSize: [80, 40],
+                symbol : 'Rect',
                 itemStyle: {
                     normal: {
                         color:colorFunction(title[4]),
@@ -226,8 +228,8 @@ let DefaultOption = {
                 x: 0,
                 y: 400,
                 value: title[5],
-                symbolSize: 50,
-                symbol : 'roundRect',
+                symbolSize: [80, 40],
+                symbol : 'Rect',
                 itemStyle: {
                     normal: {
                         color:colorFunction(title[5]),
@@ -239,8 +241,8 @@ let DefaultOption = {
                 x: 150,
                 y: 400,
                 value: title[6],
-                symbol : 'roundRect',
-                symbolSize: 50,
+                symbol : 'Rect',
+                symbolSize: [80, 40],
                 itemStyle: {
                     normal: {
                         color:colorFunction(title[6]),
@@ -252,8 +254,8 @@ let DefaultOption = {
                 x: 300,
                 y: 400,
                 value: title[7],
-                symbolSize: 50,
-                symbol : 'roundRect',
+                symbolSize: [80, 40],
+                symbol : 'Rect',
                 itemStyle: {
                     normal: {
                         color:colorFunction(title[7]),
@@ -265,8 +267,8 @@ let DefaultOption = {
                 x: 450,
                 y: 400,
                 value: title[8],
-                symbolSize: 50,
-                symbol : 'roundRect',
+                symbolSize: [80, 40],
+                symbol : 'Rect',
                 itemStyle: {
                     normal: {
                         color:colorFunction(title[8]),
@@ -278,8 +280,8 @@ let DefaultOption = {
                 x: 600,
                 y: 400,
                 value: title[9],
-                symbolSize: 50,
-                symbol : 'roundRect',
+                symbolSize: [80, 40],
+                symbol : 'Rect',
                 itemStyle: {
                     normal: {
                         color:colorFunction(title[9]),
@@ -292,8 +294,8 @@ let DefaultOption = {
                 x: 0,
                 y: 600,
                 value: title[10],
-                symbolSize: 50,
-                symbol : 'roundRect',
+                symbolSize: [80, 40],
+                symbol : 'Rect',
                 itemStyle: {
                     normal: {
                         color:colorFunction(title[10]),
@@ -305,8 +307,8 @@ let DefaultOption = {
                 x: 150,
                 y: 600,
                 value: title[11],
-                symbolSize: 50,
-                symbol : 'roundRect',
+                symbolSize: [80, 40],
+                symbol : 'Rect',
                 itemStyle: {
                     normal: {
                         color:colorFunction(title[11]),
@@ -318,8 +320,8 @@ let DefaultOption = {
                 x: 450,
                 y: 600,
                 value: title[12],
-                symbolSize: 50,
-                symbol : 'roundRect',
+                symbolSize: [80, 40],
+                symbol : 'Rect',
                 itemStyle: {
                     normal: {
                         color:colorFunction(title[12]),
@@ -336,7 +338,7 @@ let DefaultOption = {
             },
             {
                 name: '2',
-                x: 150,
+                x: 170,
                 y: 100,
                 symbolSize: 0,
             },
@@ -558,7 +560,7 @@ let DefaultOption = {
             normal: {
                 opacity: 0.9,
                 color: '#53B5EA',
-                type: 'linear',
+                type: 'solid',
                 width: 1
             }
         }
