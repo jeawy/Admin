@@ -27,7 +27,7 @@
           ></el-option>
         </el-select>
       </el-col>
-       <el-col :span="2" class="col-bg">
+       <!-- <el-col :span="2" class="col-bg">
           变动日期:
         </el-col>
         <el-col :span="4" type="flex">
@@ -43,7 +43,7 @@
             :picker-options="pickerOptions"
             value-format="yyyy/MM/dd"
           ></el-date-picker>
-        </el-col>
+        </el-col> -->
       <el-col :span="5">
         <el-button type="primary" style="height:27.99px;margin-left:10px" @click="searchWell()">点击查询</el-button>
       </el-col>
@@ -265,7 +265,7 @@ export default {
       this.wellList = [...this.wellList];
     },
     handleChange(val) {
-      console.log(val)
+     
       putWellDetail({ well_id: this.well_id, dept_id: val[3] }).then(res => {
         if (res.status === 200) {
           this.$message.success("修改成功");
