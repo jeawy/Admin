@@ -46,7 +46,7 @@ export default [{
         component: Layout,
         redirect: 'noRedirect',
         meta: {
-            title: '项目',
+            title: '井',
             icon: 'tree-table',
         },
         hidden: true,
@@ -59,7 +59,7 @@ export default [{
                 title: '告警详情',
                 icon: 'tree',
             }
-        },{
+        }, {
             path: 'deviceAlarm/:name',
             name: 'deviceAlarm',
             component: () =>
@@ -68,15 +68,14 @@ export default [{
                 title: '设备告警',
                 icon: 'tree',
             }
-        }
-    ]
+        }]
     },
     {
         path: '/projects',
         component: Layout,
         redirect: 'noRedirect',
         meta: {
-            title: '项目',
+            title: '井',
             icon: 'tree-table',
         },
         hidden: true,
@@ -96,24 +95,24 @@ export default [{
         component: Layout,
         redirect: 'noRedirect',
         meta: {
-          title: '基础信息',
-          icon: 'tree-basicInformation',
+            title: '基础信息',
+            icon: 'tree-basicInformation',
         },
         hidden: true,
         children: [{
-            path: 'new-built/:id',
-            name: 'alter-built',
-            component: () =>
-                import ('@/views/basicInformation/new-built'),
-            meta: {
-                title: '修改油井信息',
-                icon: 'wellList',
-                // roles: 'manage_well'
-            }
-        },
-       
-      ]
-      },
+                path: 'new-built/:id',
+                name: 'alter-built',
+                component: () =>
+                    import ('@/views/basicInformation/new-built'),
+                meta: {
+                    title: '修改油井信息',
+                    icon: 'wellList',
+                    // roles: 'manage_well'
+                }
+            },
+
+        ]
+    },
     {
         path: '/404',
         component: () =>
