@@ -11,3 +11,7 @@ export function ApiGetBalance(params) {
 export function ApiGetAlarm(params) {
     return AXIOS.get('/api/warning/stat/', { params })
 }
+//获取首页油井的组织结构
+export function ApiGetDept(params) {
+    return AXIOS.get('/api/dept/dept/', { params })
+}

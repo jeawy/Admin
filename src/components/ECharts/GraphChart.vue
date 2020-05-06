@@ -84,14 +84,33 @@ var title = [
     {
         label: 'leaf33',
         warn: 5,
-        error: 8,
+        error: 1,
+        value: 6
+    },
+    //第四层
+    {
+        label: 'leaf41',
+        warn: 5,
+        error: 3,
+        value: 2
+    },
+    {
+        label: 'leaf42',
+        warn: 5,
+        error: 4,
+        value: 2
+    },
+    {
+        label: 'leaf43',
+        warn: 5,
+        error: 1,
         value: 2
     },
 ];
 var colorMap = {
-    normal: '#18a849',
-    warn: '#FFC125',
-    error: '#FF0000',
+    normal: '#18a849',  //绿色
+    warn: '#FFC125',  //黄色
+    error: '#FF0000',  //红色
 };
 
 var colorFunction = function(obj) {
@@ -142,8 +161,6 @@ let DefaultOption = {
                 },
             }
         },
-        // edgeSymbol: ['circle', 'arrow'],
-        // edgeSymbolSize: [4, 10],
         edgeLabel: {
             normal: {
                 textStyle: {
@@ -152,22 +169,20 @@ let DefaultOption = {
             }
         },
         //注意，所有节点的位置都是根据自己设置的x, y坐标来设置的
-        data: [
-            // 零层
+        data: [   // 首先是节点，其次是连接线(竖线)
+            // 零层节点
             {
-                name: title[0].label,
+                name: title[0].label,  //节点名字
                 x: 300,
-                y: 0,
-                value: title[0],
-                symbolSize: [80, 40],
-                symbol : 'Rect',
-                height:20,
-                width:50,
+                y: 0,     //x,y为节点位置
+                value: title[0],    //节点的值
+                symbolSize: [80, 40],  //节点大小
+                symbol : 'Rect',     //节点形状
                 itemStyle: {
                     normal: {
                         color:colorFunction(title[0]),
                     }
-                }
+                }               //节点的背景色
             },
             // 一层
             {
@@ -185,7 +200,7 @@ let DefaultOption = {
             },
             {
                 name: title[2].label,
-                x: 170,
+                x: 150,
                 y: 200,
                 value: title[2],
                 symbolSize:[80, 40],
@@ -198,7 +213,7 @@ let DefaultOption = {
             },
             {
                 name: title[3].label,
-                x: 350,
+                x: 300,
                 y: 200,
                 value: title[3],
                 symbolSize: [80, 40],
@@ -328,29 +343,28 @@ let DefaultOption = {
                     }
                 }
             },
-            
-            // 一层
+            // 一层线条(竖线)
             {
                 name: '1',
-                x: 300,
+                x:0,
                 y: 100,
                 symbolSize: 0,
             },
             {
                 name: '2',
-                x: 170,
+                x:150,
                 y: 100,
                 symbolSize: 0,
             },
             {
                 name: '3',
-                x: 0,
+                x:300,
                 y: 100,
                 symbolSize: 0,
             },
             {
                 name: '4',
-                x: 350,
+                x: 300,
                 y: 100,
                 symbolSize: 0,
             },
@@ -381,7 +395,7 @@ let DefaultOption = {
             },
             {
                 name: '24',
-                x: 350,
+                x: 300,
                 y: 300,
                 symbolSize:0,
             },
@@ -429,11 +443,11 @@ let DefaultOption = {
             // 零层
             {
                 source: title[0].label,
-                target: '1',
+                target: '3'
             },
             // 一层
             {
-                source: '3',
+                source: '1',
                 target: title[1].label,
             },
             {
@@ -490,7 +504,6 @@ let DefaultOption = {
                 source: '34',
                 target: title[12].label,
             },
-            
             // 一层
             {
                 source: '1',
@@ -503,7 +516,7 @@ let DefaultOption = {
                 symbol: 'none',
             },
             {
-                source: '1',
+                source: '3',
                 target: '4',
                 symbol: 'none',
             },
@@ -617,7 +630,7 @@ export default {
      */
     initChart(customOption = {}) {
       let option = Object.assign({}, DefaultOption, customOption);
-      this.chart.setOption(option);
+      this.chart.setOption(option,true);
       this.chart.hideLoading()
     }
   }

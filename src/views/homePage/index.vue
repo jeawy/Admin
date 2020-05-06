@@ -5,7 +5,7 @@ import LineChart from "@/components/ECharts/LineMarker";
 import BarChart from "@/components/ECharts/BarMarker";
 import BaiduMap from "@/components/ECharts/BaiduMap";
 import GraphChart from "@/components/ECharts/GraphChart";
-import { ApiGetHomedata,ApiGetBalance,ApiGetAlarm } from "@/api/homeData";
+import { ApiGetHomedata,ApiGetBalance,ApiGetAlarm,ApiGetDept} from "@/api/homeData";
 import { ApiGetPower } from "@/api/realdata";
 import dayjs from "dayjs";
 export default {
@@ -24,6 +24,9 @@ export default {
       openCount:'',
       stopCount:'',
       openPercentage:0,
+      processedPer:0,
+      processedAlarm:0,
+      totalAlarm:0,
       total:'',
       wellid:0,
       wellId:[],
@@ -79,9 +82,29 @@ export default {
       },
       balanceList:[],
       click:false,
-      length:0
+      length:0,
+      nodeList:[],
+      parentList:[],
+      children1:[],
+      children2:[],
+      children3:[],
+      children4:[],
+      children5:[],
+      name:[],
+      level:[],
+      status:[],
+      lengthList:[]
     };
   },
+  // watch: {
+  //   level: {
+  //     handler: function(newVal, oldVal) {
+  //       if (newVal) {
+          
+  //       }
+  //     },
+  //   }
+  // },
   methods: {
     //获取首页数据
     homeData(days){
@@ -297,8 +320,423 @@ export default {
             break;
        }
     },
+    //节点背景色
+    colorFunction(obj) {
+      if (obj == 0) {
+        return '#18a849';  //开井为绿色
+      } else if (obj == 1) {
+        return '#FF0000';  //关井为红色
+      } else {
+        return '#FFC125';  //其他情况均为黄色
+      }
+    },
+    xCoord(obj,key){
+      this.lengthList.push(obj.length); 
+      console.log(obj.length) 
+      console.log(this.lengthList)
+      console.log(key)
+      let x = []
+      let y = -150
+      let i = key    
+      for(i = 0 ;i < obj.length;i ++){
+        y += 150
+        x.push(y)
+      }
+      if(obj.length == 1){
+        return x[0]
+      }else if(obj.length == 3){
+        return x[key - 3]
+      } else{
+        return x[key - 6]
+      }
+    },
+    //各节点的x轴坐标
+    xCoordNode(obj,index) {
+      if(obj == 1){
+        return this.xCoord(this.parentList,index)
+      } else if(obj == 2){
+        return this.xCoord(this.children1,index)
+      } else if(obj == 3){
+        return this.xCoord(this.children2,index)
+      } else if(obj == 4){
+        return this.xCoord(this.children3,index)
+      } else if(obj == 5){
+        return this.xCoord(this.children5,index)
+      } 
+    },
+    //各节点的y轴坐标
+    yCoordNode(obj) {
+      if(obj == 1){
+        return 0
+      }else if(obj == 2){
+        return 200
+      }else if(obj == 3){
+        return 400
+      }else if(obj == 4){
+        return 600
+      }else if(obj == 5){
+        return 800
+      }
+    },
     // 油井关联图
     getWellGraph(){
+      ApiGetDept().then(({data}) => {
+        this.parentList = data.msg  //厂
+        data.msg.forEach(item =>{
+          this.name.push(item.name)
+          this.level.push(item.level)
+          this.status.push(2)
+          this.children1.push(item.children)  //矿
+        })
+        this.children1.forEach(item =>{ 
+          this.children1 = item
+          item.forEach(key =>{
+            this.name.push(key.name)
+            this.level.push(key.level)
+            this.status.push(2)
+            this.children2.push(key.children) //队
+          })
+        })
+        this.children2.forEach(item =>{  
+          this.children2 = item
+          item.forEach(key =>{
+            this.name.push(key.name)
+            this.level.push(key.level)
+            this.status.push(2)
+            this.children3.push(key.children)  //计量间
+          })
+        })
+        this.children3.forEach(item =>{
+          this.children3 = item
+          item.forEach(key =>{
+            this.name.push(key.name)
+            this.level.push(key.level)
+            this.status.push(2)
+            this.children4.push(key.children)   //井
+          })
+        })
+        for(let i = 0;i < this.children4.length;i++){
+          this.children4[i].map(item =>{
+            this.name.push(item.well_name)
+            this.level.push(item.level)
+            this.status.push(item.status)
+            this.children5.push(item)
+          })
+        }
+        for(let j = 0;j < this.name.length;j ++){
+          let array = {
+            name: this.name[j],  //节点名字
+            x: this.xCoordNode(this.level[j],j),      //节点的横坐标位置
+            y: this.yCoordNode(this.level[j]),      //节点的纵坐标位置
+            symbolSize: [80, 40],  //节点大小
+            symbol : 'Rect',       //节点形状
+            itemStyle: {
+              normal: {
+                color:this.colorFunction(this.status[j]),
+              }
+            }               //节点的背景色
+          }
+          this.nodeList.push(array)
+        }
+        console.log(this.children3)
+        console.log(this.children5)
+        console.log(this.nodeList)
+      })
+      // let dept = {
+        // tooltip: {
+        //   trigger: 'item',
+        //   formatter: function(para) {
+        //     if (para.name != 'x' || para.name != 'y') {
+        //         return para.name;
+        //     } else {
+        //         //其他的都正式显示，自己是什么就显示什么。
+        //         return '';
+        //     }
+        //   }
+        // },
+        // animationDurationUpdate: 1500,
+        // animationEasingUpdate: 'quinticInOut',
+        // textStyle: {
+        //   color: '#000'
+        // }, //文字颜色
+        // series: [{
+        //   type: 'graph',
+        //   tooltip: {
+        //     backgroundColor: 'skyblue',
+        //   },
+        //   layout: 'none',
+        //   symbolSize: 70,
+        //   roam: false,
+        //   label: {
+        //     normal: {
+        //         show: true,
+        //         position: 'inside',
+        //         //offset: [0,-60],//居上 20
+        //         textStyle: {
+        //             fontSize: 12,
+        //             color: '#fff',
+        //             fontWeight: 'BOLD',
+        //         },
+        //     }
+        //   },
+        //   edgeLabel: {
+        //     normal: {
+        //       textStyle: {
+        //           fontSize: 18
+        //       }
+        //     }
+        //   },
+        //   //注意，所有节点的位置都是根据自己设置的x, y坐标来设置的
+        //   data: [   // 首先是节点，其次是连接线(竖线)
+        //       // 零层节点
+        //       {
+        //           name: this.name[i],  //节点名字
+        //           x: xCoordNode(this.level[i]),
+        //           y: yCoordNode(this.level[i]),     //x,y为节点位置
+        //           value: title[0],    //节点的值
+        //           symbolSize: [80, 40],  //节点大小
+        //           symbol : 'Rect',     //节点形状
+        //           itemStyle: {
+        //               normal: {
+        //                   color:colorFunction(this.status[i]),
+        //               }
+        //           }               //节点的背景色
+        //       },
+      //         // 一层线条(竖线)
+      //         {
+      //             name: '1',
+      //             x:0,
+      //             y: 100,
+      //             symbolSize: 0,
+      //         },
+      //         {
+      //             name: '2',
+      //             x:150,
+      //             y: 100,
+      //             symbolSize: 0,
+      //         },
+      //         {
+      //             name: '3',
+      //             x:300,
+      //             y: 100,
+      //             symbolSize: 0,
+      //         },
+      //         {
+      //             name: '4',
+      //             x: 300,
+      //             y: 100,
+      //             symbolSize: 0,
+      //         },
+      //         {
+      //             name: '5',
+      //             x: 600,
+      //             y: 100,
+      //             symbolSize: 0,
+      //         },
+      //         // 二层
+      //         {
+      //             name: '21',
+      //             x: 0,
+      //             y: 300,
+      //             symbolSize: 0,
+      //         },
+      //         {
+      //             name: '22',
+      //             x: 150,
+      //             y: 300,
+      //             symbolSize: 0,
+      //         },
+      //         {
+      //             name: '23',
+      //             x: 300,
+      //             y: 300,
+      //             symbolSize: 0,
+      //         },
+      //         {
+      //             name: '24',
+      //             x: 300,
+      //             y: 300,
+      //             symbolSize:0,
+      //         },
+      //         {
+      //             name: '25',
+      //             x: 450,
+      //             y: 300,
+      //             symbolSize: 0,
+      //         },
+      //         {
+      //             name: '26',
+      //             x: 600,
+      //             y: 300,
+      //             symbolSize: 0,
+      //         },
+      //         // 三层
+      //         {
+      //             name: '31',
+      //             x: 0,
+      //             y: 500,
+      //             symbolSize: 0,
+      //         },
+      //         {
+      //             name: '32',
+      //             x: 150,
+      //             y: 500,
+      //             symbolSize: 0,
+      //         },
+      //         {
+      //             name: '33',
+      //             x: 300,
+      //             y: 500,
+      //             symbolSize: 0,
+      //         },
+      //         {
+      //             name: '34',
+      //             x: 450,
+      //             y: 500,
+      //             symbolSize: 0,
+      //         },
+            // ],
+      //       //这是点与点之间的连接关系(首先是竖线，其次是横线)
+      //       links: [
+      //           // 零层
+      //           {
+      //               source: title[0].label,
+      //               target: '3'
+      //           },
+      //           // 一层
+      //           {
+      //               source: '1',
+      //               target: title[1].label,
+      //           },
+      //           {
+      //               source: '2',
+      //               target: title[2].label,
+      //           },
+      //           {
+      //               source: '4',
+      //               target: title[3].label,
+      //           },
+      //           {
+      //               source: '5',
+      //               target: title[4].label,
+      //           },
+      //           // 二层
+      //           {
+      //               source: title[3].label,
+      //               target: '24',
+      //           },
+      //           {
+      //               source: '21',
+      //               target: title[5].label,
+      //           },
+      //           {
+      //               source: '22',
+      //               target: title[6].label,
+      //           },
+      //           {
+      //               source: '23',
+      //               target: title[7].label,
+      //           },
+      //           {
+      //               source: '25',
+      //               target: title[8].label,
+      //           },
+      //           {
+      //               source: '26',
+      //               target: title[9].label,
+      //           },
+      //           // 三层
+      //           {
+      //               source: title[7].label,
+      //               target: '33',
+      //           },
+      //           {
+      //               source: '31',
+      //               target: title[10].label,
+      //           },
+      //           {
+      //               source: '32',
+      //               target: title[11].label,
+      //           },
+      //           {
+      //               source: '34',
+      //               target: title[12].label,
+      //           },
+      //           // 一层
+      //           {
+      //               source: '1',
+      //               target: '2',
+      //               symbol: 'none',
+      //           },
+      //           {
+      //               source: '2',
+      //               target: '3',
+      //               symbol: 'none',
+      //           },
+      //           {
+      //               source: '3',
+      //               target: '4',
+      //               symbol: 'none',
+      //           },
+      //           {
+      //               source: '4',
+      //               target: '5',
+      //               symbol: 'none',
+      //           },
+      //           // 二层
+      //           {
+      //               source: '21',
+      //               target: '22',
+      //               symbol: 'none',
+      //           },
+      //           {
+      //               source: '22',
+      //               target: '23',
+      //               symbol: 'none',
+      //           },
+      //           {
+      //               source: '23',
+      //               target: '24',
+      //               symbol: 'none',
+      //           },
+      //           {
+      //               source: '24',
+      //               target: '25',
+      //               symbol: 'none',
+      //           },
+      //           {
+      //               source: '25',
+      //               target: '26',
+      //               symbol: 'none',
+      //           },
+      //           // 三层
+      //           {
+      //               source: '31',
+      //               target: '32',
+      //               symbol: 'none',
+      //           },
+      //           {
+      //               source: '32',
+      //               target: '33',
+      //               symbol: 'none',
+      //           },
+      //           {
+      //               source: '33',
+      //               target: '34',
+      //               symbol: 'none',
+      //           },
+      //       ],
+      //       //线条的颜色
+      //       lineStyle: {
+      //           normal: {
+      //               opacity: 0.9,
+      //               color: '#53B5EA',
+      //               type: 'solid',
+      //               width: 1
+      //           }
+      //       }
+        // }]
+      // };
       let customOption = {
       };
       this.$nextTick(() => {
@@ -325,6 +763,7 @@ export default {
         let time_list = []
         let balance_list = []
         let name = ""
+        console.log(data.msg)
         data.msg.forEach(item =>{
           dataList.push(item.list)
           wellName.push(item.well_name)
@@ -406,7 +845,7 @@ export default {
             },
             yAxis: {
               type: "value",
-              name: "平衡率",
+              name: "米",
               axisLabel: {
                 fontSize: 14
               }
@@ -485,7 +924,7 @@ export default {
             },
             yAxis: {
               type: "value",
-              name: "有功",
+              name: "千瓦",
               axisLabel: {
                 fontSize: 14
               }
@@ -506,6 +945,9 @@ export default {
       ApiGetAlarm().then(({data}) =>{
         let alarmList = []
         alarmList = data.msg
+        this.processedAlarm = alarmList[1].num + alarmList[2].num + alarmList[3].num + alarmList[4].num
+        this.totalAlarm = alarmList[0].num + alarmList[1].num + alarmList[2].num + alarmList[3].num + alarmList[4].num
+        this.processedPer = Number((this.processedAlarm/this.totalAlarm).toFixed(2));
         //告警汇总
         let chart2 = [
           {
@@ -672,7 +1114,7 @@ export default {
                 油井架构图
               </div>
               <div>
-                <GraphChart  @click-item="clickGraph" ref="well-graph" chart-id="well-graph" style="height:420px"/>
+                <GraphChart  @click-item="clickGraph" ref="well-graph" chart-id="well-graph" style="height:420px;width:500px"/>
               </div>
             </el-card>
           </el-col>
@@ -687,7 +1129,7 @@ export default {
                   <el-col :lg="24">
                     <el-card shadow="always">
                       <chart ref="well-status" chart-id="well-status" />
-                      <div class="prompt-text">开井：{{this.openCount}} 关井：{{this.stopCount}} 总计：{{this.stopCount+this.openCount}} </div>
+                      <div class="prompt-text">开井: {{this.openCount}} 关井: {{this.stopCount}} 总计: {{this.stopCount+this.openCount}} </div>
                       <el-progress
                         style="margin-top:10px"
                         color="#28a745"
@@ -701,12 +1143,12 @@ export default {
                     <el-card shadow="always" style="height:255px">
                       <div>
                         <div class="prompt-text">告警</div>
-                        <strong style="color:black;font-size:15px">29 已处理 (40%)</strong>
+                        <strong style="color:black;font-size:15px">已处理: {{this.processedAlarm}} 总计: {{this.totalAlarm}}</strong>
                         <el-progress
-                          style="margin-top:10px"
+                          style="margin-top:10px;"
                           color="#28a745"
                           :stroke-width="10"
-                          :percentage="20"
+                          :percentage="processedPer"
                         ></el-progress>
                       </div>
                       <div style="margin-top:10px">

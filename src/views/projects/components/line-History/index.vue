@@ -239,7 +239,7 @@ export default {
           },
           yAxis: {
             type: "value",
-            name: "有功",
+            name: "千瓦",
             axisLabel: {
               fontSize: 14
             }
@@ -282,7 +282,7 @@ export default {
         });
         let option3 = {
           title: {
-            text: "平衡度 ",
+            text: "平衡率",
           },
           tooltip: {
             trigger: "axis"
