@@ -83,28 +83,32 @@ export default {
       balanceList:[],
       click:false,
       length:0,
-      nodeList:[],
+      nodeList:[],    
+      lineList:[],
+      connectLineUD:[],
+      connectLineLR:[],
       parentList:[],
       children1:[],
       children2:[],
       children3:[],
       children4:[],
-      children5:[],
-      name:[],
-      level:[],
-      status:[],
-      lengthList:[]
+      children5:[],     
+      name:[],          //所有节点名字
+      level:[],         //第几层
+      status:[],        //开关井状态
+      hasChildNode:[],  //拥有孩子的节点
+      noChildNode:[],   //没有孩子的节点
+      childLength:[],   //节点的孩子长度
+      childLevel:[],    //有孩子的节点的节点层数
+      hasChildPoint:[], //有孩子节点对应的连接点
+      allPoint:[],      //所有节点对应的连接点
+      dataList:[],      //关系图中存放data的数组
+      hasChildUD:[],     //有孩子节点间的下连接线
+      allLinkUD:[],      //所有节点间的上连接线
+      linkLR:[],        //节点间的左右连接线
+      linkList:[]       //关系图中存放link的数组
     };
   },
-  // watch: {
-  //   level: {
-  //     handler: function(newVal, oldVal) {
-  //       if (newVal) {
-          
-  //       }
-  //     },
-  //   }
-  // },
   methods: {
     //获取首页数据
     homeData(days){
@@ -297,6 +301,7 @@ export default {
         this.$refs["level"].initChart(option2);
         })
     },
+    //根据时间搜索产量和液面高度柱状图
     chart_reload(days){
        this.dynamic = days;
        switch (days){
@@ -330,41 +335,63 @@ export default {
         return '#FFC125';  //其他情况均为黄色
       }
     },
-    xCoord(obj,key){
-      this.lengthList.push(obj.length); 
-      console.log(obj.length) 
-      console.log(this.lengthList)
-      console.log(key)
+    //节点的x坐标
+    xCoord(name,level,obj,key){      
+      let length1 = this.parentList.length  //第一层的节点个数
+      let length2 = this.children1.length   //第二层的节点个数
+      let length3 = this.children2.length   //第三层的节点个数
+      let length4 = this.children3.length   //第四层的节点个数
+      let length5 = this.children5.length   //第五层的节点个数
       let x = []
-      let y = -150
+      let y = -300
       let i = key    
-      for(i = 0 ;i < obj.length;i ++){
-        y += 150
-        x.push(y)
+      if(level !== 4){
+        for(i = 0 ;i < obj.length;i ++){
+          y += 300
+          x.push(y)
+        }
+      }else{
+        for(i = 0 ;i < length4 + length5;i ++){
+          y += 300
+          x.push(y)
+        }
       }
-      if(obj.length == 1){
-        return x[0]
-      }else if(obj.length == 3){
-        return x[key - 3]
-      } else{
-        return x[key - 6]
+      if(level == 1){
+        return x[key]
+      }else if(level == 2){
+        return x[key - length1]
+      }else if(level == 3){
+        return x[key - length1 - length2]
+      }else if(level == 4){
+        for(let i = key ;i < this.childLevel.length;i ++){
+          let index = this.hasChildNode.indexOf(this.hasChildNode[key])
+          if(name == this.hasChildNode[i] && this.childLength[i - 1] > 1 && index - length1 - length2 -length3 == 0 ){
+            return x[key - length1 - length2 -length3]
+          }else if(index - length1 - length2 -length3 == 1){
+            return x[key - length1 - length2 -length3 + this.childLength [i - 1] - 1]
+          }else{
+            return x[key - length1 - length2 -length3 + this.childLength [i - 1] + this.childLength[i - 2]- 2]
+          }
+        }
+      }else if(level == 5){
+        return x[key - length1 - length2 -length3 - length4]
       }
     },
-    //各节点的x轴坐标
-    xCoordNode(obj,index) {
+    //各节点的x轴坐标函数
+    xCoordNode(name,obj,index) {
       if(obj == 1){
-        return this.xCoord(this.parentList,index)
+        return this.xCoord(name,obj,this.parentList,index)
       } else if(obj == 2){
-        return this.xCoord(this.children1,index)
+        return this.xCoord(name,obj,this.children1,index)
       } else if(obj == 3){
-        return this.xCoord(this.children2,index)
+        return this.xCoord(name,obj,this.children2,index)
       } else if(obj == 4){
-        return this.xCoord(this.children3,index)
+        return this.xCoord(name,obj,this.children3,index)
       } else if(obj == 5){
-        return this.xCoord(this.children5,index)
+        return this.xCoord(name,obj,this.children5,index)
       } 
     },
-    //各节点的y轴坐标
+    //各节点的y轴坐标函数
     yCoordNode(obj) {
       if(obj == 1){
         return 0
@@ -378,11 +405,175 @@ export default {
         return 800
       }
     },
+    //连接点名字
+    lineName(sign,obj,key){      //sign标记是有孩子的节点还是所有节点   sign=1为有孩子节点,sign=2为所有节点
+      let arr = []
+      let s = 0
+      let m = 10
+      for(let i = 0 ;i < obj.length; i ++){
+        if(sign == 1){
+          s += 1
+          s = "" + s + ""
+          arr.push(s)
+          s = parseInt(s)
+        }else{
+          m += 1
+          m = "" + m + ""
+          arr.push(m)
+          m = parseInt(m)
+        }
+      }
+      return arr[key]
+    },
+    //连接点的x抽
+    xCoordPoint(name,obj,index){
+      if(obj == 1){
+        return this.xCoord(name,obj,this.parentList,index)
+      } else if(obj == 2){
+        return this.xCoord(name,obj,this.children1,index)
+      } else if(obj == 3){
+        return this.xCoord(name,obj,this.children2,index)
+      } else if(obj == 4){
+        return this.xCoord(name,obj,this.children3,index)
+      } else if(obj == 5){
+        return this.xCoord(name,obj,this.children5,index)
+      } 
+    },
+    //连接点的y抽坐标函数
+    yCoordPoint(sign,obj){
+      if(sign == 2){// 所有节点上方对应连接点的y轴坐标
+        if(obj == 1){
+          return 100
+        }else if(obj == 2){
+          return 100
+        }else if(obj == 3){
+          return 300
+        }else if(obj == 4){
+          return 500
+        }else if(obj == 5){
+          return 700
+        }
+      }else{  //有孩子节点下方对应连接点的y轴坐标
+        if(obj == 1){
+          return 100
+        }else if(obj == 2){
+          return 300
+        }else if(obj == 3){
+          return 500
+        }else if(obj == 4){
+          return 700
+        }
+      }
+    },
+    //左右连接线的源函数
+    sourceLR(obj,key){
+      let length1 = this.parentList.length  //第一层的节点个数
+      let length2 = this.children1.length   //第二层的节点个数
+      let length3 = this.children2.length   //第三层的节点个数
+      let length4 = this.children3.length   //第四层的节点个数
+      let length5 = this.children5.length   //第五层的节点个数
+      if(obj == 1){
+        return ""
+      }else if(obj == 2){
+        if(length2 == 1){  //第一层下面横向连接线源
+          return ""
+        }else{
+          return this.allPoint[key].name
+        }
+      }else if(obj == 3){
+        if(length3 == 1){  //第二层下面横向连接线源
+          return ""
+        }else{
+          return this.allPoint[key].name
+        }
+      }else if(obj == 4){
+        if(length4 == 1 ||key == this.hasChildNode.length - 1){   //第三层下面横向连接线源
+          return ""
+        }else{
+          return this.allPoint[key].name
+        }
+      }else if(obj == 5){
+        if(length5 == 1 
+          ||key == this.hasChildNode.length + this.childLength[3] - 1 
+          || key == this.hasChildNode.length + this.childLength[3] + this.childLength[4] - 1 ){   //第四层下面横向连接线源
+          return ""
+        }else{
+          return this.allPoint[key].name
+        }
+      }
+    },
+    //左右连接线的目标函数
+    targetLR(obj,key){
+      let length1 = this.parentList.length  //第一层的节点个数
+      let length2 = this.children1.length   //第二层的节点个数
+      let length3 = this.children2.length   //第三层的节点个数
+      let length4 = this.children3.length   //第四层的节点个数
+      let length5 = this.children5.length   //第五层的节点个数
+      if(obj == 1){
+        return ""
+      }else if(obj == 2){
+        if(length2 == 1){  //第一层下面横向连接线源
+          return ""
+        }else{
+          return this.allPoint[key + 1].name
+        }
+      }else if(obj == 3){
+        if(length3 == 1){  //第二层下面横向连接线源
+          return ""
+        }else{
+          return this.allPoint[key + 1].name
+        }
+      }else if(obj == 4){
+        if(length4 == 1 ||key == this.hasChildNode.lenth - 1){   //第三层下面横向连接线源
+          return ""
+        }else{
+          return this.allPoint[key + 1].name
+        }
+      }else if(obj == 5){
+        if(length5 == 1 || key == this.name.length - 1 
+          ||key == this.hasChildNode.length + this.childLength[3] - 1 
+          || key == this.hasChildNode.length + this.childLength[3] + this.childLength[4] - 1){   //第四层下面横向连接线源
+          return ""
+        }else{
+          return this.allPoint[key + 1].name
+        }
+      }
+    },
+    //上下连接线的源函数
+    sourceUD(sign,level,key){        //sign标记是有孩子的节点还是所有节点   sign=1为有孩子节点,sign=2为所有节点
+      if(sign == 1){   //有孩子节点的下连接点的源
+        return this.hasChildNode[key]
+      }else{           //所有节点的上连接线的源
+        if(level == 1){
+          return ""
+        }else{
+          return this.allPoint[key].name
+        }
+      }
+    },
+    //上下连接线的目标函数
+    targetUD(sign,level,key){
+      if(sign == 1){   //有孩子节点的下连接线目标
+        return this.hasChildPoint[key].name
+      }else{           //所有节点的上连接线目标
+        if(level == 1){
+          return ""
+        }else{
+          return this.name[key]
+        }
+      }
+    },
     // 油井关联图
     getWellGraph(){
       ApiGetDept().then(({data}) => {
+        let j = 0
         this.parentList = data.msg  //厂
         data.msg.forEach(item =>{
+          if(item.children !== ""){   //判断第一层是否有孩子节点
+            this.hasChildNode.push(item.name)  
+            this.childLength.push(item.children.length) //第一层的孩子数据长度
+            this.childLevel.push(item.level)
+          }
           this.name.push(item.name)
           this.level.push(item.level)
           this.status.push(2)
@@ -391,6 +582,11 @@ export default {
         this.children1.forEach(item =>{ 
           this.children1 = item
           item.forEach(key =>{
+            if(key.children !== ""){   //判断第二层是否有孩子节点
+              this.hasChildNode.push(key.name)  
+              this.childLength.push(key.children.length) //第二层的孩子数据长度
+              this.childLevel.push(key.level)
+            }
             this.name.push(key.name)
             this.level.push(key.level)
             this.status.push(2)
@@ -400,6 +596,11 @@ export default {
         this.children2.forEach(item =>{  
           this.children2 = item
           item.forEach(key =>{
+            if(key.children !== ""){   //判断第三层节点是否有孩子节点
+              this.hasChildNode.push(key.name)  
+              this.childLength.push(key.children.length) //第三层的孩子数据长度
+              this.childLevel.push(key.level)
+            }
             this.name.push(key.name)
             this.level.push(key.level)
             this.status.push(2)
@@ -409,6 +610,11 @@ export default {
         this.children3.forEach(item =>{
           this.children3 = item
           item.forEach(key =>{
+            if(key.children !== ""){   //判断第四层是否有孩子节点
+              this.hasChildNode.push(key.name)  
+              this.childLength.push(key.children.length) //第四层的孩子数据长度
+              this.childLevel.push(key.level)
+            }
             this.name.push(key.name)
             this.level.push(key.level)
             this.status.push(2)
@@ -417,16 +623,17 @@ export default {
         })
         for(let i = 0;i < this.children4.length;i++){
           this.children4[i].map(item =>{
+            this.noChildNode.push(item.well_name)
             this.name.push(item.well_name)
             this.level.push(item.level)
             this.status.push(item.status)
             this.children5.push(item)
           })
         }
-        for(let j = 0;j < this.name.length;j ++){
-          let array = {
+        for(j = 0;j < this.name.length;j ++){     //标记所有节点
+          let array1 = {   //标记所有的节点
             name: this.name[j],  //节点名字
-            x: this.xCoordNode(this.level[j],j),      //节点的横坐标位置
+            x: this.xCoordNode(this.name[j],this.level[j],j),      //节点的横坐标位置
             y: this.yCoordNode(this.level[j]),      //节点的纵坐标位置
             symbolSize: [80, 40],  //节点大小
             symbol : 'Rect',       //节点形状
@@ -436,312 +643,134 @@ export default {
               }
             }               //节点的背景色
           }
-          this.nodeList.push(array)
+          let array2 = {  //标记所有节点上方的连接点
+            name: this.lineName(2,this.name,j),
+            x:this.xCoordPoint(this.name[j],this.level[j],j),
+            y:this.yCoordPoint(2,this.level[j]),
+            symbolSize: 0,
+          }
+          this.nodeList.push(array1)     //节点的坐标位置
+          this.allPoint.push(array2)     //除了第一层节点，其它各层节点上方对应一个连接点
         }
-        console.log(this.children3)
-        console.log(this.children5)
-        console.log(this.nodeList)
-      })
-      // let dept = {
-        // tooltip: {
-        //   trigger: 'item',
-        //   formatter: function(para) {
-        //     if (para.name != 'x' || para.name != 'y') {
-        //         return para.name;
-        //     } else {
-        //         //其他的都正式显示，自己是什么就显示什么。
-        //         return '';
-        //     }
+        for(let j = 0;j< this.name.length; j ++){ 
+          let array3 = {    //标记节点间的左右连接线
+            source: this.sourceLR(this.level[j],j),
+            target: this.targetLR(this.level[j],j),
+            symbol: 'none',
+          }
+          let array4 = {       //标记所有节点的上连接线
+            source: this.sourceUD(2,this.level[j],j),
+            target: this.targetUD(2,this.level[j],j),
+          }
+          this.linkLR.push(array3)       //节点间的左右连接线
+          this.allLinkUD.push(array4)    //所有节点的上连接线
+        }
+        for(let i = 0; i < this.hasChildNode.length; i ++){    //标记有孩子节点
+          let array5 = {        //标记有孩子节点下方的连接点           
+            name: this.lineName(1,this.hasChildNode,i),
+            x:this.xCoordPoint(this.hasChildNode[i],this.childLevel[i],i),
+            y:this.yCoordPoint(1,this.childLevel[i]),
+            symbolSize: 0,
+          } 
+          this.hasChildPoint.push(array5)          //标记有孩子的节点下方对应的连接点
+        }
+        for(let i = 0;i < this.hasChildNode.length; i ++){
+          let array6 = {        //标记有孩子节点的下连接线
+            source: this.sourceUD(1,this.childLevel[i],i),
+            target: this.targetUD(1,this.childLevel[i],i),
+          }
+          this.hasChildUD.push(array6)             //标记有孩子的节点的下连接线
+        }
+        this.dataList = this.nodeList.concat(this.hasChildPoint)
+        this.dataList = this.dataList.concat(this.allPoint)
+        this.linkList = this.linkLR.concat(this.hasChildUD)
+        this.linkList = this.linkList.concat(this.allLinkUD)
+        // for(i = 0; i < lineNumber.length; i ++){
+        //   let array2 = {
+        //     name: this.lineName(lineNumber,i),
+        //     x:this.xCoordLine(this.level[j],j),
+        //     y:this.yCoordLine(this.level[j]),
+        //     symbolSize: 0,
         //   }
-        // },
-        // animationDurationUpdate: 1500,
-        // animationEasingUpdate: 'quinticInOut',
-        // textStyle: {
-        //   color: '#000'
-        // }, //文字颜色
-        // series: [{
-        //   type: 'graph',
-        //   tooltip: {
-        //     backgroundColor: 'skyblue',
-        //   },
-        //   layout: 'none',
-        //   symbolSize: 70,
-        //   roam: false,
-        //   label: {
-        //     normal: {
-        //         show: true,
-        //         position: 'inside',
-        //         //offset: [0,-60],//居上 20
-        //         textStyle: {
-        //             fontSize: 12,
-        //             color: '#fff',
-        //             fontWeight: 'BOLD',
-        //         },
-        //     }
-        //   },
-        //   edgeLabel: {
-        //     normal: {
-        //       textStyle: {
-        //           fontSize: 18
-        //       }
-        //     }
-        //   },
-        //   //注意，所有节点的位置都是根据自己设置的x, y坐标来设置的
-        //   data: [   // 首先是节点，其次是连接线(竖线)
-        //       // 零层节点
-        //       {
-        //           name: this.name[i],  //节点名字
-        //           x: xCoordNode(this.level[i]),
-        //           y: yCoordNode(this.level[i]),     //x,y为节点位置
-        //           value: title[0],    //节点的值
-        //           symbolSize: [80, 40],  //节点大小
-        //           symbol : 'Rect',     //节点形状
-        //           itemStyle: {
-        //               normal: {
-        //                   color:colorFunction(this.status[i]),
-        //               }
-        //           }               //节点的背景色
-        //       },
-      //         // 一层线条(竖线)
-      //         {
-      //             name: '1',
-      //             x:0,
-      //             y: 100,
-      //             symbolSize: 0,
-      //         },
-      //         {
-      //             name: '2',
-      //             x:150,
-      //             y: 100,
-      //             symbolSize: 0,
-      //         },
-      //         {
-      //             name: '3',
-      //             x:300,
-      //             y: 100,
-      //             symbolSize: 0,
-      //         },
-      //         {
-      //             name: '4',
-      //             x: 300,
-      //             y: 100,
-      //             symbolSize: 0,
-      //         },
-      //         {
-      //             name: '5',
-      //             x: 600,
-      //             y: 100,
-      //             symbolSize: 0,
-      //         },
-      //         // 二层
-      //         {
-      //             name: '21',
-      //             x: 0,
-      //             y: 300,
-      //             symbolSize: 0,
-      //         },
-      //         {
-      //             name: '22',
-      //             x: 150,
-      //             y: 300,
-      //             symbolSize: 0,
-      //         },
-      //         {
-      //             name: '23',
-      //             x: 300,
-      //             y: 300,
-      //             symbolSize: 0,
-      //         },
-      //         {
-      //             name: '24',
-      //             x: 300,
-      //             y: 300,
-      //             symbolSize:0,
-      //         },
-      //         {
-      //             name: '25',
-      //             x: 450,
-      //             y: 300,
-      //             symbolSize: 0,
-      //         },
-      //         {
-      //             name: '26',
-      //             x: 600,
-      //             y: 300,
-      //             symbolSize: 0,
-      //         },
-      //         // 三层
-      //         {
-      //             name: '31',
-      //             x: 0,
-      //             y: 500,
-      //             symbolSize: 0,
-      //         },
-      //         {
-      //             name: '32',
-      //             x: 150,
-      //             y: 500,
-      //             symbolSize: 0,
-      //         },
-      //         {
-      //             name: '33',
-      //             x: 300,
-      //             y: 500,
-      //             symbolSize: 0,
-      //         },
-      //         {
-      //             name: '34',
-      //             x: 450,
-      //             y: 500,
-      //             symbolSize: 0,
-      //         },
-            // ],
-      //       //这是点与点之间的连接关系(首先是竖线，其次是横线)
-      //       links: [
-      //           // 零层
-      //           {
-      //               source: title[0].label,
-      //               target: '3'
-      //           },
-      //           // 一层
-      //           {
-      //               source: '1',
-      //               target: title[1].label,
-      //           },
-      //           {
-      //               source: '2',
-      //               target: title[2].label,
-      //           },
-      //           {
-      //               source: '4',
-      //               target: title[3].label,
-      //           },
-      //           {
-      //               source: '5',
-      //               target: title[4].label,
-      //           },
-      //           // 二层
-      //           {
-      //               source: title[3].label,
-      //               target: '24',
-      //           },
-      //           {
-      //               source: '21',
-      //               target: title[5].label,
-      //           },
-      //           {
-      //               source: '22',
-      //               target: title[6].label,
-      //           },
-      //           {
-      //               source: '23',
-      //               target: title[7].label,
-      //           },
-      //           {
-      //               source: '25',
-      //               target: title[8].label,
-      //           },
-      //           {
-      //               source: '26',
-      //               target: title[9].label,
-      //           },
-      //           // 三层
-      //           {
-      //               source: title[7].label,
-      //               target: '33',
-      //           },
-      //           {
-      //               source: '31',
-      //               target: title[10].label,
-      //           },
-      //           {
-      //               source: '32',
-      //               target: title[11].label,
-      //           },
-      //           {
-      //               source: '34',
-      //               target: title[12].label,
-      //           },
-      //           // 一层
-      //           {
-      //               source: '1',
-      //               target: '2',
-      //               symbol: 'none',
-      //           },
-      //           {
-      //               source: '2',
-      //               target: '3',
-      //               symbol: 'none',
-      //           },
-      //           {
-      //               source: '3',
-      //               target: '4',
-      //               symbol: 'none',
-      //           },
-      //           {
-      //               source: '4',
-      //               target: '5',
-      //               symbol: 'none',
-      //           },
-      //           // 二层
-      //           {
-      //               source: '21',
-      //               target: '22',
-      //               symbol: 'none',
-      //           },
-      //           {
-      //               source: '22',
-      //               target: '23',
-      //               symbol: 'none',
-      //           },
-      //           {
-      //               source: '23',
-      //               target: '24',
-      //               symbol: 'none',
-      //           },
-      //           {
-      //               source: '24',
-      //               target: '25',
-      //               symbol: 'none',
-      //           },
-      //           {
-      //               source: '25',
-      //               target: '26',
-      //               symbol: 'none',
-      //           },
-      //           // 三层
-      //           {
-      //               source: '31',
-      //               target: '32',
-      //               symbol: 'none',
-      //           },
-      //           {
-      //               source: '32',
-      //               target: '33',
-      //               symbol: 'none',
-      //           },
-      //           {
-      //               source: '33',
-      //               target: '34',
-      //               symbol: 'none',
-      //           },
-      //       ],
-      //       //线条的颜色
-      //       lineStyle: {
-      //           normal: {
-      //               opacity: 0.9,
-      //               color: '#53B5EA',
-      //               type: 'solid',
-      //               width: 1
-      //           }
-      //       }
-        // }]
-      // };
-      let customOption = {
-      };
-      this.$nextTick(() => {
-        this.$refs["well-graph"].initChart(customOption);
-      });
+        //   let array3 = {
+        //     source: this.sourceUD(this.level[j],j),
+        //     target: this.targetUD(this.level[j],j)
+        //   }
+        //   this.lineList.push(array2) //连接线的坐标位置
+        //   dataList = this.nodeList.concat(this.lineList)
+        //   this.connectLineUD.push(array3) //上下节点之间的连接线
+        //   this.connectLineLR.push(array4) //左右节点之间的连接线
+        //   this.connectLineUD.concat(this.connectLineLR)
+        // }
+        console.log(this.hasChildPoint)
+        console.log(this.dataList)
+        console.log(this.linkLR)
+        console.log(this.hasChildUD)
+        console.log(this.allLinkUD)
+        console.log(this.linkList)
+        let dept = {
+          tooltip: {
+            trigger: 'item',
+            formatter: function(para) {
+              if (para.name != 'x' || para.name != 'y') {
+                  return para.name;
+              } else {
+                  //其他的都正式显示，自己是什么就显示什么。
+                  return '';
+              }
+            }
+          },
+          animationDurationUpdate: 1500,
+          animationEasingUpdate: 'quinticInOut',
+          textStyle: {
+            color: '#000'
+          },
+          series: [{
+            type: 'graph',
+            tooltip: {
+                backgroundColor: 'skyblue',
+                //formatter: "{b} <br/>{a} : {c} h "
+            },
+            layout: 'none',
+            symbolSize: 10,
+            roam: false,
+            label: {
+              normal: {
+                show: true,
+                position: 'inside',
+                //offset: [0,-60],//居上 20
+                textStyle: {
+                    fontSize: 12,
+                    color: '#fff',
+                    fontWeight: 'BOLD',
+                },
+              }
+            },
+            edgeLabel: {
+              normal: {
+                  textStyle: {
+                      fontSize: 18
+                  }
+              }
+            },
+            //注意，所有节点的位置都是根据自己设置的x, y坐标来设置的
+            data:this.dataList,    // 首先是节点坐标位置，其次是连接点坐标位置(竖线)
+            links:this.linkList,   //连接点间的左右连接线和节点间的上下连接线
+            //线条的颜色
+            lineStyle: {
+                normal: {
+                    opacity: 0.9,
+                    color: '#53B5EA',
+                    type: 'solid',
+                    width: 1
+                }
+            }
+          }]
+        };
+        this.$nextTick(() => {
+          this.$refs["well-graph"].initChart(dept);
+        });
+      })
     },
     //根据时间搜索平衡率和有功曲线图
     getChart(){
@@ -763,7 +792,6 @@ export default {
         let time_list = []
         let balance_list = []
         let name = ""
-        console.log(data.msg)
         data.msg.forEach(item =>{
           dataList.push(item.list)
           wellName.push(item.well_name)
@@ -936,6 +964,7 @@ export default {
         }
       })
     },
+    //判断曲线图是否是根据时间搜索
     search(){
       this.click = true
       this.getChart()
@@ -1109,14 +1138,14 @@ export default {
               </div>
             </el-card>
             <el-col style="height:15px"></el-col>
-            <el-card shadow="always" style="height:500px">
+            <!-- <el-card shadow="always" style="height:500px">
               <div style="font-weight: bold;font-size:15px">
                 油井架构图
               </div>
               <div>
                 <GraphChart  @click-item="clickGraph" ref="well-graph" chart-id="well-graph" style="height:420px;width:500px"/>
               </div>
-            </el-card>
+            </el-card> -->
           </el-col>
         </el-row>
       </el-col>
@@ -1236,6 +1265,18 @@ export default {
           </el-col>
         </el-row>
       </el-col>
+    </el-row>
+    <el-row calss="home-header">
+      <el-scrollbar style="height:100%">
+        <el-card shadow="always" style="height:700px;width:3000px">
+          <div style="font-weight: bold;font-size:15px">
+            油井架构图
+          </div>
+          <div>
+            <GraphChart  @click-item="clickGraph" ref="well-graph" chart-id="well-graph" style="height:420px;;margin-left:-250px"/>
+          </div>
+        </el-card>
+      </el-scrollbar>
     </el-row>
   </div>
 </template>
@@ -1364,6 +1405,12 @@ export default {
   .card-header {
     font-size: 14px;
     font-weight: 600;
+  }
+  .el-scrollbar .el-scrollbar__wrap .el-scrollbar__view{
+    white-space: nowrap;
+  }
+  .el-scrollbar__wrap {
+    overflow-x: hidden;
   }
 }
 </style>

@@ -4,124 +4,6 @@
 <script>
 import echarts from "echarts";
 import resize from "./mixins/resize";
-var title = [
-    // 第零层
-    {
-        label: 'root',
-        warn: 5,
-        error: 8,
-        value: 2
-    },
-    // 第一层
-    {
-        label: 'leaf11',
-        warn: 5,
-        error: 8,
-        value: 5
-    },
-    {
-        label: 'leaf12',
-        warn: 5,
-        error: 8,
-        value: 7
-    },
-    {
-        label: 'leaf13',
-        warn: 5,
-        error: 8,
-        value: 7
-    },
-    {
-        label: 'leaf14',
-        warn: 5,
-        error: 8,
-        value: 7
-    },
-    // 第二层
-    {
-        label: 'leaf21',
-        warn: 5,
-        error: 8,
-        value: 2
-    },
-    {
-        label: 'leaf22',
-        warn: 5,
-        error: 8,
-        value: 2
-    },
-    {
-        label: 'leaf23',
-        warn: 5,
-        error: 8,
-        value: 2
-    },
-    {
-        label: 'leaf24',
-        warn: 5,
-        error: 8,
-        value: 2
-    },
-    {
-        label: 'leaf25',
-        warn: 5,
-        error: 8,
-        value: 2
-    },
-    // 第三层
-    {
-        label: 'leaf31',
-        warn: 5,
-        error: 8,
-        value: 2
-    },
-    {
-        label: 'leaf32',
-        warn: 5,
-        error: 8,
-        value: 2
-    },
-    {
-        label: 'leaf33',
-        warn: 5,
-        error: 1,
-        value: 6
-    },
-    //第四层
-    {
-        label: 'leaf41',
-        warn: 5,
-        error: 3,
-        value: 2
-    },
-    {
-        label: 'leaf42',
-        warn: 5,
-        error: 4,
-        value: 2
-    },
-    {
-        label: 'leaf43',
-        warn: 5,
-        error: 1,
-        value: 2
-    },
-];
-var colorMap = {
-    normal: '#18a849',  //绿色
-    warn: '#FFC125',  //黄色
-    error: '#FF0000',  //红色
-};
-
-var colorFunction = function(obj) {
-    if (obj.value < obj.warn) {
-        return colorMap.normal;
-    } else if (obj.warn <= obj.value && obj.value < obj.error) {
-        return colorMap.warn;
-    } else if (obj.error <= obj.value) {
-        return colorMap.error;
-    }
-};
 //具体的绘制流程图的方法
 let DefaultOption = {
     tooltip: {
@@ -172,174 +54,63 @@ let DefaultOption = {
         data: [   // 首先是节点，其次是连接线(竖线)
             // 零层节点
             {
-                name: title[0].label,  //节点名字
+                name: 'root',  //节点名字
                 x: 300,
                 y: 0,     //x,y为节点位置
-                value: title[0],    //节点的值
                 symbolSize: [80, 40],  //节点大小
                 symbol : 'Rect',     //节点形状
                 itemStyle: {
                     normal: {
-                        color:colorFunction(title[0]),
+                        color:'#FFC125',
                     }
                 }               //节点的背景色
             },
             // 一层
             {
-                name: title[1].label,
+                name: 'leaf11',
                 x: 0,
                 y: 200,
-                value: title[1],
                 symbolSize: [80, 40],
                 symbol : 'Rect',
                 itemStyle: {
                     normal: {
-                        color:colorFunction(title[1]),
+                        color:'#FFC125',
                     }
                 }
             },
             {
-                name: title[2].label,
+                name: 'leaf12',
                 x: 150,
                 y: 200,
-                value: title[2],
                 symbolSize:[80, 40],
                 symbol : 'Rect',
                 itemStyle: {
                     normal: {
-                        color:colorFunction(title[2]),
+                        color:'#FFC125',
                     }
                 }
             },
             {
-                name: title[3].label,
+                name: 'leaf13',
                 x: 300,
                 y: 200,
-                value: title[3],
                 symbolSize: [80, 40],
                 symbol : 'Rect',
                 itemStyle: {
                     normal: {
-                        color:colorFunction(title[3]),
+                        color:'#FFC125',
                     }
                 }
             },
             {
-                name: title[4].label,
+                name: 'leaf14',
                 x: 600,
                 y: 200,
-                value: title[4],
                 symbolSize: [80, 40],
                 symbol : 'Rect',
                 itemStyle: {
                     normal: {
-                        color:colorFunction(title[4]),
-                    }
-                }
-            },
-            // 二层
-            {
-                name: title[5].label,
-                x: 0,
-                y: 400,
-                value: title[5],
-                symbolSize: [80, 40],
-                symbol : 'Rect',
-                itemStyle: {
-                    normal: {
-                        color:colorFunction(title[5]),
-                    }
-                }
-            },
-            {
-                name: title[6].label,
-                x: 150,
-                y: 400,
-                value: title[6],
-                symbol : 'Rect',
-                symbolSize: [80, 40],
-                itemStyle: {
-                    normal: {
-                        color:colorFunction(title[6]),
-                    }
-                }
-            },
-            {
-                name: title[7].label,
-                x: 300,
-                y: 400,
-                value: title[7],
-                symbolSize: [80, 40],
-                symbol : 'Rect',
-                itemStyle: {
-                    normal: {
-                        color:colorFunction(title[7]),
-                    }
-                }
-            },
-            {
-                name: title[8].label,
-                x: 450,
-                y: 400,
-                value: title[8],
-                symbolSize: [80, 40],
-                symbol : 'Rect',
-                itemStyle: {
-                    normal: {
-                        color:colorFunction(title[8]),
-                    }
-                }
-            },
-            {
-                name: title[9].label,
-                x: 600,
-                y: 400,
-                value: title[9],
-                symbolSize: [80, 40],
-                symbol : 'Rect',
-                itemStyle: {
-                    normal: {
-                        color:colorFunction(title[9]),
-                    }
-                }
-            },
-            // 三层
-            {
-                name: title[10].label,
-                x: 0,
-                y: 600,
-                value: title[10],
-                symbolSize: [80, 40],
-                symbol : 'Rect',
-                itemStyle: {
-                    normal: {
-                        color:colorFunction(title[10]),
-                    }
-                }
-            },
-            {
-                name: title[11].label,
-                x: 150,
-                y: 600,
-                value: title[11],
-                symbolSize: [80, 40],
-                symbol : 'Rect',
-                itemStyle: {
-                    normal: {
-                        color:colorFunction(title[11]),
-                    }
-                }
-            },
-            {
-                name: title[12].label,
-                x: 450,
-                y: 600,
-                value: title[12],
-                symbolSize: [80, 40],
-                symbol : 'Rect',
-                itemStyle: {
-                    normal: {
-                        color:colorFunction(title[12]),
+                        color:'#FFC125',
                     }
                 }
             },
@@ -374,135 +145,31 @@ let DefaultOption = {
                 y: 100,
                 symbolSize: 0,
             },
-            // 二层
-            {
-                name: '21',
-                x: 0,
-                y: 300,
-                symbolSize: 0,
-            },
-            {
-                name: '22',
-                x: 150,
-                y: 300,
-                symbolSize: 0,
-            },
-            {
-                name: '23',
-                x: 300,
-                y: 300,
-                symbolSize: 0,
-            },
-            {
-                name: '24',
-                x: 300,
-                y: 300,
-                symbolSize:0,
-            },
-            {
-                name: '25',
-                x: 450,
-                y: 300,
-                symbolSize: 0,
-            },
-            {
-                name: '26',
-                x: 600,
-                y: 300,
-                symbolSize: 0,
-            },
-            // 三层
-            {
-                name: '31',
-                x: 0,
-                y: 500,
-                symbolSize: 0,
-            },
-            {
-                name: '32',
-                x: 150,
-                y: 500,
-                symbolSize: 0,
-            },
-            {
-                name: '33',
-                x: 300,
-                y: 500,
-                symbolSize: 0,
-            },
-            {
-                name: '34',
-                x: 450,
-                y: 500,
-                symbolSize: 0,
-            },
         ],
         // links: [],
-        //这是点与点之间的连接关系
+        //这是点与点之间的连接关系,首先是竖线，其次是横线
         links: [
             // 零层
             {
-                source: title[0].label,
+                source: 'root',
                 target: '3'
             },
             // 一层
             {
                 source: '1',
-                target: title[1].label,
+                target: 'leaf11',
             },
             {
                 source: '2',
-                target: title[2].label,
+                target: 'leaf12',
             },
             {
                 source: '4',
-                target: title[3].label,
+                target: 'leaf13',
             },
             {
                 source: '5',
-                target: title[4].label,
-            },
-            // 二层
-            {
-                source: title[3].label,
-                target: '24',
-            },
-            {
-                source: '21',
-                target: title[5].label,
-            },
-            {
-                source: '22',
-                target: title[6].label,
-            },
-            {
-                source: '23',
-                target: title[7].label,
-            },
-            {
-                source: '25',
-                target: title[8].label,
-            },
-            {
-                source: '26',
-                target: title[9].label,
-            },
-            // 三层
-            {
-                source: title[7].label,
-                target: '33',
-            },
-            {
-                source: '31',
-                target: title[10].label,
-            },
-            {
-                source: '32',
-                target: title[11].label,
-            },
-            {
-                source: '34',
-                target: title[12].label,
+                target: 'leaf14',
             },
             // 一层
             {
@@ -524,49 +191,7 @@ let DefaultOption = {
                 source: '4',
                 target: '5',
                 symbol: 'none',
-            },
-            // 二层
-            {
-                source: '21',
-                target: '22',
-                symbol: 'none',
-            },
-            {
-                source: '22',
-                target: '23',
-                symbol: 'none',
-            },
-            {
-                source: '23',
-                target: '24',
-                symbol: 'none',
-            },
-            {
-                source: '24',
-                target: '25',
-                symbol: 'none',
-            },
-            {
-                source: '25',
-                target: '26',
-                symbol: 'none',
-            },
-            // 三层
-            {
-                source: '31',
-                target: '32',
-                symbol: 'none',
-            },
-            {
-                source: '32',
-                target: '33',
-                symbol: 'none',
-            },
-            {
-                source: '33',
-                target: '34',
-                symbol: 'none',
-            },
+            }
         ],
         //线条的颜色
         lineStyle: {
