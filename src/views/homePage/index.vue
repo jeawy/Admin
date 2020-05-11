@@ -630,6 +630,7 @@ export default {
             this.children5.push(item)
           })
         }
+        console.log(this.children4)
         for(j = 0;j < this.name.length;j ++){     //标记所有节点
           let array1 = {   //标记所有的节点
             name: this.name[j],  //节点名字
@@ -685,29 +686,6 @@ export default {
         this.dataList = this.dataList.concat(this.allPoint)
         this.linkList = this.linkLR.concat(this.hasChildUD)
         this.linkList = this.linkList.concat(this.allLinkUD)
-        // for(i = 0; i < lineNumber.length; i ++){
-        //   let array2 = {
-        //     name: this.lineName(lineNumber,i),
-        //     x:this.xCoordLine(this.level[j],j),
-        //     y:this.yCoordLine(this.level[j]),
-        //     symbolSize: 0,
-        //   }
-        //   let array3 = {
-        //     source: this.sourceUD(this.level[j],j),
-        //     target: this.targetUD(this.level[j],j)
-        //   }
-        //   this.lineList.push(array2) //连接线的坐标位置
-        //   dataList = this.nodeList.concat(this.lineList)
-        //   this.connectLineUD.push(array3) //上下节点之间的连接线
-        //   this.connectLineLR.push(array4) //左右节点之间的连接线
-        //   this.connectLineUD.concat(this.connectLineLR)
-        // }
-        console.log(this.hasChildPoint)
-        console.log(this.dataList)
-        console.log(this.linkLR)
-        console.log(this.hasChildUD)
-        console.log(this.allLinkUD)
-        console.log(this.linkList)
         let dept = {
           tooltip: {
             trigger: 'item',
@@ -1017,7 +995,6 @@ export default {
     },
     //点击油井关联图中的某一项
     clickGraph(params){
-      console.log("111")
       console.log(params)
     },
     //获取近一周时间的函数

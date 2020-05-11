@@ -14,7 +14,7 @@
       </el-col>
       <el-col :span="2" class="col-bg">井名:</el-col>
       <el-col :span="2">
-        <el-input v-model="wellNumber"></el-input>
+        <el-input v-model="wellNumber" @keyup.enter.native="searchWell()"></el-input>
       </el-col>
       <el-col :span="2" class="col-bg">状态:</el-col>
       <el-col :span="2">
@@ -363,7 +363,7 @@ export default {
         ApiDeleteWellList({ well_id: id, method: "delete" }).then(({ data }) => {
           if (data.status === 0) {
             this.$message.success(data.msg);
-            this.GetwellList();
+            this.searchWell();
           }
         });
       });
