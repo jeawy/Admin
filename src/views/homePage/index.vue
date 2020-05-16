@@ -793,6 +793,8 @@ export default {
             })
             name = wellName[i]
           }
+          time_list.reverse()
+          balance_list.reverse()
           let item = {
             name: name,
             smooth: true, //光滑
@@ -903,6 +905,8 @@ export default {
               }
             }
           }
+          active_list.reverse()
+          dates_list.reverse()
           let item = {
             name: wellName[0],
             smooth: true, //光滑
