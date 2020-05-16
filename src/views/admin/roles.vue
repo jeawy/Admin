@@ -303,12 +303,15 @@ export default {
       id: null,
       editing: false,
       add_role_show: false,
-      addDeptRole: {}
+      addDeptRole: {},
+      UserList:[]
     };
   },
   components: {},
   created() {
     this.getList();
+    this.getAllUserlist();
+    
   },
   watch: {
     optionInput: {
@@ -327,9 +330,17 @@ export default {
     }
   },
   computed: {
-    ...mapState("admin", ["UserList"])
+   // ...mapState("admin", ["UserList"])
   },
   methods: {
+     getAllUserlist() {
+     
+      getUserList().then(({ data }) => {
+        this.UserList = [...data];
+        
+      })
+     
+    },
     //添加角色
     addRole(Type) {
       if (Type === 1) {
