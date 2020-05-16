@@ -785,7 +785,7 @@ export default {
             name = ""
           }else{
             this.balanceList = dataList[i]
-            time_list = this.balanceList.map(item =>{
+            time_list = dataList[0].map(item =>{
               return item.date
             })
             balance_list = this.balanceList.map(item =>{
@@ -793,6 +793,8 @@ export default {
             })
             name = wellName[i]
           }
+          console.log(time_list)
+          console.log(balance_list)
           time_list.reverse()
           balance_list.reverse()
           let item = {
