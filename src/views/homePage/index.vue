@@ -793,8 +793,6 @@ export default {
             })
             name = wellName[i]
           }
-          console.log(time_list)
-          console.log(balance_list)
           time_list.reverse()
           balance_list.reverse()
           let item = {
@@ -903,7 +901,7 @@ export default {
               if(dataList !== ""){
                 active_list.push(dataList[i][j].active)
                 wellName.push(dataList[i][j].well_name)
-                dates_list.push(dateFormat(dataList[0][j].time));
+                dates_list.push(dateFormat(dataList[i][j].time));
               }
             }
           }
