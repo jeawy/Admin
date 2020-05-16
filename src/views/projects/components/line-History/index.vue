@@ -28,7 +28,7 @@ export default {
      function dataFormat(params) {
         if (params) {
           params *= 1000;
-          return dayjs(params).format("MM/DD");
+          return dayjs(params).format("YYYY/MM/DD");
         } else {
           return "";
         }
@@ -50,6 +50,9 @@ export default {
           output_list.push(item.output);
           level.push(item.level);
         });
+        dates_list.reverse();
+        output_list.reverse();
+        level.reverse()
         let Output = {
           title: {
             text: "日产量折线图",
@@ -209,7 +212,7 @@ export default {
       function dateFormat(date) {
         if (date) {
           date *= 1000
-          return dayjs(date).format('YYYY/MM/DD HH:mm')
+          return dayjs(date).format('YYYY/MM/DD')
         } else {
           return ''
         }
@@ -225,6 +228,8 @@ export default {
           dates_list.push(dateFormat(item.time));
           active.push(item.active);
         });
+        dates_list.reverse();
+        active.reverse()
         let power = {
           title: {
             text: "有功"
@@ -280,6 +285,8 @@ export default {
           dates_list.push(item.date);
           balance.push(item.balance);
         });
+        dates_list.reverse()
+        balance.reverse()
         let option3 = {
           title: {
             text: "平衡率",
