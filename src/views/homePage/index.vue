@@ -630,7 +630,6 @@ export default {
             this.children5.push(item)
           })
         }
-        console.log(this.children4)
         for(j = 0;j < this.name.length;j ++){     //标记所有节点
           let array1 = {   //标记所有的节点
             name: this.name[j],  //节点名字
@@ -1213,7 +1212,7 @@ export default {
           <el-col :lg="24">
             <el-card shadow="always">
               <el-row>
-                <el-col :sm="9" :lg="10" style="margin-top:5px">
+                <el-col :sm="10" :lg="10" style="margin-top:5px">
                   <span style="font-size:15px">时间：</span>
                   <el-date-picker
                     v-model="time"
@@ -1228,7 +1227,7 @@ export default {
                     value-format="yyyy/MM/dd"
                   ></el-date-picker>
                 </el-col>
-                <el-col :sm="3">
+                <el-col :sm="4" :lg="4">
                   <el-button
                     @click="search()"
                     icon="el-icon-search"
