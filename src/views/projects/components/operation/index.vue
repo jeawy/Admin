@@ -35,11 +35,14 @@
           align="center"
         ></el-table-column>
         <el-table-column prop="text" label="内容" width="230px" align="center"></el-table-column>
-        <el-table-column prop="status" label="状态" width="100px" :formatter="Status" align="center"></el-table-column>
+        <el-table-column prop="status" label="状态" width="100px" :formatter="Status" align="center">
+             
+        </el-table-column>
         <el-table-column label="执行日期" width="150px" align="center">
           <template slot-scope="scope">{{scope.row.exe_date|dateTimeFormat}}</template>
         </el-table-column>
-        <el-table-column prop="result" label="执行结果" width="100px" align="center"></el-table-column>
+        <el-table-column prop="result" label="执行结果" width="100px" align="center"> 
+        </el-table-column>
          <el-table-column label="操作" align="center" width="100px" v-if="auth">
              <template slot-scope="scope">
             <el-tooltip effect="dark" content="删除" placement="top">
@@ -412,10 +415,10 @@ export default {
     Order_type: function(row, column) {
       switch (row.order_type) {
         case 0:
-          return " 维持当前运行状态";
+          return "维持当前运行状态";
           break;
         case 1:
-          return "固定频率调参";
+          return "实测参量调参";
           break;
         case 2:
           return "现场系统调参";
@@ -470,6 +473,9 @@ export default {
           break;
         case 1:
           return "已执行";
+          break;
+        case 2:
+          return "待反馈";
           break;
       }
     },
