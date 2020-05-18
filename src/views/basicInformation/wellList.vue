@@ -52,6 +52,7 @@
       :data="wellList"
       stripe
       :border="true"
+      :max-height="tableHeight"
       style="width: 100%;"
       :header-cell-style="{color:'#212529',fontSize:'16px',fontWeight:400}"
       :row-style="{fontSize:'16px',color:'#212529;',fontWeight:400,}"
@@ -236,7 +237,9 @@ export default {
       currentPage: 1,
       pageSize: 50,
       pageSizeList: [10, 30, 50, 100],
-      cutType: -1 // 分页类型
+      cutType: -1, // 分页类型
+      clientHeight:"",
+      tableHeight:0
     };
   },
   computed: {
@@ -385,6 +388,8 @@ export default {
   },
   created() {
     this.GetwellList();
+    this.clientHeight =   `${document.documentElement.clientHeight}`          //document.body.clientWidth;
+    this.tableHeight = this.clientHeight - 208
   },
   mounted() {
     this.getDeptList();

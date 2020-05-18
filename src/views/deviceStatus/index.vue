@@ -15,6 +15,7 @@
       :data="devicedata"
       stripe
       :border="true"
+      :max-height="tableHeight"
       style="width: 100%;"
       :header-cell-style="{color:'#212529',fontSize:'16px',fontWeight:400}"
       :row-style="{fontSize:'16px',color:'#212529;',fontWeight:400}"
@@ -71,6 +72,8 @@ export default {
     return {
       devicedata: [],
       wellNumber: null,
+      clientHeight:"",
+      tableHeight:0
     };
   },
   methods: {
@@ -98,6 +101,8 @@ export default {
   },
   created() {
     this.getDeviceStatus();
+    this.clientHeight =   `${document.documentElement.clientHeight}`          //document.body.clientWidth;
+    this.tableHeight = this.clientHeight - 208
   }
 };
 </script>

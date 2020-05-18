@@ -961,16 +961,16 @@ export default {
         //告警汇总
         let chart2 = [
           {
+            name: "误报",
+            value: alarmList[3].num
+          },
+          {
             name: "忽略",
             value: alarmList[1].num
           },
           {
             name: "关闭",
             value: alarmList[2].num
-          },
-          {
-            name: "误报",
-            value: alarmList[3].num
           },
           {
             name: "已处置",
@@ -1138,7 +1138,7 @@ export default {
                   <el-col :lg="24">
                     <el-card shadow="always">
                       <chart ref="well-status" chart-id="well-status" />
-                      <div class="prompt-text">开井: {{this.openCount}} 关井: {{this.stopCount}} 总计: {{this.stopCount+this.openCount}} </div>
+                      <div style="color: #6c757d;font-size: 15px;">开井: {{this.openCount}} 关井: {{this.stopCount}} 总计: {{this.stopCount+this.openCount}} </div>
                       <el-progress
                         style="margin-top:10px"
                         color="#28a745"
@@ -1151,7 +1151,7 @@ export default {
                   <el-col :lg="24">
                     <el-card shadow="always" style="height:255px">
                       <div>
-                        <div class="prompt-text">告警</div>
+                        <div style="color: #6c757d;font-size: 15px;">告警</div>
                         <strong style="color:black;font-size:15px">已处理: {{this.processedAlarm}} 总计: {{this.totalAlarm}}</strong>
                         <el-progress
                           style="margin-top:10px;"
@@ -1324,7 +1324,7 @@ export default {
       .prompt-text {
         display: flex;
         color: #6c757d;
-        font-size: 15px;
+        font-size: 20px;
       }
       .left-item {
         .el-card {
@@ -1377,7 +1377,7 @@ export default {
     }
     .text-light {
       color: #f8f9fa;
-      font-size: 16px;
+      font-size: 20px;
       font-weight: 400;
       line-height: 24px;
     }

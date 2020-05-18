@@ -16,7 +16,7 @@ module.exports = {
     lintOnSave: false, // process.env.NODE_ENV === 'development'
     productionSourceMap: false,
     devServer: {
-        port: 8080,
+        port: 8081,
         // open: true,
         overlay: {
             warnings: false,
@@ -24,7 +24,7 @@ module.exports = {
         },
         proxy: {
             [process.env.VUE_APP_BASE_API]: {
-                target:'http://39.106.137.233:8092/',
+                target:'http://39.106.137.233:8081/',
                 // target: 'http://127.0.0.1:9000/',
                 changeOrigin: true,
                 pathRewrite: {

@@ -241,6 +241,7 @@
       :data="alarmList"
       stripe
       :border="true"
+      :max-height="tableHeight"
       highlight-current-row
       style="width: 100%;"
       :header-cell-style="{color:'#212529',fontSize:'16px',fontWeight:400}"
@@ -533,7 +534,9 @@ export default {
       frequency1:"",
       frequency2:"",
       nesting_pressure1:"",
-      nesting_pressure2:""
+      nesting_pressure2:"",
+      clientHeight:"",
+      tableHeight:0
     };
   },
   methods: {
@@ -738,6 +741,8 @@ export default {
     }
   },
   created() {
+    this.clientHeight =   `${document.documentElement.clientHeight}`          //document.body.clientWidth;
+    this.tableHeight = this.clientHeight - 245
     if(this.$route.params.name == "全部"){
       this.GetalarmList();
     }else{

@@ -60,6 +60,7 @@
       stripe
       :border="true"
       style="width: 100%;"
+      :max-height="tableHeight"
       :header-cell-style="{color:'#212529',fontSize:'16px',fontWeight:400}"
       :row-style="{fontSize:'16px',color:'#212529;',fontWeight:400,}"
     >
@@ -230,7 +231,8 @@ export default {
       pageSize: 20,
       cutType: -1, //分页类型
       pageSizeList: [20, 30, 50, 100],
-
+      clientHeight:"",
+      tableHeight:0
     };
   },
   methods: {
@@ -312,6 +314,8 @@ export default {
   },
   created() {
     this.GetcomprehensiveData();
+    this.clientHeight =   `${document.documentElement.clientHeight}`          //document.body.clientWidth;
+    this.tableHeight = this.clientHeight - 208
   }
 };
 </script>

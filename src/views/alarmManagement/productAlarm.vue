@@ -242,6 +242,7 @@
       stripe
       :border="true"
       highlight-current-row
+      :max-height="tableHeight"
       style="width: 100%;"
       :header-cell-style="{color:'#212529',fontSize:'16px',fontWeight:400}"
       :row-style="{fontSize:'16px',color:'#212529;',fontWeight:400,}"
@@ -533,7 +534,9 @@ export default {
       frequency1:"",
       frequency2:"",
       nesting_pressure1:"",
-      nesting_pressure2:""
+      nesting_pressure2:"",
+      clientHeight:"",
+      tableHeight:0
     };
   },
   methods: {
@@ -702,6 +705,8 @@ export default {
   },
   created() {
     this.GetalarmList()
+    this.clientHeight =   `${document.documentElement.clientHeight}`          //document.body.clientWidth;
+    this.tableHeight = this.clientHeight - 245
   }
 };
 </script>
