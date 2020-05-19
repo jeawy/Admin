@@ -46,7 +46,9 @@
       return{
         isDShow:false,
         backgroundDiv: {
-          backgroundImage: 'url(' + require('@/assets/background1.jpg') + ')'
+          backgroundImage: 'url(' + require('@/assets/background.png') + ')',
+          backgroundPosition:"center",
+          backgroundRepeat: "no-repeat",
         }
       }
     },
@@ -76,13 +78,16 @@
 
 <style lang="scss" scoped>
    .well{
-     font-size: 25px;
+    font-size: 25px;
     color: #101010;
+    border-radius: 15px;
+    padding:15px 10px;
+    margin:8px;
+    background: #fff;
    }
   .navbar {
     display: flex;
     justify-content: space-between;
-
     &>* {
       display: flex;
       align-items: center;
