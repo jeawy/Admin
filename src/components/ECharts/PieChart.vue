@@ -50,7 +50,7 @@ export default {
      * @param {Array} chartData 饼图的数据，必传,具体格式为[{ name:'demo', value: 10 }]
      *
      */
-    initChart(title = "", chartData = []) {
+    initChart(title = "", chartData = [],chartColor=[]) {
       let options = {
         title: {
           text: title,
@@ -77,17 +77,26 @@ export default {
             radius: ['45%', '80%'],
             label: {
                 normal: {
-                    show: false,
-                    position: 'center'
+                  show: false,
+                  position: 'center'
                 },
                 emphasis: {
-                    show: true,
-                    textStyle: {
-                        fontSize: '20',
-                        fontWeight: 'bold'
-                    }
+                  show: true,
+                  textStyle: {
+                    fontSize: '20',
+                    fontWeight: 'bold'
+                  }
                 }
             },
+            itemStyle: {
+              normal:{
+                color:function(params) {
+                //自定义颜色
+                var colorList = chartColor
+                    return colorList[params.dataIndex]
+                  }
+              }
+            }
           }
         ]
       };
