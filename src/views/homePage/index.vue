@@ -712,7 +712,7 @@ export default {
           let length = 0
           let arr = {}
           if(this.level[j] == 1){  //第一层
-            size = 40
+            size = 60
             arr = {
               source:this.node1,
               target:this.node2,
@@ -720,7 +720,7 @@ export default {
             }
             this.linkList.push(arr)
           }else if(this.level[j] == 2){
-            size = 35
+            size = 55
             arr = {
               source:this.node2,
               target:this.node3,
@@ -728,9 +728,9 @@ export default {
             }
             this.linkList.push(arr)
           }else if(this.level[j] == 3){
-            size = 30
+            size = 50
           }else if(this.level[j] == 4){
-            size = 25
+            size = 45
             arr = {
               source:this.node3,
               target:this.node4[j - 3],
@@ -738,7 +738,7 @@ export default {
             }
             this.linkList.push(arr)
           }else if(this.level[j] == 5){
-            size = 20
+            size = 40
             if(j < 6 + this.node5.length){
               arr = {
                 source:this.node4[0],
@@ -888,7 +888,7 @@ export default {
               },
               // 数据
               data: this.nodeList,
-              // links: this.linkList,
+              links: this.linkList,
               categories: categories
             }
           ]
