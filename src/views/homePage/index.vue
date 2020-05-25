@@ -112,13 +112,13 @@ export default {
       allLinkUD: [], //所有节点间的上连接线
       linkLR: [], //节点间的左右连接线
       linkList: [], //关系图中存放link的数组
-      node1:"",
-      node2:"",
-      node3:"",
-      node4:[],
-      node5:[],
-      node6:[],
-      node7:[]
+      node1: "",
+      node2: "",
+      node3: "",
+      node4: [],
+      node5: [],
+      node6: [],
+      node7: []
     };
   },
   methods: {
@@ -151,169 +151,274 @@ export default {
             value: res.data.stop_count
           }
         ];
-        let colorList = ["#28a745","#c23531"]
+        let colorList = ["#28a745", "#c23531"];
         this.$nextTick(() => {
           this.$refs["well-status"].initChart("", chart1, colorList);
         });
-        //产量柱状图
-        let option1 = {
+        // //产量柱状图
+        // let option1 = {
+        //   title: {
+        //     text: "产量TOP20",
+        //     textStyle: {
+        //       //---主标题内容样式
+        //       color: "#000",
+        //       fontSize: 16
+        //       // height:"50px"
+        //     },
+        //     padding: [5, 18] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
+        //   },
+        //   tooltip: {
+        //     trigger: "axis",
+        //     axisPointer: {
+        //       type: "shadow"
+        //     }
+        //   },
+        //   grid: {
+        //     left: "3%",
+        //     top: "12%",
+        //     height: 370,
+        //     containLabel: true
+        //   },
+        //   legend: {
+        //     data: []
+        //   },
+        //   xAxis: [
+        //     {
+        //       name: "井号",
+        //       type: "category",
+        //       triggerEvent: true,
+        //       data: wellName,
+        //       // nameGap :15,
+        //       axisLabel: {
+        //         //---坐标轴 标签
+        //         fontSize: 14,
+        //         show: true, //---是否显示
+        //         inside: false, //---是否朝内
+        //         interval: 0,
+        //         rotate: 45,
+        //         margin: 5 //---刻度标签与轴线之间的距离
+        //       }
+        //     }
+        //   ],
+        //   yAxis: [
+        //     {
+        //       type: "value",
+        //       name: "吨",
+        //       splitLine: { show: false },
+        //       axisLabel: {
+        //         fontSize: 14
+        //       }
+        //     }
+        //   ],
+        //   series: [
+        //     {
+        //       name: "产量",
+        //       type: "bar",
+        //       barWidth: 30,
+        //       barMaxWidth: 50,
+        //       barCategoryGap: "30%",
+        //       barGap: "0%",
+        //       data: output,
+        //       itemStyle: {
+        //         normal: {
+        //           label: {
+        //             show: true, //开启显示
+        //             position: "top", //在上方显示
+        //             textStyle: {
+        //               //数值样式
+        //               color: "black",
+        //               fontSize: 10
+        //             }
+        //           }
+        //         }
+        //       }
+        //     }
+        //   ]
+        // };
+        // //液面高度柱状图
+        // let option2 = {
+        //   title: {
+        //     text: "液面高度",
+        //     textStyle: {
+        //       //---主标题内容样式
+        //       color: "#000",
+        //       fontSize: 16
+        //       // height:"50px"
+        //     },
+        //     padding: [1, 18] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
+        //   },
+        //   tooltip: {
+        //     trigger: "axis",
+        //     axisPointer: {
+        //       type: "shadow"
+        //     }
+        //   },
+        //   legend: {
+        //     data: []
+        //   },
+        //   grid: {
+        //     left: "3%",
+        //     top: "12%",
+        //     bottom: "3%",
+        //     height: 370,
+        //     containLabel: true
+        //   },
+        //   xAxis: [
+        //     {
+        //       name: "井号",
+        //       type: "category",
+        //       data: wellName,
+        //       axisLabel: {
+        //         fontSize: 14,
+        //         show: true, //---是否显示
+        //         inside: false, //---是否朝内
+        //         interval: 0,
+        //         rotate: 45,
+        //         margin: 5
+        //       }
+        //     }
+        //   ],
+        //   yAxis: [
+        //     {
+        //       type: "value",
+        //       name: "米",
+        //       splitLine: { show: false },
+        //       axisLabel: {
+        //         fontSize: 14
+        //       }
+        //     }
+        //   ],
+        //   series: [
+        //     {
+        //       type: "bar",
+        //       barWidth: 30,
+        //       barMaxWidth: 50,
+        //       barCategoryGap: "30%",
+        //       barGap: "0%",
+        //       data: level,
+        //       itemStyle: {
+        //         normal: {
+        //           label: {
+        //             show: true, //开启显示
+        //             position: "top", //在上方显示
+        //             textStyle: {
+        //               //数值样式
+        //               color: "black",
+        //               fontSize: 10
+        //             }
+        //           }
+        //         }
+        //       }
+        //     }
+        //   ]
+        // };
+        // this.$refs["ouput"].initChart(option1);
+        // this.$refs["level"].initChart(option2);
+        let option = {
           title: {
-            text: "产量TOP20",
-            textStyle: {
-              //---主标题内容样式
-              color: "#000",
-              fontSize: 16
-              // height:"50px"
-            },
-            padding: [5, 18] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
+            text: "产量和液面高度关系图",
+            left: "center"
           },
           tooltip: {
             trigger: "axis",
             axisPointer: {
-              type: "shadow"
+              animation: false
             }
-          },
-          grid: {
-            left: "3%",
-            top: "12%",
-            height: 370,
-            containLabel: true
           },
           legend: {
-            data: []
+            data: ["产量TOP20", "液面高度"],
+            left: 10
           },
-          xAxis: [
-            {
-              name: "井号",
-              type: "category",
-              triggerEvent: true,
-              data: wellName,
-              // nameGap :15,
-              axisLabel: {
-                //---坐标轴 标签
-                fontSize: 14,
-                show: true, //---是否显示
-                inside: false, //---是否朝内
-                interval: 0,
-                rotate: 45,
-                margin: 5 //---刻度标签与轴线之间的距离
-              }
+          toolbox: {
+            feature: {
+              saveAsImage: {}
             }
-          ],
-          yAxis: [
+          },
+          axisPointer: {
+            link: { xAxisIndex: "all" }
+          },
+          dataZoom: [
             {
-              type: "value",
-              name: "吨",
-              splitLine: { show: false },
-              axisLabel: {
-                fontSize: 14
-              }
-            }
-          ],
-          series: [
-            {
-              name: "产量",
-              type: "bar",
-              barWidth: 30,
-              barMaxWidth: 50,
-              barCategoryGap: "30%",
-              barGap: "0%",
-              data: output,
-              itemStyle: {
-                normal: {
-                  label: {
-                    show: true, //开启显示
-                    position: "top", //在上方显示
-                    textStyle: {
-                      //数值样式
-                      color: "black",
-                      fontSize: 10
-                    }
-                  }
-                }
-              }
-            }
-          ]
-        };
-        //液面高度柱状图
-        let option2 = {
-          title: {
-            text: "液面高度",
-            textStyle: {
-              //---主标题内容样式
-              color: "#000",
-              fontSize: 16
-              // height:"50px"
+              show: true,
+              realtime: true,
+              start: 30,
+              end: 70,
+              xAxisIndex: [0, 1]
             },
-            padding: [1, 18] //---标题位置,因为图形是是放在一个dom中,因此用padding属性来定位
-          },
-          tooltip: {
-            trigger: "axis",
-            axisPointer: {
-              type: "shadow"
+            {
+              type: "inside",
+              realtime: true,
+              start: 30,
+              end: 70,
+              xAxisIndex: [0, 1]
             }
-          },
-          legend: {
-            data: []
-          },
-          grid: {
-            left: "3%",
-            top: "12%",
-            bottom: "3%",
-            height: 370,
-            containLabel: true
-          },
+          ],
+          grid: [
+            {
+              left: 50,
+              right: 50,
+              height: "35%"
+            },
+            {
+              left: 50,
+              right: 50,
+              top: "55%",
+              height: "35%"
+            }
+          ],
           xAxis: [
             {
-              name: "井号",
+              name:"井号",
               type: "category",
+              boundaryGap: false,
+              axisLine: { onZero: true },
+              data: wellName
+            },
+            {
+              gridIndex: 1,
+              name:"井号",
+              type: "category",
+              boundaryGap: false,
+              axisLine: { onZero: true },
               data: wellName,
-              axisLabel: {
-                fontSize: 14,
-                show: true, //---是否显示
-                inside: false, //---是否朝内
-                interval: 0,
-                rotate: 45,
-                margin: 5
-              }
+              position: "top"
             }
           ],
           yAxis: [
             {
+              name: "产量TOP20(吨)",
               type: "value",
-              name: "米",
-              splitLine: { show: false },
-              axisLabel: {
-                fontSize: 14
-              }
+              max: 500
+            },
+            {
+              gridIndex: 1,
+              name: "液面高度(米)",
+              type: "value",
+              inverse: true
             }
           ],
           series: [
             {
-              type: "bar",
-              barWidth: 30,
-              barMaxWidth: 50,
-              barCategoryGap: "30%",
-              barGap: "0%",
-              data: level,
-              itemStyle: {
-                normal: {
-                  label: {
-                    show: true, //开启显示
-                    position: "top", //在上方显示
-                    textStyle: {
-                      //数值样式
-                      color: "black",
-                      fontSize: 10
-                    }
-                  }
-                }
-              }
+              name: "产量TOP20",
+              smooth:true,
+              type: "line",
+              symbolSize: 8,
+              hoverAnimation: false,
+              data:output
+            },
+            {
+              name: "液面高度",
+              smooth:true,
+              type: "line",
+              xAxisIndex: 1,
+              yAxisIndex: 1,
+              symbolSize: 8,
+              hoverAnimation: false,
+              data: level
             }
           ]
         };
-        this.$refs["ouput"].initChart(option1);
-        this.$refs["level"].initChart(option2);
+        this.$refs["lineChart"].initChart(option);
       });
     },
     //根据时间搜索产量和液面高度柱状图
@@ -629,7 +734,7 @@ export default {
         data.msg.forEach(item => {
           if (item.children !== "") {
             //判断第一层是否有孩子节点
-            this.node1 = item.name
+            this.node1 = item.name;
             this.hasChildNode.push(item.name);
             this.childLength.push(item.children.length); //第一层的孩子数据长度
             this.childLevel.push(item.level);
@@ -644,7 +749,7 @@ export default {
           item.forEach(key => {
             if (key.children !== "") {
               //判断第二层是否有孩子节点
-              this.node2 = key.name
+              this.node2 = key.name;
               this.hasChildNode.push(key.name);
               this.childLength.push(key.children.length); //第二层的孩子数据长度
               this.childLevel.push(key.level);
@@ -660,7 +765,7 @@ export default {
           item.forEach(key => {
             if (key.children !== "") {
               //判断第三层节点是否有孩子节点
-              this.node3 = key.name
+              this.node3 = key.name;
               this.hasChildNode.push(key.name);
               this.childLength.push(key.children.length); //第三层的孩子数据长度
               this.childLevel.push(key.level);
@@ -676,7 +781,7 @@ export default {
           item.forEach(key => {
             if (key.children !== "") {
               //判断第四层是否有孩子节点
-              this.node4.push(key.name)
+              this.node4.push(key.name);
               this.hasChildNode.push(key.name);
               this.childLength.push(key.children.length); //第四层的孩子数据长度
               this.childLevel.push(key.level);
@@ -696,78 +801,82 @@ export default {
             this.children5.push(item);
           });
         }
-        this.children4[0].map(item =>{
-          this.node5.push(item.well_name)
-        })
-        this.children4[1].map(item =>{
-          this.node6.push(item.well_name)
-        })
-        this.children4[2].map(item =>{
-          this.node7.push(item.well_name)
-        })
-        console.log(this.node3)
-        console.log(this.node4)
+        this.children4[0].map(item => {
+          this.node5.push(item.well_name);
+        });
+        this.children4[1].map(item => {
+          this.node6.push(item.well_name);
+        });
+        this.children4[2].map(item => {
+          this.node7.push(item.well_name);
+        });
+        console.log(this.node3);
+        console.log(this.node4);
         for (j = 0; j < this.name.length; j++) {
-          let size = 0
-          let length = 0
-          let arr = {}
-          if(this.level[j] == 1){  //第一层
-            size = 60
+          let size = 0;
+          let length = 0;
+          let arr = {};
+          if (this.level[j] == 1) {
+            //第一层
+            size = 60;
             arr = {
-              source:this.node1,
-              target:this.node2,
-              name:""
-            }
-            this.linkList.push(arr)
-          }else if(this.level[j] == 2){
-            size = 55
+              source: this.node1,
+              target: this.node2,
+              name: ""
+            };
+            this.linkList.push(arr);
+          } else if (this.level[j] == 2) {
+            size = 55;
             arr = {
-              source:this.node2,
-              target:this.node3,
-              name:""
-            }
-            this.linkList.push(arr)
-          }else if(this.level[j] == 3){
-            size = 50
-          }else if(this.level[j] == 4){
-            size = 45
+              source: this.node2,
+              target: this.node3,
+              name: ""
+            };
+            this.linkList.push(arr);
+          } else if (this.level[j] == 3) {
+            size = 50;
+          } else if (this.level[j] == 4) {
+            size = 45;
             arr = {
-              source:this.node3,
-              target:this.node4[j - 3],
-              name:""
-            }
-            this.linkList.push(arr)
-          }else if(this.level[j] == 5){
-            size = 40
-            if(j < 6 + this.node5.length){
+              source: this.node3,
+              target: this.node4[j - 3],
+              name: ""
+            };
+            this.linkList.push(arr);
+          } else if (this.level[j] == 5) {
+            size = 40;
+            if (j < 6 + this.node5.length) {
               arr = {
-                source:this.node4[0],
-                target:this.noChildNode[j - 6],
-                name:""
-              }
-              this.linkList.push(arr)
-            }else if(j < 6 + this.node5.length + this.node6.length){
+                source: this.node4[0],
+                target: this.noChildNode[j - 6],
+                name: ""
+              };
+              this.linkList.push(arr);
+            } else if (j < 6 + this.node5.length + this.node6.length) {
               arr = {
-                source:this.node4[1],
-                target:this.noChildNode[j - 6 ],
-                name:""
-              }
-              this.linkList.push(arr)
-            }else if(j < 6 + this.node5.length + this.node6.length + this.node7.length){
+                source: this.node4[1],
+                target: this.noChildNode[j - 6],
+                name: ""
+              };
+              this.linkList.push(arr);
+            } else if (
+              j <
+              6 + this.node5.length + this.node6.length + this.node7.length
+            ) {
               arr = {
-                source:this.node4[2],
-                target:this.noChildNode[j - 6],
-                name:""
-              }
-              this.linkList.push(arr)
+                source: this.node4[2],
+                target: this.noChildNode[j - 6],
+                name: ""
+              };
+              this.linkList.push(arr);
             }
           }
           //标记所有节点
           let array1 = {
             //标记所有的节点
             name: this.name[j], //节点名字
-            symbolSize:size,
-            category:this.level[j],
+            symbolSize: size,
+            category: this.level[j],
             itemStyle: {
               normal: {
                 color: this.colorFunction(this.status[j])
@@ -836,13 +945,13 @@ export default {
           },
           // 提示框的配置
           tooltip: {
-            trigger: 'item',
+            trigger: "item",
             formatter: function(para) {
-              if (para.name != 'x' || para.name != 'y') {
+              if (para.name != "x" || para.name != "y") {
                 return para.name;
               } else {
-                  //其他的都正式显示，自己是什么就显示什么。
-                return '';
+                //其他的都正式显示，自己是什么就显示什么。
+                return "";
               }
             }
           },
@@ -1139,9 +1248,9 @@ export default {
           {
             name: "已处置",
             value: alarmList[4].num
-          },
+          }
         ];
-        let colorList = ["#c23531","#d0c5c5","#2f4554","#ffcd39","#28a745"]
+        let colorList = ["#c23531", "#d0c5c5", "#2f4554", "#ffcd39", "#28a745"];
         this.$nextTick(() => {
           this.$refs["alarm-summary"].initChart("", chart2, colorList);
         });
@@ -1274,7 +1383,7 @@ export default {
                   <input type="radio" name="options" id="option5" />近一年
                 </div>
               </div>
-              <div>
+              <!-- <div>
                 <BarChart
                   @click-item="handleClickChart"
                   ref="ouput"
@@ -1288,6 +1397,14 @@ export default {
                   ref="level"
                   chart-id="level"
                   style="height:420px"
+                />
+              </div> -->
+              <div>
+                <BarChart
+                  @click-item="handleClickChart"
+                  ref="lineChart"
+                  chart-id="lineChart"
+                  style="height:800px"
                 />
               </div>
             </el-card>
