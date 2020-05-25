@@ -172,7 +172,8 @@ import {
   putDept,
   removeDept,
   getWKTemplate,
-  getRoles
+  getRoles,
+   getUserList,
 } from "@/api/admin";
 
 import usersTable from "@/views/components/UsersTable";
@@ -189,6 +190,7 @@ export default {
       LinkTemplateList: [],
       SelectMembers: [],
       AllMembers: [],
+      UserList:[],
       MemberEditState: {},
       isMemberEditShow: false,
       GroupUsers: [],
@@ -244,7 +246,7 @@ export default {
         active: this.isActive && !this.error
       };
     },
-    ...mapState("admin", ["UserList", "DeptList", "DeptAuth"])
+    ...mapState("admin", [ "DeptList", "DeptAuth"])
   },
   methods: {
     jumpChange(val) {
@@ -355,7 +357,6 @@ export default {
     // 单击流程审批按钮触发事件
     show(ActiveGroup) {
       this.activeTemplate = ActiveGroup;
-      console.log(this.activeTemplate.id);
       this.isDrawerShow = true;
       getWKTemplate({
         dept: this.activeTemplate.id
@@ -529,7 +530,7 @@ export default {
       }
 
       this.dialogFormVisible = true;
-      this.$refs["GroupForm"].resetFields();
+     this.$refs["GroupForm"].resetFields();
     },
     pageRouter() {
       //  console.log(this.$route.query.id);
@@ -541,7 +542,15 @@ export default {
           this.handleGroupClick(msg);
         })
         .catch(err => {});
-    }
+    },
+    getAllUserlist() {
+     
+      getUserList().then(({ data }) => {
+        this.UserList = [...data];
+        
+      })
+     
+    },
   },
   watch: {
     filterText(val) {
@@ -550,8 +559,10 @@ export default {
   },
   created() {
     this.getDeptList();
+     this.getAllUserlist();
     if (this.$route.query.id) {
       this.pageRouter();
+      
     }
   },
 
