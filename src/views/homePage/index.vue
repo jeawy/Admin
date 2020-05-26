@@ -1404,7 +1404,7 @@ export default {
                   @click-item="handleClickChart"
                   ref="lineChart"
                   chart-id="lineChart"
-                  style="height:800px"
+                  style="height:800px;margin-top:50px"
                 />
               </div>
             </el-card>
@@ -1556,7 +1556,7 @@ export default {
         </el-row>
       </el-col>
     </el-row>
-    <el-row calss="home-header">
+    <!-- <el-row calss="home-header">
       <el-scrollbar style="height:100%">
         <el-card shadow="always" style="height:700px;">
           <div style="font-weight: bold;font-size:15px">油井架构图</div>
@@ -1570,7 +1570,7 @@ export default {
           </div>
         </el-card>
       </el-scrollbar>
-    </el-row>
+    </el-row> -->
   </div>
 </template>
 <style lang="scss">
@@ -1609,7 +1609,7 @@ export default {
     margin-bottom: 15px;
     .left {
       .el-card {
-        height: 950px;
+        height: 1320px;
       }
       .btn-group {
         display: flex;

@@ -89,8 +89,7 @@ export default function asyncRoutes(params) {
                     title: '油井列表',
                     icon: 'wellList'
                 }
-            },
-            {
+            },{
                 path: 'new-built',
                 name: 'new-built',
                 component: () =>
@@ -100,7 +99,18 @@ export default function asyncRoutes(params) {
                     icon: 'wellList',
                     roles: 'manage_well'
                 }
-            }, ]
+            }, {
+                path: 'wellStruct',
+                name: 'wellStruct',
+                component: () =>
+                    import ('@/views/basicInformation/wellStruct'),
+                meta: {
+                    title: '油井组织结构',
+                    icon: 'wellList',
+                    roles: 'manage_well'
+                }
+            },
+            ]
         },
         {
             path: '/power',
