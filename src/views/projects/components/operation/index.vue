@@ -2,19 +2,29 @@
   <div id="dataOperation">
     <el-row :gutter="20">
       <el-col :span="4">
-        <el-button type="primary" class="btn" @click="openDialog(1)" size="medium"  v-if="auth">固定调参</el-button>
+        <el-button type="primary" class="btn" @click="openDialog(1)" size="medium" v-if="auth">固定调参</el-button>
       </el-col>
       <el-col :span="4">
-        <el-button type="warning" class="btn" @click="openDialog(2)" size="medium"  v-if="auth">自动调参</el-button>
+        <el-button type="warning" class="btn" @click="openDialog(2)" size="medium" v-if="auth">自动调参</el-button>
       </el-col>
       <el-col :span="4">
-        <el-button type="primary" class="btn" @click="openDialog(3)" size="medium"  v-if="auth">参量修改</el-button>
+        <el-button type="primary" class="btn" @click="openDialog(3)" size="medium" v-if="auth">参量修改</el-button>
       </el-col>
       <el-col :span="5">
-        <el-button type="success" class="btn" @click="openDialog(4)" size="medium"  v-if="auth">发送实测值</el-button>
+        <el-button type="success" class="btn" @click="openDialog(4)" size="medium" v-if="auth">发送实测值</el-button>
       </el-col>
-      <el-col :span="6">
-        <el-button type="warning" class="btn" @click="openDialog(5)" size="medium"  v-if="auth">直接指令发送</el-button>
+      <el-col :span="7" style="padding-left: 0px;">
+        <el-button
+          type="warning"
+          class="btn"
+          @click="openDialog(5)"
+          size="medium"
+          v-if="auth"
+        >直接指令发送</el-button>
+        <span class="btn-explain" @click="openExplain()">
+          提示:
+          <svg-icon icon-class="wenhao" />
+        </span>
       </el-col>
     </el-row>
     <el-row>
@@ -35,16 +45,13 @@
           align="center"
         ></el-table-column>
         <el-table-column prop="text" label="内容" width="230px" align="center"></el-table-column>
-        <el-table-column prop="status" label="状态" width="100px" :formatter="Status" align="center">
-             
-        </el-table-column>
+        <el-table-column prop="status" label="状态" width="100px" :formatter="Status" align="center"></el-table-column>
         <el-table-column label="执行日期" width="150px" align="center">
           <template slot-scope="scope">{{scope.row.exe_date|dateTimeFormat}}</template>
         </el-table-column>
-        <el-table-column prop="result" label="执行结果" width="100px" align="center"> 
-        </el-table-column>
-         <el-table-column label="操作" align="center" width="100px" v-if="auth">
-             <template slot-scope="scope">
+        <el-table-column prop="result" label="执行结果" width="100px" align="center"></el-table-column>
+        <el-table-column label="操作" align="center" width="100px" v-if="auth">
+          <template slot-scope="scope">
             <el-tooltip effect="dark" content="删除" placement="top">
               <el-button
                 @click="deleteOrder(scope.row.id)"
@@ -53,15 +60,14 @@
                 type="text"
               />
             </el-tooltip>
-              </template>
-         </el-table-column>
+          </template>
+        </el-table-column>
       </el-table>
-
     </el-row>
     <el-dialog title="调频" :visible.sync="dialogVisible1" width="380px">
       <el-form :model="freguencyModal" ref="freguency-modal" label-width="100px" :rules="rules">
         <el-form-item label="频率" prop="freguency">
-          <el-input-number v-model="freguencyModal.freguency" :precision="1" :step="0.1" ></el-input-number>
+          <el-input-number v-model="freguencyModal.freguency" :precision="1" :step="0.1"></el-input-number>
         </el-form-item>
         <div class="butn">
           <el-button @click="cancelFreguency">取消</el-button>
@@ -149,15 +155,26 @@
       </el-form>
     </el-dialog>
     <el-dialog title="指令发送" :visible.sync="dialogVisible5" width="450px">
-      <el-form :model="anyOrderModal" ref="any-order-modal"  :rules="rules">
-        <el-form-item  label="十六进制指令" prop="anyOrder" >
-        <el-input  v-model="anyOrderModal.anyOrder" placeholder="请输入内容" style="width:300px;"></el-input>
+      <el-form :model="anyOrderModal" ref="any-order-modal" :rules="rules">
+        <el-form-item label="十六进制指令" prop="anyOrder">
+          <el-input v-model="anyOrderModal.anyOrder" placeholder="请输入内容" style="width:300px;"></el-input>
         </el-form-item>
         <div class="butn">
           <el-button @click="cancelAnyOrde">取消</el-button>
           <el-button type="primary" @click="anyOrderForm('anyOrderModal')">确认</el-button>
         </div>
       </el-form>
+    </el-dialog>
+    <el-dialog title="提示" :visible.sync="explainVisible" width="365px">
+     
+        <div style="font-size:14px">
+          <span style="font-weight:bold">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;指令可以随时发送，但是发送完之后并没有将指令发送到现场设备里，
+            而是存储在上位机。等到现场系统发送可以执行这些指令的代码后，
+            才会从上机位调出这些指令进行执行。
+          </span>
+        
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -173,8 +190,9 @@ export default {
   name: "dataOperation",
   data() {
     return {
+      explainVisible: false,
       number: "",
-      auth:"",
+      auth: "",
       id: this.$route.params.id,
       orderList: [],
       data: "",
@@ -263,15 +281,18 @@ export default {
         realLevel: 0,
         dataOutput: 0
       },
-      anyOrderModal:{
-        anyOrder:'',
-      },
+      anyOrderModal: {
+        anyOrder: ""
+      }
     };
   },
   methods: {
+    openExplain() {
+      this.explainVisible = true;
+    },
     //获取指令列表
     getOrderList() {
-      ApiGetOrders({ wellid: this.id}).then(res => {
+      ApiGetOrders({ wellid: this.id }).then(res => {
         this.orderList = res.data.msg;
       });
     },
@@ -432,16 +453,16 @@ export default {
       }
     },
     //直接指令发送
-    anyOrderForm(anyOrderModal){
+    anyOrderForm(anyOrderModal) {
       let order = {};
-       order = {
+      order = {
         well_no: this.number,
-        any_order : this.anyOrderModal.anyOrder
+        any_order: this.anyOrderModal.anyOrder
       };
-        ApiCreateOrder(order).then(res => {
+      ApiCreateOrder(order).then(res => {
         if (res.data.status === 0) {
           this.$message.success(res.data.msg);
-          this.dialogVisible5= false;
+          this.dialogVisible5 = false;
           this.anyOrderModal = {};
           this.getOrderList(this.id);
         } else {
@@ -449,16 +470,15 @@ export default {
           this.anyOrderModal = {};
         }
       });
-
     },
-     //指令删除
+    //指令删除
     deleteOrder(id) {
       this.$confirm("此操作将永久删除指令, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        ApiDeleteOrder({ id: id,method: "delete",}).then(({ data }) => {
+        ApiDeleteOrder({ id: id, method: "delete" }).then(({ data }) => {
           if (data.status === 0) {
             this.$message.success(data.msg);
             this.getOrderList(this.id);
@@ -481,9 +501,9 @@ export default {
     },
     cancelFreguency() {
       this.dialogVisible1 = false;
-       this.freguencyModal= { freguency: 0} 
+      this.freguencyModal = { freguency: 0 };
     },
-     cancelAuto() {
+    cancelAuto() {
       this.dialogVisible2 = false;
     },
     cancelParam() {
@@ -526,5 +546,11 @@ export default {
 .butn {
   text-align: right;
   margin-top: 50px;
+}
+.btn-explain {
+  padding-left: 10px;
+  font-size: 12px;
+  color: #808080;
+  cursor: pointer;
 }
 </style>
