@@ -1,7 +1,8 @@
 <template>
   <div id="lineHistory">
-    <LineChart ref="output_chart" chart-id="output_chart" style="height:350px"/>
-    <LineChart ref="output_liquid" chart-id="output_liquid" style="height:350px"/>
+    <LineChart ref="outputLevel" chart-id="outputLevel" style="height:700px"/>
+    <!-- <LineChart ref="output_chart" chart-id="output_chart" style="height:350px"/>
+    <LineChart ref="output_liquid" chart-id="output_liquid" style="height:350px"/> -->
     <LineChart ref="ele-chart" chart-id="ele-chart" style="height:350px"/>
     <LineChart ref="power-chart" chart-id="power-chart" style="height:350px"/>
     <LineChart ref="balance-chart" chart-id="balance-chart" style="height:350px"/>
@@ -53,108 +54,106 @@ export default {
         dates_list.reverse();
         output_list.reverse();
         level.reverse()
-        let Output = {
+        let option = {
           title: {
-            text: "日产量折线图",
-            textStyle: {
-              fontSize: 20
-            },
-            // padding:[1,40,23,60],
-            padding: [1, 18],
-            left: "left",
-            top: 0
+            text: "产量和液面高度关系图",
+            left: "center"
           },
           tooltip: {
-            trigger: "axis"
+            trigger: "axis",
+            axisPointer: {
+              animation: false
+            }
           },
           legend: {
-            data: []
+            data: ["产量", "液面高度"],
+            left: 10
           },
-          xAxis: {
-            name: "时间",
-            nameTextStyle: { fontSize: 16 },
-            type: "category",
-            triggerEvent: true, //为标签添加触发事件
-            axisLabel: {
-              fontSize: 14
-            },
-            data: dates_list
-          },
-          yAxis: {
-            type: "value",
-            minInterval: 10,
-            name: "吨",
-            splitLine: { show: false },
-            axisLabel: { fontSize: 14 },
-            nameTextStyle: { fontSize: 16 }
-          },
-          series: {
-            name: "产量",
-            type: "line",
-            barWidth: 20,
-            data: output_list,
-            itemStyle: {
-              normal: {
-                label: {
-                  show: false, //开启显示
-                  position: "top", //在上方显示
-                  textStyle: {
-                    //数值样式
-                    color: "black",
-                    fontSize: 16
-                  }
-                }
-              }
+          toolbox: {
+            feature: {
+              saveAsImage: {}
             }
-          }
-        };
-        this.$refs["output_chart"].initChart(Output);
-        let OutputLiquid = {
-          title: {
-            text: "液面折线图",
-            textStyle: {
-              fontSize: 20
+          },
+          axisPointer: {
+            link: { xAxisIndex: "all" }
+          },
+          dataZoom: [
+            {
+              show: true,
+              realtime: true,
+              start: 30,
+              end: 70,
+              xAxisIndex: [0, 1]
             },
-            // padding:[1,40,23,60],
-            padding: [1, 18]
-          },
-          tooltip: {
-            trigger: "axis"
-          },
-          xAxis: {
-            type: "category",
-            name: "时间",
-            boundaryGap: false,
-            data: dates_list
-          },
-          yAxis: {
-            type: "value",
-            name: "米",
-            axisLabel: { fontSize: 14 }
-          },
+            {
+              type: "inside",
+              realtime: true,
+              start: 30,
+              end: 70,
+              xAxisIndex: [0, 1]
+            }
+          ],
+          grid: [
+            {
+              left: 50,
+              right: 50,
+              height: "35%"
+            },
+            {
+              left: 50,
+              right: 50,
+              top: "55%",
+              height: "35%"
+            }
+          ],
+          xAxis: [
+            {
+              name:"时间",
+              type: "category",
+              data: dates_list,
+            },
+            {
+              gridIndex: 1,
+              name:"时间",
+              type: "category",
+              data: dates_list,
+              position: "top",
+            }
+          ],
+          yAxis: [
+            {
+              name: "产量(吨)",
+              type: "value",
+            },
+            {
+              gridIndex: 1,
+              name: "液面高度(米)",
+              type: "value",
+              inverse: true
+            }
+          ],
           series: [
             {
-              name: "液面",
-              data: level,
+              name: "产量",
+              smooth:true,
               type: "line",
-              itemStyle: {
-                normal: {
-                  label: {
-                    show: false, //开启显示
-                    position: "top", //在上方显示
-                    textStyle: {
-                      //数值样式
-                      color: "black",
-                      fontSize: 16
-                    }
-                  }
-                }
-              },
-              areaStyle: {}
+              symbolSize: 8,
+              hoverAnimation: false,
+              data:output_list
+            },
+            {
+              name: "液面高度",
+              smooth:true,
+              type: "line",
+              xAxisIndex: 1,
+              yAxisIndex: 1,
+              symbolSize: 8,
+              hoverAnimation: false,
+              data: level
             }
           ]
-        };
-        this.$refs["output_liquid"].initChart(OutputLiquid);
+        } 
+        this.$refs["outputLevel"].initChart(option);
       });
     },
     //电流曲线图

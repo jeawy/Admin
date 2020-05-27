@@ -379,7 +379,7 @@ export default {
       this.time[0] = list[0]
       this.time[1] = list[1]
       this.$nextTick(() => {
-        this.$refs["lineHistory"].getOutputChart(this.$route.params.id);
+        this.$refs["lineHistory"].getOutputChart(this.$route.params.id,list[0] + "-" + list[1]);
       });
       this.$nextTick(() => {
         this.$refs["lineHistory"].getPowerChart(
