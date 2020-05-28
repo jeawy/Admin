@@ -3,7 +3,7 @@
     <LineChart ref="outputLevel" chart-id="outputLevel" style="height:700px"/>
     <!-- <LineChart ref="output_chart" chart-id="output_chart" style="height:350px"/>
     <LineChart ref="output_liquid" chart-id="output_liquid" style="height:350px"/> -->
-    <LineChart ref="ele-chart" chart-id="ele-chart" style="height:350px"/>
+    <LineChart ref="ele-chart" chart-id="ele-chart" style="height:350px;margin-top:10px"/>
     <LineChart ref="power-chart" chart-id="power-chart" style="height:350px"/>
     <LineChart ref="balance-chart" chart-id="balance-chart" style="height:350px"/>
   </div>
@@ -22,8 +22,6 @@ export default {
   watch: {},
   data() {
     return {
-      upCurrent:[],
-      downCurrent:[]
     };
   },
   methods: {
@@ -173,82 +171,83 @@ export default {
             subScript = i
           }
         }
-        for(let i = 0;i < displacement.length ; i ++){
-          if(i < subScript){
-            this.upCurrent.push(P144data[i])
-          } else{
-            this.downCurrent.push(P144data[i])
-          } 
-        }
         let  x_list = []
+        var j = 0; 
         for (let i = 0 ; i < 145; i ++)
           x_list.push(i)
-      let customOption = {
-        title: {
-          text: "电流曲线:"+time 
-        },
-        tooltip: {
-          trigger: "axis",
-          formatter: function(params) {
-            let marker =params[0].marker;
-            var res = params[0].name;
-            var texts = "";
-            if (params[0].value[1] == 5) {
-              texts = "开井";
-            } else if (params[0].value[1] == 6) {
-              texts = "关井";
-            }
-          }
-        },
-        xAxis: {
-          type: "category",
-          data: x_list,
-        },
-        yAxis: {
-          type: "value",
-          name: "安培",
-          axisLabel: {
-            fontSize: 14
-          }
-        },
-        // visualMap: {
-        //   show: false,
-        //   type: "piecewise",
-        //   pieces: [
-        //     {
-        //       gt: max, //gt为大于，lt为小于，lte为小于等于，gte为大于等于
-        //       color: "#fb060f"
-        //     },
-        //     {
-        //       gt: 0,
-        //       lte: max,
-        //       color: "green"
-        //     }
-        //   ]
-        // },
-        series: [
-          {
-            step: "start",
-            smooth: true,//光滑
-            data: P144data,
-            type: "line",
-            itemStyle: {
-              normal: {
-                label: {
-                  show: false, //开启显示
-                  position: "top", //在上方显示
-                  textStyle: {
-                    //数值样式
-                    color: "black",
-                    fontSize: 16
-                  }
-                }
+        let customOption = {
+          title: {
+            text: "电流点位曲线:"+time,
+            left: "center"
+          },
+          tooltip: {
+            trigger: "axis",
+            formatter: function(params) {
+              var tip = "";
+              let marker0 = params[0].marker
+              let marker1 = params[1].marker
+              if(params[0].dataIndex <= subScript){
+                tip = params[0].axisValue+'<br />';
+                tip = tip + marker0 +'上电流:'+ params[0].value
+                return tip;
+              }else{
+                tip = params[0].axisValue+'<br />';
+                tip = tip + marker1 +'下电流:'+ params[1].value
+                return tip;
               }
+            },
+          },
+          legend: {
+            left: 10,
+            data: ['上电流','下电流']
+          },
+          grid: [
+            {
+              left: 50
             }
+          ],
+          xAxis: {
+            name:"点位数",
+            type: "category",
+            data: x_list,
+          },
+          yAxis: {
+            type: "value",
+            name: "安培",
+            axisLabel: {
+              fontSize: 14
+            }
+          },
+          series: [
+            {
+              name: '上电流',
+              type: 'line',
+              data:[]
+            },
+            {
+              name: '下电流',
+              type: 'line',
+              data:[]
+            }
+          ]
+        };
+        let upCurrent = []
+        let downCurrent = []
+        for(let i = 0;i < P144data.length;i++){
+          if(i <= subScript){
+            upCurrent.push(P144data[i])
+            downCurrent.push('-')
+          } else{
+            upCurrent.push('-')
+            downCurrent.push(P144data[i])
           }
-        ]
-      };
-      this.$refs["ele-chart"].initChart(customOption);
+        }
+        downCurrent[subScript] = upCurrent[subScript]
+        if (customOption && typeof customOption === "object") {
+          customOption.series[0].data = upCurrent;
+          customOption.series[1].data = downCurrent;
+          this.$refs["ele-chart"].initChart(customOption);
+        }
       })
     },
     //获取有功曲线图
@@ -281,6 +280,11 @@ export default {
           tooltip: {
             trigger: "axis"
           },
+          grid: [
+            {
+              left: 50
+            }
+          ],
           xAxis: {
             type: "category",
             name: "时间",
@@ -341,6 +345,11 @@ export default {
           legend: {
             data: []
           },
+          grid: [
+            {
+              left: 50
+            }
+          ],
           xAxis: {
             name: "时间",
             type: "category",
