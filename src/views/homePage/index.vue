@@ -130,12 +130,22 @@ export default {
           },
           tooltip: {
             trigger: "axis",
+            // formatter: function(params) {
+            //   var tip = "";
+            //   let marker0 = params[0].marker; //液面高度
+            //   let marker1 = params[1].marker;  //产量
+            //   tip = params[0].axisValue+'<br />';
+            //   tip = tip + marker1 +'产量:'+ params[1].value + '</p>'
+            //         + marker0 +'液面高度:'+ params[0].value;
+            //   console.log(tip)
+            //   return tip;
+            // },
             axisPointer: {
-              animation: false
+              animation: true
             }
           },
           legend: {
-            data: ["产量TOP20", "液面高度"],
+            data: ["产量", "液面高度"],
             left: 10
           },
           toolbox: {
@@ -207,9 +217,8 @@ export default {
           ],
           yAxis: [
             {
-              name: "产量TOP20(吨)",
+              name: "产量(吨)",
               type: "value",
-              max: 500
             },
             {
               gridIndex: 1,
@@ -220,7 +229,7 @@ export default {
           ],
           series: [
             {
-              name: "产量TOP20",
+              name: "产量",
               smooth:true,
               type: "line",
               symbolSize: 8,
@@ -646,7 +655,7 @@ export default {
                   @click-item="handleClickChart"
                   ref="lineChart"
                   chart-id="lineChart"
-                  style="height:1050px;margin-top:60px"
+                  style="height:950px;margin-top:50px"
                 />
               </div>
             </el-card>
@@ -661,24 +670,9 @@ export default {
               <el-col :lg="12">
                 <el-row class="left-item">
                   <el-col :lg="24">
-                    <el-card shadow="always">
-                      <chart ref="well-status" chart-id="well-status" />
-                      <div
-                        style="color: #6c757d;font-size: 15px;"
-                      >开井: {{this.openCount}} 关井: {{this.stopCount}} 总计: {{this.stopCount+this.openCount}}</div>
-                      <el-progress
-                        style="margin-top:10px"
-                        color="#28a745"
-                        :stroke-width="10"
-                        :percentage="openPercentage"
-                      ></el-progress>
-                    </el-card>
-                  </el-col>
-                  <el-col style="height:15px"></el-col>
-                  <el-col :lg="24">
-                    <el-card shadow="always" style="height:255px">
+                    <el-card shadow="always" style="height:315px">
                       <div>
-                        <div style="color: #6c757d;font-size: 15px;">告警</div>
+                        <div style="color: #6c757d;font-size:15px;margin-top:20px">告警</div>
                         <strong
                           style="color:black;font-size:15px"
                         >已处理: {{this.processedAlarm}} 总计: {{this.totalAlarm}}</strong>
@@ -689,7 +683,7 @@ export default {
                           :percentage="processedPer"
                         ></el-progress>
                       </div>
-                      <div style="margin-top:10px">
+                      <div style="margin-top:30px">
                         <chart
                           @click-item="ClickChart"
                           ref="alarm-summary"
@@ -703,14 +697,14 @@ export default {
               <el-col :lg="12">
                 <el-row class="right-item">
                   <el-col :lg="24">
-                    <el-card shadow="always" style="height:160px">
+                    <el-card shadow="always" style="height:90px">
                       <div style="display:flex">
                         <img
-                          style="width: 76px;height: 74px;margin-top:25px"
+                          style="width: 76px;height: 74px;margin-top:-12px"
                           src="@/assets/output.jpg"
                           alt
                         />
-                        <div style="margin-left:20px;margin-top:25px">
+                        <div style="margin-left:20px;margin-top:-12px">
                           <div class="prompt-text">总产油量：(吨)</div>
                           <div style="font-size:25px;margin-top:8px;">{{this.total}}</div>
                         </div>
@@ -719,6 +713,19 @@ export default {
                   </el-col>
                   <el-col style="height:15px"></el-col>
                   <el-col :lg="24">
+                    <el-card shadow="always" style="height:210px">
+                      <chart ref="well-status" chart-id="well-status" style="margin-top:-10px"/>
+                      <div
+                        style="color: #6c757d;font-size: 15px;"
+                      >开井: {{this.openCount}} 关井: {{this.stopCount}} 总计: {{this.stopCount+this.openCount}}</div>
+                      <el-progress
+                        color="#28a745"
+                        :stroke-width="10"
+                        :percentage="openPercentage"
+                      ></el-progress>
+                    </el-card>
+                  </el-col>
+                  <!-- <el-col :lg="24">
                     <el-card shadow="always" style="height:160px">
                       <router-link :to="{name:'power'}">
                         <div style="display:flex">
@@ -746,7 +753,7 @@ export default {
                         </div>
                       </router-link>
                     </el-card>
-                  </el-col>
+                  </el-col> -->
                 </el-row>
               </el-col>
             </el-row>
@@ -828,7 +835,7 @@ export default {
     margin-bottom: 15px;
     .left {
       .el-card {
-        height: 1320px;
+        height: 1125px;
       }
       .btn-group {
         display: flex;

@@ -21,7 +21,10 @@ export default {
   },
   watch: {},
   data() {
-    return {};
+    return {
+      upCurrent:[],
+      downCurrent:[]
+    };
   },
   methods: {
     //搜索日产量折线图
@@ -157,19 +160,45 @@ export default {
       });
     },
     //电流曲线图
-    getEleChart(wellid) {
-      ApiGetElectdata({id:wellid,p_type:'3',json:''}).then(res =>{
-        let P144data =res.data.datas;
-        let time = res.data.time;
+    getEleChart(id) {
+      ApiGetElectdata({id:id,p_type:'3',json:''}).then(({data}) =>{
+        let P144data = data.datas;
+        let time = data.time;
+        let displacement = data.displacement
+        let max = displacement[0]
+        let subScript = 0
+        for(let i = 0;i< displacement.length; i++){
+          if (displacement[i] > max){
+            max = displacement[i]
+            subScript = i
+          }
+        }
+        for(let i = 0;i < displacement.length ; i ++){
+          if(i < subScript){
+            this.upCurrent.push(P144data[i])
+          } else{
+            this.downCurrent.push(P144data[i])
+          } 
+        }
         let  x_list = []
-           for (let i = 0 ; i < 145; i ++)
-             x_list.push(i)
+        for (let i = 0 ; i < 145; i ++)
+          x_list.push(i)
       let customOption = {
         title: {
           text: "电流曲线:"+time 
         },
         tooltip: {
-          trigger: "axis"
+          trigger: "axis",
+          formatter: function(params) {
+            let marker =params[0].marker;
+            var res = params[0].name;
+            var texts = "";
+            if (params[0].value[1] == 5) {
+              texts = "开井";
+            } else if (params[0].value[1] == 6) {
+              texts = "关井";
+            }
+          }
         },
         xAxis: {
           type: "category",
@@ -182,8 +211,24 @@ export default {
             fontSize: 14
           }
         },
+        // visualMap: {
+        //   show: false,
+        //   type: "piecewise",
+        //   pieces: [
+        //     {
+        //       gt: max, //gt为大于，lt为小于，lte为小于等于，gte为大于等于
+        //       color: "#fb060f"
+        //     },
+        //     {
+        //       gt: 0,
+        //       lte: max,
+        //       color: "green"
+        //     }
+        //   ]
+        // },
         series: [
           {
+            step: "start",
             smooth: true,//光滑
             data: P144data,
             type: "line",
@@ -334,9 +379,6 @@ export default {
       })
     }
   },
-  mounted() {
-    this.getEleChart();
-  }
 };
 </script>
 
