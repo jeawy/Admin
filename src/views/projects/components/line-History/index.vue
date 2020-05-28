@@ -1,9 +1,9 @@
 <template>
   <div id="lineHistory">
     <LineChart ref="outputLevel" chart-id="outputLevel" style="height:700px"/>
-    <!-- <LineChart ref="output_chart" chart-id="output_chart" style="height:350px"/>
-    <LineChart ref="output_liquid" chart-id="output_liquid" style="height:350px"/> -->
-    <LineChart ref="ele-chart" chart-id="ele-chart" style="height:350px;margin-top:10px"/>
+    <!-- <LineChart ref="output_chart" chart-id="output_chart" style="height:350px"/> -->
+    <LineChart ref="ele-history" chart-id="ele-history" style="height:350px;margin-top:10px"/>
+    <LineChart ref="ele-chart" chart-id="ele-chart" style="height:350px"/>
     <LineChart ref="power-chart" chart-id="power-chart" style="height:350px"/>
     <LineChart ref="balance-chart" chart-id="balance-chart" style="height:350px"/>
   </div>
@@ -12,7 +12,7 @@
 <script>
 import LineChart from "@/components/ECharts/LineMarker";
 import { getHistoryData,viewPowersMonth } from "@/api/welldetail";
-import { ApiGetElectdata,ApiGetPower} from "@/api/realdata";
+import { ApiGetElectdata,ApiGetPower,ApiGetEleHistory} from "@/api/realdata";
 import dayjs from "dayjs";
 export default {
   name: "lineHistory",
@@ -157,6 +157,77 @@ export default {
         this.$refs["outputLevel"].initChart(option);
       });
     },
+    //获取电流历史数据
+    getEleHistory(id, date){
+      function dateFormat(date) {
+        if (date) {
+          date *= 1000
+          return dayjs(date).format('YYYY/MM/DD')
+        } else {
+          return ''
+        }
+      }
+      ApiGetEleHistory({well_id:id,electricity:""}).then(({data}) =>{
+        let name = data.msg.well_name
+        let time_list = []
+        data.msg.times.forEach(item => {
+          time_list.push(dateFormat(item));
+        });
+        let electrics = data.msg.electrics
+        time_list.reverse()
+        electrics.reverse()
+        let option = {
+          title: {
+            text: "历史电流曲线",
+            left: "center"
+          },
+          tooltip: {
+            trigger: "axis"
+          },
+          grid: [
+            {
+              left: 50
+            }
+          ],
+          xAxis: {
+            type: "category",
+            name: "时间",
+            data: time_list
+          },
+          yAxis: {
+            type: "value",
+            name: "安培",
+            axisLabel: {
+              fontSize: 14
+            }
+          },
+          series: [
+            {
+              name: "电流",
+              smooth: true, //光滑
+              data: electrics,
+              type: "line",
+              itemStyle: {
+                normal: {
+                  label: {
+                    show: false, //开启显示
+                    position: "top", //在上方显示
+                    textStyle: {
+                      //数值样式
+                      color: "black",
+                      fontSize: 16
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+        this.$nextTick(()=>{
+          this.$refs["ele-history"].initChart(option);
+        });
+      })
+    },
     //电流曲线图
     getEleChart(id) {
       ApiGetElectdata({id:id,p_type:'3',json:''}).then(({data}) =>{
@@ -275,7 +346,8 @@ export default {
         active.reverse()
         let power = {
           title: {
-            text: "有功"
+            text: "有功曲线",
+            left: "center"
           },
           tooltip: {
             trigger: "axis"
@@ -337,7 +409,8 @@ export default {
         balance.reverse()
         let option3 = {
           title: {
-            text: "平衡率",
+            text: "平衡率曲线",
+            left: "center"
           },
           tooltip: {
             trigger: "axis"

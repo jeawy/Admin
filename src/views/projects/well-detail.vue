@@ -341,6 +341,10 @@ export default {
         this.$route.params.id,
         dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
       );
+      this.$refs["lineHistory"].getEleHistory(
+        this.$route.params.id,
+        dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
+      );
       this.$refs["lineHistory"].getPowerChart(
         this.$route.params.id,
         dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
@@ -380,6 +384,9 @@ export default {
       this.time[1] = list[1]
       this.$nextTick(() => {
         this.$refs["lineHistory"].getOutputChart(this.$route.params.id,list[0] + "-" + list[1]);
+      });
+      this.$nextTick(() => {
+        this.$refs["lineHistory"].getEleHistory(this.$route.params.id,list[0] + "-" + list[1]);
       });
       this.$nextTick(() => {
         this.$refs["lineHistory"].getPowerChart(
