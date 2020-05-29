@@ -103,6 +103,9 @@ export default {
   },
   mounted() {
     this.chart = echarts.init(document.getElementById(this.chartId));
+    this.chart.on("click", (params)=> {
+      this.$emit('click-item',params)
+    })
   },
   beforeDestroy() {
     if (!this.chart) {

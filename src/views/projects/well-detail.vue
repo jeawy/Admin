@@ -220,7 +220,8 @@ export default {
           }
         ]
       },
-      time: []
+      time: [],
+      wellType:""
     };
   },
   methods: {
@@ -366,15 +367,18 @@ export default {
     getWellDetails() {
       getWellDetail({ id: this.$route.params.id, json: "" }).then(
         ({ data }) => {
-          // this.wellDetail = data.entities_list[0];
           this.wellDetail = data.well;
           this.num = this.wellDetail.number;
+          this.wellType = data.well.well_type
           this.auth = data.auth.order;
           this.$nextTick(() => {
             this.$refs["dataOperation"].number = this.num;
           });
           this.$nextTick(() => {
             this.$refs["dataOperation"].auth = this.auth;
+          });
+          this.$nextTick(() => {
+            this.$refs["lineHistory"].getEleChart(this.$route.params.id,this.wellType);
           });
         }
       );
@@ -396,9 +400,6 @@ export default {
       });
       this.$nextTick(() => {
         this.$refs["lineHistory"].getBalanceChart(this.$route.params.id);
-      });
-      this.$nextTick(() => {
-        this.$refs["lineHistory"].getEleChart(this.$route.params.id);
       });
       this.$nextTick(() => {
         this.$refs["tableHistory"].getHistoryData(this.$route.params.id);

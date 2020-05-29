@@ -1,11 +1,21 @@
 <template>
   <div id="lineHistory">
-    <LineChart ref="outputLevel" chart-id="outputLevel" style="height:700px"/>
+    <LineChart ref="outputLevel" chart-id="outputLevel" style="height:700px" @click-item="handleClickChart"/>
     <!-- <LineChart ref="output_chart" chart-id="output_chart" style="height:350px"/> -->
     <LineChart ref="ele-history" chart-id="ele-history" style="height:350px;margin-top:10px"/>
     <LineChart ref="ele-chart" chart-id="ele-chart" style="height:350px"/>
     <LineChart ref="power-chart" chart-id="power-chart" style="height:350px"/>
     <LineChart ref="balance-chart" chart-id="balance-chart" style="height:350px"/>
+    <el-dialog :visible.sync="dialogShow" title="油井信息" width="500px">
+      <el-row>
+        <el-col :span="20">
+          井名：{{this.wellName}}
+        </el-col>
+      </el-row>
+      <el-col :offset="11">
+        <el-button @click="dialogShow = false">取消</el-button>
+      </el-col>
+    </el-dialog>
   </div>
 </template>
 
@@ -22,6 +32,8 @@ export default {
   watch: {},
   data() {
     return {
+      dialogShow:false,
+      wellName:""
     };
   },
   methods: {
@@ -229,18 +241,53 @@ export default {
       })
     },
     //电流曲线图
-    getEleChart(id) {
+    getEleChart(id,wellType) { //wellType==0表示抽油机，wellType==1表示螺杆泵
       ApiGetElectdata({id:id,p_type:'3',json:''}).then(({data}) =>{
         let P144data = data.datas;
         let time = data.time;
-        let displacement = data.displacement
-        let max = displacement[0]
         let subScript = 0
-        for(let i = 0;i< displacement.length; i++){
-          if (displacement[i] > max){
-            max = displacement[i]
-            subScript = i
+        let upCurrent = []
+        let downCurrent = []
+        let series = []
+        if(wellType == 0){
+          let displacement = data.displacement
+          let max = displacement[0]
+          for(let i = 0;i< displacement.length; i++){
+            if (displacement[i] > max){
+              max = displacement[i]
+              subScript = i
+            }
           }
+          for(let i = 0;i < P144data.length;i++){
+            if(i <= subScript){
+              upCurrent.push(P144data[i])
+              downCurrent.push('-')
+            } else{
+              upCurrent.push('-')
+              downCurrent.push(P144data[i])
+            }
+          }
+          downCurrent[subScript] = upCurrent[subScript]
+          series = [
+            {
+              name: '上电流',
+              type: 'line',
+              data:[]
+            },
+            {
+              name: '下电流',
+              type: 'line',
+              data:[]
+            }
+          ]
+        }else{
+          series = [
+            {
+              name: '电流',
+              type: 'line',
+              data:[]
+            }
+          ]
         }
         let  x_list = []
         var j = 0; 
@@ -254,16 +301,23 @@ export default {
           tooltip: {
             trigger: "axis",
             formatter: function(params) {
-              var tip = "";
-              let marker0 = params[0].marker
-              let marker1 = params[1].marker
-              if(params[0].dataIndex <= subScript){
-                tip = params[0].axisValue+'<br />';
-                tip = tip + marker0 +'上电流:'+ params[0].value
-                return tip;
+              let tip = "";
+              if(params.length > 1){
+                let marker0 = params[0].marker
+                let marker1 = params[1].marker
+                if(params[0].dataIndex <= subScript){
+                  tip = params[0].axisValue+'<br />';
+                  tip = tip + marker0 +'上电流:'+ params[0].value
+                  return tip;
+                }else{
+                  tip = params[0].axisValue+'<br />';
+                  tip = tip + marker1 +'下电流:'+ params[1].value
+                  return tip;
+                }
               }else{
+                let marker = params[0].marker
                 tip = params[0].axisValue+'<br />';
-                tip = tip + marker1 +'下电流:'+ params[1].value
+                tip = tip + marker +'电流:'+ params[0].value
                 return tip;
               }
             },
@@ -289,34 +343,15 @@ export default {
               fontSize: 14
             }
           },
-          series: [
-            {
-              name: '上电流',
-              type: 'line',
-              data:[]
-            },
-            {
-              name: '下电流',
-              type: 'line',
-              data:[]
-            }
-          ]
+          series: series
         };
-        let upCurrent = []
-        let downCurrent = []
-        for(let i = 0;i < P144data.length;i++){
-          if(i <= subScript){
-            upCurrent.push(P144data[i])
-            downCurrent.push('-')
-          } else{
-            upCurrent.push('-')
-            downCurrent.push(P144data[i])
-          }
-        }
-        downCurrent[subScript] = upCurrent[subScript]
         if (customOption && typeof customOption === "object") {
-          customOption.series[0].data = upCurrent;
-          customOption.series[1].data = downCurrent;
+          if(wellType == 0){
+            customOption.series[0].data = upCurrent;
+            customOption.series[1].data = downCurrent;
+          }else{
+            customOption.series[0].data = P144data
+          }
           this.$refs["ele-chart"].initChart(customOption);
         }
       })
@@ -459,6 +494,11 @@ export default {
           this.$refs["balance-chart"].initChart(option3);
         })
       })
+    },
+    //点击产量和液面高度图
+    handleClickChart(params){
+      this.dialogShow = true
+      console.log(params)
     }
   },
 };

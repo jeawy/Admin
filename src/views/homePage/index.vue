@@ -524,7 +524,7 @@ export default {
         });
       });
     },
-    //点击柱状图
+    //点击产量和液面高度图
     handleClickChart(params) {
       this.wellid = this.wellId[params.dataIndex];
       this.$router.push({
