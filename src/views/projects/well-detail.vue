@@ -390,7 +390,7 @@ export default {
         this.$refs["lineHistory"].getOutputChart(this.$route.params.id,list[0] + "-" + list[1]);
       });
       this.$nextTick(() => {
-        this.$refs["lineHistory"].getEleHistory(this.$route.params.id,list[0] + "-" + list[1]);
+        this.$refs["lineHistory"].getEleHistory(this.$route.params.id);
       });
       this.$nextTick(() => {
         this.$refs["lineHistory"].getPowerChart(

@@ -6,15 +6,28 @@
     <LineChart ref="ele-chart" chart-id="ele-chart" style="height:350px"/>
     <LineChart ref="power-chart" chart-id="power-chart" style="height:350px"/>
     <LineChart ref="balance-chart" chart-id="balance-chart" style="height:350px"/>
-    <el-dialog :visible.sync="dialogShow" title="油井信息" width="500px">
-      <el-row>
-        <el-col :span="20">
-          井名：{{this.wellName}}
-        </el-col>
+    <el-dialog :visible.sync="dialogShow" title="油井信息">
+      <el-row style="font-size:16px;margin-bottom:10px">
+        <el-col :span="10">井号：{{this.well_name}}</el-col>
+        <el-col :span="10">当天时间：{{this.time}}</el-col>
       </el-row>
-      <el-col :offset="11">
-        <el-button @click="dialogShow = false">取消</el-button>
-      </el-col>
+      <el-table
+        :data="realdata"
+        stripe
+        :border="true"
+        style="width: 100%;"
+        :header-cell-style="{color:'#212529',fontSize:'16px',fontWeight:400}"
+        :row-style="{fontSize:'16px',color:'#212529;',fontWeight:400,}"
+        >
+        <el-table-column label="具体时间" width="160px" align="center">
+          <template slot-scope="scope">{{scope.row.time|dateTimeFormat}}</template>
+        </el-table-column>
+        <el-table-column prop="level" label="动液面(米)" width="132px" align="center"></el-table-column>
+        <el-table-column prop="output" label="产量(吨)" width="130px" align="center"></el-table-column>
+        <el-table-column prop="balance" label="平衡度(米)" width="130px" align="center"></el-table-column>
+        <el-table-column prop="active" label="有功(千瓦)" width="130px" align="center"></el-table-column>
+        <el-table-column prop="electric_current" label="电流(安培)" width="130px" align="center"></el-table-column>
+      </el-table>
     </el-dialog>
   </div>
 </template>
@@ -22,7 +35,7 @@
 <script>
 import LineChart from "@/components/ECharts/LineMarker";
 import { getHistoryData,viewPowersMonth } from "@/api/welldetail";
-import { ApiGetElectdata,ApiGetPower,ApiGetEleHistory} from "@/api/realdata";
+import { ApiGetElectdata,ApiGetPower,ApiGetEleHistory,ApiGetWellData} from "@/api/realdata";
 import dayjs from "dayjs";
 export default {
   name: "lineHistory",
@@ -33,12 +46,16 @@ export default {
   data() {
     return {
       dialogShow:false,
-      wellName:""
+      well_name:"",
+      wellId:"",
+      time:"",
+      realdata:[]
     };
   },
   methods: {
     //搜索日产量折线图
     getOutputChart(id, date) {
+     this.wellId = id
      function dataFormat(params) {
         if (params) {
           params *= 1000;
@@ -179,8 +196,8 @@ export default {
           return ''
         }
       }
-      ApiGetEleHistory({well_id:id,electricity:""}).then(({data}) =>{
-        let name = data.msg.well_name
+      ApiGetEleHistory({well_id:id,electricity:"",time_range:date}).then(({data}) =>{
+        this.well_name = data.msg.well_name
         let time_list = []
         data.msg.times.forEach(item => {
           time_list.push(dateFormat(item));
@@ -238,6 +255,12 @@ export default {
         this.$nextTick(()=>{
           this.$refs["ele-history"].initChart(option);
         });
+      })
+    },
+    //获取井的实时数据
+    getWellData(){
+      ApiGetWellData({well_id:this.wellId,time:this.time}).then(({data}) =>{
+        this.realdata = data.msg
       })
     },
     //电流曲线图
@@ -498,8 +521,12 @@ export default {
     //点击产量和液面高度图
     handleClickChart(params){
       this.dialogShow = true
-      console.log(params)
+      this.time = params.name
+      this.getWellData()
     }
+  },
+  created() {
+    // this.GetRealdata();
   },
 };
 </script>

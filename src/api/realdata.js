@@ -19,4 +19,7 @@ export function ApiGetElectdata(params) {
 export function ApiGetEleHistory(params) {
     return AXIOS.get('/api/realdata/realdata/?electricity', { params })
 }
-
+//获取井的实时数据
+export function ApiGetWellData(params) {
+    return AXIOS.get('/api/realdata/realdata/?', { params })
+}
