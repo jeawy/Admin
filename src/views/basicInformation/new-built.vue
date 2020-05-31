@@ -279,6 +279,46 @@
             <el-input-number v-model="addwellForm.pump_hang" style="width:160px;" :precision="2"></el-input-number>
           </el-form-item>
         </el-col>
+        
+      <el-col :sm="6">
+          <el-form-item label="曲柄尺寸2:" prop="size_2_crank">
+            <el-input-number v-model="addwellForm.size_2_crank" style="width:160px;"></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :sm="6">
+          <el-form-item label="曲柄销重量:" prop="crank_pin_weight">
+            <el-input-number v-model="addwellForm.crank_pin_weight" style="width:160px;"></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :sm="6">
+          <el-form-item label="曲柄重量1:" prop="weight_1_crank">
+            <el-input-number v-model="addwellForm.weight_1_crank" style="width:160px;"></el-input-number>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="15" style="margin-top:10px;">
+        <el-col :sm="6">
+          <el-form-item label="曲柄重量2:" prop="weight_2_crank">
+            <el-input-number v-model="addwellForm.weight_2_crank" style="width:160px;"></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :sm="6">
+          <el-form-item label="偏置角:" prop="offset_angle">
+            <el-input-number v-model="addwellForm.offset_angle" style="width:160px;"></el-input-number>
+          </el-form-item>
+        </el-col>
+         <el-col :sm="6">
+          <el-form-item label="冲次(转速)上限值:" prop="toplimit">
+            <el-input-number v-model="addwellForm.toplimit" style="width:160px;" 
+             :min="0&&addwellForm.lowerlimit"></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :sm="6">
+          <el-form-item label="冲次(转速)下限值:" prop="lowerlimit">
+            <el-input-number v-model="addwellForm.lowerlimit" style="width:160px;"
+             :min="0"  :max="addwellForm.toplimit" ></el-input-number>
+          </el-form-item>
+        </el-col>
       </el-row>
       <div class="btn">
         <el-button @click="cancel">清空</el-button>
@@ -533,6 +573,28 @@ export default {
         if (wellparams.watery == undefined) {
           delete wellparams.watery;
         }
+        
+        if (wellparams.size_2_crank == undefined) {
+          delete wellparams.size_2_crank;
+        }
+        if (wellparams.crank_pin_weight == undefined) {
+          delete wellparams.crank_pin_weight;
+        }
+        if (wellparams.weight_1_crank == undefined) {
+          delete wellparams.weight_1_crank;
+        }
+        if (wellparams.weight_2_crank == undefined) {
+          delete wellparams.weight_2_crank;
+        }
+        if (wellparams.offset_angle == undefined) {
+          delete wellparams.offset_angle;
+        }
+        if (wellparams.toplimit == undefined) {
+          delete wellparams.toplimit;
+        }
+        if (wellparams.lowerlimit == undefined) {
+          delete wellparams.lowerlimit;
+        }
         ApiAlterWell(wellparams).then(({ data }) => {
           if (data.status === 0) {
             this.$message.success(data.msg);
@@ -577,9 +639,15 @@ export default {
           tubing_outer_diameter: this.addwellForm.tubing_outer_diameter,
           casing_inner_diameter: this.addwellForm.casing_inner_diameter,
           pump_hang: this.addwellForm.pump_hang,
-          watery: this.addwellForm.watery
+          watery: this.addwellForm.watery,
+           size_2_crank: this.addwellForm.size_2_crank,
+          crank_pin_weight: this.addwellForm.crank_pin_weight,
+          weight_1_crank: this.addwellForm.weight_1_crank,
+          weight_2_crank: this.addwellForm.weight_2_crank,
+          offset_angle: this.addwellForm.offset_angle,
+           toplimit: this.addwellForm.toplimit,
+            lowerlimit: this.addwellForm.lowerlimit,
         };
-        console.log(wellparams.dept_id);
         if (wellparams.dept_id == undefined) {
           delete wellparams.dept_id;
         }
@@ -678,6 +746,28 @@ export default {
         }
         if (wellparams.watery == undefined) {
           delete wellparams.watery;
+        }
+        
+        if (wellparams.size_2_crank == undefined) {
+          delete wellparams.size_2_crank;
+        }
+        if (wellparams.crank_pin_weight == undefined) {
+          delete wellparams.crank_pin_weight;
+        }
+        if (wellparams.weight_1_crank == undefined) {
+          delete wellparams.weight_1_crank;
+        }
+        if (wellparams.weight_2_crank == undefined) {
+          delete wellparams.weight_2_crank;
+        }
+        if (wellparams.offset_angle == undefined) {
+          delete wellparams.offset_angle;
+        }
+        if (wellparams.toplimit == undefined) {
+          delete wellparams.toplimit;
+        }
+        if (wellparams.lowerlimit == undefined) {
+          delete wellparams.lowerlimit;
         }
         ApiAddWell(wellparams).then(({ data }) => {
           if (data.status === 0) {

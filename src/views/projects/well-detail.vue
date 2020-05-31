@@ -221,7 +221,10 @@ export default {
         ]
       },
       time: [],
-      wellType:""
+      wellType:"",
+       lowerlimit:"",
+       toplimit:"",
+      well_type:"",
     };
   },
   methods: {
@@ -371,6 +374,9 @@ export default {
           this.num = this.wellDetail.number;
           this.wellType = data.well.well_type
           this.auth = data.auth.order;
+            this.lowerlimit = this.wellDetail.lowerlimit;
+            this.toplimit = this.wellDetail.toplimit;
+            this.well_type = this.wellDetail.well_type;
           this.$nextTick(() => {
             this.$refs["dataOperation"].number = this.num;
           });

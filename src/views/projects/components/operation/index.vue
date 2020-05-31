@@ -66,8 +66,13 @@
     </el-row>
     <el-dialog title="调频" :visible.sync="dialogVisible1" width="380px">
       <el-form :model="freguencyModal" ref="freguency-modal" label-width="100px" :rules="rules">
-        <el-form-item label="频率" prop="freguency">
-          <el-input-number v-model="freguencyModal.freguency" :precision="1" :step="0.1"></el-input-number>
+        <el-form-item label="冲次" prop="freguency" v-if="this.well_type=0">
+          <el-input-number v-model="freguencyModal.freguency" 
+           :min="this.lowerlimit"  :max="this.toplimit"  :step="0.1"></el-input-number>
+        </el-form-item>
+        <el-form-item label="转速" prop="freguency" v-if="this.well_type=1">
+          <el-input-number v-model="freguencyModal.freguency"  
+           :min="this.lowerlimit"  :max="this.toplimit"  :step="0.1"></el-input-number>
         </el-form-item>
         <div class="butn">
           <el-button @click="cancelFreguency">取消</el-button>
@@ -190,6 +195,9 @@ export default {
   name: "dataOperation",
   data() {
     return {
+       lowerlimit:"",
+      toplimit:"",
+      well_type:"",
       explainVisible: false,
       number: "",
       auth: "",
