@@ -672,7 +672,7 @@ export default {
                   <el-col :lg="24">
                     <el-card shadow="always" style="height:315px">
                       <div>
-                        <div style="color: #6c757d;font-size:15px;margin-top:20px">告警</div>
+                        <div style="color: #6c757d;font-size:15px;margin-top:15px">告警</div>
                         <strong
                           style="color:black;font-size:15px"
                         >已处理: {{this.processedAlarm}} 总计: {{this.totalAlarm}}</strong>
@@ -683,7 +683,7 @@ export default {
                           :percentage="processedPer"
                         ></el-progress>
                       </div>
-                      <div style="margin-top:30px">
+                      <div style="margin-top:10px">
                         <chart
                           @click-item="ClickChart"
                           ref="alarm-summary"
