@@ -118,6 +118,7 @@
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
                 align="right"
+                unlink-panels
               ></el-date-picker>
               <el-button
                 @click="search()"
