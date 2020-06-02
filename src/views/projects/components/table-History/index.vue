@@ -29,16 +29,16 @@
       <el-table-column prop="oil_pressure" label="油压(兆帕)" width="100px" align="center"></el-table-column>
       <el-table-column prop="nesting_pressure" label="套压(兆帕)" width="100px" align="center"></el-table-column>
     </el-table>
-    <!-- <div class="block" style="text-align: right">
-        <el-pagination
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-size="pageSize"
-          layout="total, prev, pager, next, jumper"
-          :total="total"
-          style="margin-top:10px"
-        ></el-pagination>
-    </div>-->
+    <div class="block" style="text-align: right">
+      <el-pagination
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-size="pageSize"
+        layout="total, prev, pager, next, jumper"
+        :total="total"
+        style="margin-top:10px"
+      ></el-pagination>
+    </div>
   </div>
 </template>
 
@@ -49,35 +49,47 @@ export default {
   data() {
     return {
       histarydata: [],
-      total: 0,
-      pageCount: 0,
       currentPage: 1,
       pageSize: 20,
+      pageSizeList: [20, 30, 50, 100],
+      total: 0,
       cutType: -1, //分页类型
-      wellid: ""
+      wellid: "",
+      id: this.$route.params.id,
+      hisdate:''
     };
   },
   methods: {
-    // //分页
-    // handleCurrentChange(currentPage) {
-    //   this.currentPage = currentPage;
-    //   switch (this.cutType) {
-    //     case -1:
-    //       this.getHistoryData(this.wellid);//正常查看
-    //       break;
-    //     // case 1:
-    //     //   this.searchWell(); //筛选分页查看
-    //     //   break;
-    //   }
-    //   //
-    // },
-    getHistoryData(wellid, date) {
+    //分页
+    handleSizeChange(val) {
+      this.pageSize = val;
+    },
+    handleCurrentChange(currentPage) {
+      this.currentPage = currentPage;
+      switch (this.cutType) {
+        case -1:
+          this.getHistoryData(this.id,this.hisdate); //正常查看
+          break;
+        // case 1:
+        //   this.searchWell(); //筛选分页查看
+        //   break;
+      }
+      //
+    },
+    //解决索引旨在当前页排序的问题，增加函数自定义索引序号
+    indexMethod(index) {
+      return (this.currentPage - 1) * this.pageSize + index + 1;
+    },
+    getHistoryData(wellid,date) {
+       
       let lines = {};
       lines = {
         wellid: wellid,
         action: "history",
-        daterange: date,
-        welldetail:""
+        daterange:date,
+        welldetail: "",
+        page: this.currentPage,
+        pagenum: 20
       };
       ApiGetHistorydata(lines).then(res => {
         //  console.log(res)
@@ -85,10 +97,10 @@ export default {
         this.total = res.data.counts;
       });
     }
+  },
+  created() {
+  // this.getHistoryData();
   }
-  // created() {
-  //  this.getHistoryData();
-  // }
 };
 </script>
 

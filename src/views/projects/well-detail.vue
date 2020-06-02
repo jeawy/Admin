@@ -357,10 +357,13 @@ export default {
         this.$route.params.id,
         dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
       );
-      this.$refs["tableHistory"].getHistoryData(
+       this.$refs["tableHistory"].getHistoryData(
         this.$route.params.id,
         dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
       );
+     this.$refs["tableHistory"].hisdate = dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
+   
+      
       this.$refs["recordHistory"].getRecordData(
         this.$route.params.id,
         dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
@@ -408,8 +411,12 @@ export default {
         this.$refs["lineHistory"].getBalanceChart(this.$route.params.id);
       });
       this.$nextTick(() => {
-        this.$refs["tableHistory"].getHistoryData(this.$route.params.id);
+        this.$refs["tableHistory"].getHistoryData(this.$route.params.id,list[0] + "-" + list[1]);
       });
+      
+        this.$nextTick(() => {
+            this.$refs["tableHistory"].hisdate = list[0] + "-" + list[1];
+          });
       this.$nextTick(() => {
         this.$refs["recordHistory"].getRecordData(this.$route.params.id);
       });
@@ -453,6 +460,7 @@ export default {
     var list = this.getDateRange(date,300,true)
     this.time[0] = list[0]
     this.time[1] = list[1]
+    
   },
   mounted() {
     this.getPowerMonth();
