@@ -542,10 +542,6 @@ export default {
         query: { type: params.pro_type }
       });
     },
-    //点击油井关联图中的某一项
-    clickGraph(params) {
-      console.log(params);
-    },
     //获取近一周时间的函数
     getDateRange(dateNow, intervalDays, bolPastTime) {
       let oneDayTime = 24 * 60 * 60 * 1000;

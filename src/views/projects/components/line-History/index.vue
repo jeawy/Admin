@@ -1,9 +1,9 @@
 <template>
   <div id="lineHistory">
     <LineChart ref="outputLevel" chart-id="outputLevel" style="height:700px" @click-item="handleClickChart"/>
-    <!-- <LineChart ref="output_chart" chart-id="output_chart" style="height:350px"/> -->
     <LineChart ref="ele-history" chart-id="ele-history" style="height:350px;margin-top:10px"/>
     <LineChart ref="ele-chart" chart-id="ele-chart" style="height:350px"/>
+    <LineChart v-if="this.well_type == 0" ref="udEle-chart" chart-id="udEle-chart" style="height:350px"/>
     <LineChart ref="power-chart" chart-id="power-chart" style="height:350px"/>
     <LineChart ref="balance-chart" chart-id="balance-chart" style="height:350px"/>
     <el-dialog :visible.sync="dialogShow" title="油井信息">
@@ -35,7 +35,7 @@
 <script>
 import LineChart from "@/components/ECharts/LineMarker";
 import { getHistoryData,viewPowersMonth } from "@/api/welldetail";
-import { ApiGetElectdata,ApiGetPower,ApiGetEleHistory,ApiGetWellData} from "@/api/realdata";
+import { ApiGetElectdata,ApiGetPower,ApiGetEleHistory,ApiGetWellData,ApiGetUDEleHis} from "@/api/realdata";
 import dayjs from "dayjs";
 export default {
   name: "lineHistory",
@@ -49,21 +49,23 @@ export default {
       well_name:"",
       wellId:"",
       time:"",
-      realdata:[]
+      realdata:[],
+      well_type:""
     };
   },
   methods: {
+    //格式化时间日期
+    dataFormat(params) {
+      if (params) {
+        params *= 1000;
+        return dayjs(params).format("YYYY/MM/DD");
+      } else {
+        return "";
+      }
+    },
     //搜索日产量折线图
     getOutputChart(id, date) {
      this.wellId = id
-     function dataFormat(params) {
-        if (params) {
-          params *= 1000;
-          return dayjs(params).format("YYYY/MM/DD");
-        } else {
-          return "";
-        }
-      }
       let lines = {};
       lines = {
         wellid: id,
@@ -77,7 +79,7 @@ export default {
         let level = [];
         // this.monthList = data.powers_month_list;
         data.msg.forEach(item => {
-          dates_list.push(dataFormat(item.time));
+          dates_list.push(this.dataFormat(item.time));
           output_list.push(item.output);
           level.push(item.level);
         });
@@ -188,19 +190,11 @@ export default {
     },
     //获取电流历史数据
     getEleHistory(id, date){
-      function dateFormat(date) {
-        if (date) {
-          date *= 1000
-          return dayjs(date).format('YYYY/MM/DD')
-        } else {
-          return ''
-        }
-      }
       ApiGetEleHistory({well_id:id,electricity:"",time_range:date}).then(({data}) =>{
         this.well_name = data.msg.well_name
         let time_list = []
         data.msg.times.forEach(item => {
-          time_list.push(dateFormat(item));
+          time_list.push(this.dataFormat(item));
         });
         let electrics = data.msg.electrics
         time_list.reverse()
@@ -265,6 +259,7 @@ export default {
     },
     //电流曲线图
     getEleChart(id,wellType) { //wellType==0表示抽油机，wellType==1表示螺杆泵
+      this.well_type = wellType
       ApiGetElectdata({id:id,p_type:'3',json:''}).then(({data}) =>{
         let P144data = data.datas;
         let time = data.time;
@@ -379,16 +374,81 @@ export default {
         }
       })
     },
+    //抽油机上下电流历史数据
+    getUDEleHis(id,date){
+      ApiGetUDEleHis({wellid:id,line:"",daterange:date}).then(({data}) =>{
+        let upElectric = [];               //上电流
+        let downElectric = [];             //下电流
+        let dates_list = [];                //时间
+        data.msg.forEach(item =>{
+          upElectric.push(item.up)
+          downElectric.push(item.down)
+          dates_list.push(this.dataFormat(item.date))
+        })
+        let udEle = {
+          title: {
+            text: "上下电流历史数据",
+            left: "center"
+          },
+          tooltip: {
+            trigger: "axis"
+          },
+          grid: [
+            {
+              left: 50
+            }
+          ],
+          legend: {
+            left: 10,
+            data: ['上电流','下电流']
+          },
+          xAxis: {
+            type: "category",
+            name: "时间",
+            data: dates_list
+          },
+          yAxis: {
+            type: "value",
+            name: "安培",
+            axisLabel: {
+              fontSize: 14
+            }
+          },
+          series: [
+            {
+              name: "上电流",
+              smooth: true, //光滑
+              data: upElectric,
+              type: "line",
+            },
+            {
+              name: "下电流",
+              smooth: true, //光滑
+              data: downElectric,
+              type: "line",
+              itemStyle: {
+                normal: {
+                  label: {
+                    show: false, //开启显示
+                    position: "top", //在上方显示
+                    textStyle: {
+                      //数值样式
+                      color: "black",
+                      fontSize: 16
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+        this.$nextTick(()=>{
+          this.$refs["udEle-chart"].initChart(udEle);
+        });
+      })
+    },
     //获取有功曲线图
     getPowerChart(id,date){
-      function dateFormat(date) {
-        if (date) {
-          date *= 1000
-          return dayjs(date).format('YYYY/MM/DD')
-        } else {
-          return ''
-        }
-      }
       ApiGetPower({
         active:"",
         well_id:id,
@@ -397,7 +457,7 @@ export default {
         let active = [];
         let dates_list = [];
         data.msg.forEach(item => {
-          dates_list.push(dateFormat(item.time));
+          dates_list.push(this.dataFormat(item.time));
           active.push(item.active);
         });
         dates_list.reverse();
