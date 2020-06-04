@@ -399,34 +399,32 @@ export default {
           if(this.wellType == 0){
             this.$nextTick(() => {
               this.$refs["lineHistory"].getUDEleHis(
-                this.$route.params.id,
-                list[0] + "-" + list[1]
+                this.$route.params.id
               );
             });
           }
         }
       );
       var date = new Date();
-      var list = this.getDateRange(date,300,true)
+      var list = this.getDateRange(date,90,true)
       this.time[0] = list[0]
       this.time[1] = list[1]
       this.$nextTick(() => {
-        this.$refs["lineHistory"].getOutputChart(this.$route.params.id,list[0] + "-" + list[1]);
+        this.$refs["lineHistory"].getOutputChart(this.$route.params.id);
       });
       this.$nextTick(() => {
         this.$refs["lineHistory"].getEleHistory(this.$route.params.id);
       });
       this.$nextTick(() => {
         this.$refs["lineHistory"].getPowerChart(
-          this.$route.params.id,
-          list[0] + "-" + list[1]
+          this.$route.params.id
         );
       });
       this.$nextTick(() => {
         this.$refs["lineHistory"].getBalanceChart(this.$route.params.id);
       });
       this.$nextTick(() => {
-        this.$refs["tableHistory"].getHistoryData(this.$route.params.id,list[0] + "-" + list[1]);
+        this.$refs["tableHistory"].getHistoryData(this.$route.params.id);
       });
       
         this.$nextTick(() => {
@@ -472,7 +470,7 @@ export default {
   created() {
     this.getWellDetails();
     var date = new Date();
-    var list = this.getDateRange(date,300,true)
+    var list = this.getDateRange(date,90,true)
     this.time[0] = list[0]
     this.time[1] = list[1]
     
