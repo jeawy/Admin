@@ -6,7 +6,7 @@
     <LineChart v-if="this.well_type == 0" ref="udEle-chart" chart-id="udEle-chart" style="height:350px"/>
     <LineChart ref="power-chart" chart-id="power-chart" style="height:350px"/>
     <LineChart ref="balance-chart" chart-id="balance-chart" style="height:350px"/>
-    <el-dialog :visible.sync="dialogShow" title="油井信息">
+    <el-dialog :visible.sync="dialogShow" title="油井信息" :style="styleObject">
       <el-row style="font-size:16px;margin-bottom:10px">
         <el-col :span="10">井号：{{this.well_name}}</el-col>
         <el-col :span="10">当天时间：{{this.time}}</el-col>
@@ -22,11 +22,13 @@
         <el-table-column label="具体时间" width="160px" align="center">
           <template slot-scope="scope">{{scope.row.time|dateTimeFormat}}</template>
         </el-table-column>
-        <el-table-column prop="level" label="动液面(米)" width="132px" align="center"></el-table-column>
+        <el-table-column prop="level" label="动液面(米)" width="130px" align="center"></el-table-column>
         <el-table-column prop="output" label="产量(吨)" width="130px" align="center"></el-table-column>
         <el-table-column prop="balance" label="平衡度(米)" width="130px" align="center"></el-table-column>
         <el-table-column prop="active" label="有功(千瓦)" width="130px" align="center"></el-table-column>
-        <el-table-column prop="electric_current" label="电流(安培)" width="130px" align="center"></el-table-column>
+        <el-table-column v-if="well_type == 0" prop="up" label="上电流(安培)" width="130px" align="center"></el-table-column>
+        <el-table-column v-else prop="electric_current" label="电流(安培)" width="130px" align="center"></el-table-column>
+        <el-table-column v-if="well_type == 0" prop="down" label="下电流(安培)" width="130px" align="center"></el-table-column>
       </el-table>
     </el-dialog>
   </div>
@@ -50,7 +52,10 @@ export default {
       wellId:"",
       time:"",
       realdata:[],
-      well_type:""
+      well_type:"",
+      styleObject: {
+        width:'1701px'
+      }
     };
   },
   methods: {
@@ -255,6 +260,7 @@ export default {
     getWellData(){
       ApiGetWellData({well_id:this.wellId,time:this.time}).then(({data}) =>{
         this.realdata = data.msg
+        console.log(data.msg)
       })
     },
     //电流曲线图
@@ -268,6 +274,9 @@ export default {
         let downCurrent = []
         let series = []
         if(wellType == 0){
+          this.styleObject = {
+            width:'1960px'
+          }
           let displacement = data.displacement
           let max = displacement[0]
           for(let i = 0;i< displacement.length; i++){
