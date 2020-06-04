@@ -217,6 +217,22 @@ export default {
               left: 50
             }
           ],
+          dataZoom: [
+            {
+              show: true,
+              realtime: true,
+              start: 30,
+              end: 70,
+              xAxisIndex: 0
+            },
+            {
+              type: "inside",
+              realtime: true,
+              start: 30,
+              end: 70,
+              xAxisIndex: 0
+            }
+          ],
           xAxis: {
             type: "category",
             name: "时间",
@@ -407,6 +423,22 @@ export default {
               left: 50
             }
           ],
+          dataZoom: [
+            {
+              show: true,
+              realtime: true,
+              start: 30,
+              end: 70,
+              xAxisIndex: 0
+            },
+            {
+              type: "inside",
+              realtime: true,
+              start: 30,
+              end: 70,
+              xAxisIndex: 0
+            }
+          ],
           legend: {
             left: 10,
             data: ['上电流','下电流']
@@ -484,6 +516,22 @@ export default {
               left: 50
             }
           ],
+          dataZoom: [
+            {
+              show: true,
+              realtime: true,
+              start: 30,
+              end: 70,
+              xAxisIndex: 0
+            },
+            {
+              type: "inside",
+              realtime: true,
+              start: 30,
+              end: 70,
+              xAxisIndex: 0
+            }
+          ],
           xAxis: {
             type: "category",
             name: "时间",
@@ -545,6 +593,22 @@ export default {
           legend: {
             data: []
           },
+          dataZoom: [
+            {
+              show: true,
+              realtime: true,
+              start: 30,
+              end: 70,
+              xAxisIndex: 0
+            },
+            {
+              type: "inside",
+              realtime: true,
+              start: 30,
+              end: 70,
+              xAxisIndex: 0
+            }
+          ],
           grid: [
             {
               left: 50
