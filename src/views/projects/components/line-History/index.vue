@@ -491,7 +491,6 @@ export default {
     //获取有功曲线图
     getPowerChart(id,date){
       ApiGetPower({
-        active:"",
         well_id:id,
         daterange:date
       }).then(({data}) =>{
