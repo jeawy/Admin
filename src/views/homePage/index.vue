@@ -336,6 +336,22 @@ export default {
             grid: {
               left: "8%"
             },
+            dataZoom: [
+              {
+                show: true,
+                realtime: true,
+                start: 30,
+                end: 70,
+                xAxisIndex: 0
+              },
+              {
+                type: "inside",
+                realtime: true,
+                start: 30,
+                end: 70,
+                xAxisIndex: 0
+              }
+            ],
             // legend: {//图例
             //   data: wellName,// 名字
             //   tooltip: {
@@ -452,6 +468,22 @@ export default {
             tooltip: {
               trigger: "axis"
             },
+            dataZoom: [
+              {
+                show: true,
+                realtime: true,
+                start: 30,
+                end: 70,
+                xAxisIndex: 0
+              },
+              {
+                type: "inside",
+                realtime: true,
+                start: 30,
+                end: 70,
+                xAxisIndex: 0
+              }
+            ],
             xAxis: {
               type: "category",
               name: "时间",
