@@ -570,7 +570,7 @@ export default {
         });
       })
     },
-    //获取平衡率曲线图
+    //获取平衡度曲线图
     getBalanceChart(id,date){
       viewPowersMonth({id:id,daily:"",daterange:date}).then(({data}) =>{
         let balance = [];
@@ -583,7 +583,7 @@ export default {
         balance.reverse()
         let option3 = {
           title: {
-            text: "平衡率曲线",
+            text: "平衡度曲线",
             left: "center"
           },
           tooltip: {
@@ -622,7 +622,7 @@ export default {
           yAxis: {
             type: "value",
             minInterval: 0.3,
-            name: "米",
+            name: "",
             axisLabel: { fontSize: 14 },
           },
           series: {

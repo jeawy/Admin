@@ -52,15 +52,15 @@
     <el-row :gutter="10">
       <el-col :sm="12">
         <el-card>
-          <!-- 平衡率 -->
+          <!-- 平衡度 -->
           <div class="header-top">
               <div style="display: flex;align-items: center;justify-content: center;">
                 <div style="width:20px;height:20px;background:red;border-radius:5px"></div>
-                <div style="padding-left:5px">平衡率：&ge;80%</div>
+                <div style="padding-left:5px">平衡度：&ge;80%</div>
               </div>
               <div style="display: flex;align-items: center;justify-content: center;padding-left:5px;">
                 <div style="width:20px;height:20px;background:yellow;border-radius:5px"></div>
-                <div style="padding-left:5px">平衡率：&lt;80%</div>
+                <div style="padding-left:5px">平衡度：&lt;80%</div>
               </div>
           </div>
          <BarChart @click-item="handleClickChart" ref="balance" chart-id="balance" />
@@ -124,7 +124,7 @@ export default {
           let frequency = []
           // 功率利用率
           let rated_power = []
-          // 平衡率
+          // 平衡度
           let balance = []
           // 系统效率
           let system_efficiency = []
@@ -340,7 +340,7 @@ export default {
         this.$refs["frequency"].initChart(option3);
         let option2 = {
             title: {
-            text: "平衡率",
+            text: "平衡度",
             textStyle: {
                 //---主标题内容样式
                 color: "#000",
@@ -359,7 +359,7 @@ export default {
                  var tip = "";
                  let marker = params[0].marker;
                  tip = params[0].axisValue+'<br />';
-                 tip  = tip + marker+'平衡率:'+params[0].value+'%';
+                 tip  = tip + marker+'平衡度:'+params[0].value+'%';
                  return tip;
                 }
             },
@@ -403,7 +403,7 @@ export default {
             ],
             series: [
             {
-                name: "平衡率",
+                name: "平衡度",
                 type: "bar",
                 barWidth: 30,
                 barMaxWidth: 50,
@@ -422,7 +422,7 @@ export default {
                             },
                         },
                         color:function (params){
-                        // 平衡率20%  展示为黄色
+                        // 平衡度20%  展示为黄色
                         if (params.data<80){
                             return 'yellow'
                         }

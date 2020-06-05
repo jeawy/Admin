@@ -275,7 +275,7 @@ export default {
           break;
       }
     },
-    //根据时间搜索平衡率和有功曲线图
+    //根据时间搜索平衡度和有功曲线图
     getChart() {
       var date1 = new Date();
       var list = this.getDateRange(date1, 7, true);
@@ -328,10 +328,10 @@ export default {
             type: "line"
           };
           series.push(item);
-          //平衡率曲线图
+          //平衡度曲线图
           let option3 = {
             title: {
-              text: "平衡率"
+              text: "平衡度"
             },
             grid: {
               left: "8%"
