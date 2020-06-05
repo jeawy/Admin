@@ -378,7 +378,7 @@ export default {
             },
             yAxis: {
               type: "value",
-              name: "米",
+              name: "",
               axisLabel: {
                 fontSize: 14
               }
