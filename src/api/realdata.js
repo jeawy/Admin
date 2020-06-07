@@ -23,3 +23,7 @@ export function ApiGetEleHistory(params) {
 export function ApiGetWellData(params) {
     return AXIOS.get('/api/realdata/realdata/?', { params })
 }
+//获取抽油机的上下电流历史曲线
+export function ApiGetUDEleHis(params) {
+    return AXIOS.get('/api/realdata/ele/?wellid=97&line', { params })
+}

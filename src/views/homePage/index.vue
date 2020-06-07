@@ -275,7 +275,7 @@ export default {
           break;
       }
     },
-    //根据时间搜索平衡率和有功曲线图
+    //根据时间搜索平衡度和有功曲线图
     getChart() {
       var date1 = new Date();
       var list = this.getDateRange(date1, 7, true);
@@ -328,14 +328,30 @@ export default {
             type: "line"
           };
           series.push(item);
-          //平衡率曲线图
+          //平衡度曲线图
           let option3 = {
             title: {
-              text: "平衡率"
+              text: "平衡度"
             },
             grid: {
               left: "8%"
             },
+            dataZoom: [
+              {
+                show: true,
+                realtime: true,
+                start: 30,
+                end: 70,
+                xAxisIndex: 0
+              },
+              {
+                type: "inside",
+                realtime: true,
+                start: 30,
+                end: 70,
+                xAxisIndex: 0
+              }
+            ],
             // legend: {//图例
             //   data: wellName,// 名字
             //   tooltip: {
@@ -378,7 +394,7 @@ export default {
             },
             yAxis: {
               type: "value",
-              name: "米",
+              name: "",
               axisLabel: {
                 fontSize: 14
               }
@@ -452,6 +468,22 @@ export default {
             tooltip: {
               trigger: "axis"
             },
+            dataZoom: [
+              {
+                show: true,
+                realtime: true,
+                start: 30,
+                end: 70,
+                xAxisIndex: 0
+              },
+              {
+                type: "inside",
+                realtime: true,
+                start: 30,
+                end: 70,
+                xAxisIndex: 0
+              }
+            ],
             xAxis: {
               type: "category",
               name: "时间",
@@ -541,10 +573,6 @@ export default {
         params: { name: this.alarmStatus },
         query: { type: params.pro_type }
       });
-    },
-    //点击油井关联图中的某一项
-    clickGraph(params) {
-      console.log(params);
     },
     //获取近一周时间的函数
     getDateRange(dateNow, intervalDays, bolPastTime) {
