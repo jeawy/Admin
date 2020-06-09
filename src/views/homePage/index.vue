@@ -7,6 +7,7 @@ import BaiduMap from "@/components/ECharts/BaiduMap";
 import GraphChart from "@/components/ECharts/GraphChart";
 import {
   ApiGetHomedata,
+  ApiGetTotalData,
   ApiGetBalance,
   ApiGetAlarm,
   ApiGetDept
@@ -37,6 +38,7 @@ export default {
       wellId: [],
       alarmStatus: "",
       time: [],
+      date: [],
       pickerOptions: {
         shortcuts: [
           {
@@ -75,39 +77,63 @@ export default {
             }
           },
           {
-            text: "自定义",
+            text: "最近三个月",
             onClick(picker) {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
               picker.$emit("pick", [start, end]);
             }
+          },
+          {
+            text: "最近半年",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 180);
+              picker.$emit("pick", [start, end]);
+            }
+          },
+          {
+            text: "最近一年",
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 365);
+              picker.$emit("pick", [start, end]);
+            }
           }
         ]
       },
       balanceList: [],
-      click: false,
+      click1: false, //是否点击平衡度和有功搜索按钮
+      click2: false //是否点击平衡度和有功搜索按钮
     };
   },
   methods: {
-    //获取首页数据
-    homeData(days) {
-      let data = { days: days };
-      ApiGetHomedata(data).then(res => {
+    //格式化时间日期
+    dataFormat(params) {
+      if (params) {
+        params *= 1000;
+        return dayjs(params).format("YYYY/MM/DD");
+      } else {
+        return "";
+      }
+    },
+    //获取首页开关井信息
+    homeData() {
+      ApiGetHomedata().then(res => {
         let chartData = res.data;
-        let wellName = [];
-        let output = [];
-        let level = [];
         this.openCount = chartData.open_count;
         this.stopCount = chartData.stop_count;
         this.openPercentage = chartData.open_percentage;
         this.total = chartData.total;
-        chartData.results.forEach(item => {
-          wellName.push(item.well.name);
-          output.push(item.output);
-          level.push(item.level);
-          this.wellId.push(item.well.id);
-        });
+        // chartData.results.forEach(item => {
+        //   wellName.push(item.well.name);
+        //   output.push(item.output);
+        //   level.push(item.level);
+        //   this.wellId.push(item.well.id);
+        // });
         //开关井状态
         let chart1 = [
           {
@@ -123,9 +149,29 @@ export default {
         this.$nextTick(() => {
           this.$refs["well-status"].initChart("", chart1, colorList);
         });
+      });
+    },
+    //获取首页曲线图
+    getTotalChart() {
+      let data = {};
+      let output = [];
+      let level = [];
+      let date = [];
+      if (this.click1 == true) {
+        data = { daterange: this.date[0] + "-" + this.date[1] };
+      }
+      ApiGetTotalData(data).then(({ data }) => {
+        data.msg.forEach(item => {
+          output.push(item.output);
+          level.push(item.level);
+          date.push(this.dataFormat(item.date));
+        });
+        output.reverse();
+        level.reverse();
+        date.reverse();
         let option = {
           title: {
-            text: "产量和液面高度关系图",
+            text: "历史总产量和平均液面高度关系图",
             left: "center"
           },
           tooltip: {
@@ -181,44 +227,44 @@ export default {
             {
               left: 50,
               right: 50,
-              top: "55%",
+              top: "52%",
               height: "35%"
             }
           ],
           xAxis: [
             {
-              name:"井号",
+              name: "时间",
               type: "category",
-              data: wellName,
-              axisLabel: {
-                //---坐标轴 标签
-                show: true, //---是否显示
-                inside: false, //---是否朝内
-                interval: 0,
-                rotate: 45,
-                margin: 5 //---刻度标签与轴线之间的距离
-              }
+              data: date,
+              // axisLabel: {
+              //   //---坐标轴 标签
+              //   show: true, //---是否显示
+              //   inside: false, //---是否朝内
+              //   interval: 0,
+              //   rotate: 45,
+              //   margin: 5 //---刻度标签与轴线之间的距离
+              // }
             },
             {
               gridIndex: 1,
-              name:"井号",
+              name: "时间",
               type: "category",
-              data: wellName,
+              data: date,
               position: "top",
-              axisLabel: {
-                //---坐标轴 标签
-                show: true, //---是否显示
-                inside: false, //---是否朝内
-                interval: 0,
-                rotate: 45,
-                margin: 5 //---刻度标签与轴线之间的距离
-              }
+              // axisLabel: {
+              //   //---坐标轴 标签
+              //   show: true, //---是否显示
+              //   inside: false, //---是否朝内
+              //   interval: 0,
+              //   rotate: 45,
+              //   margin: 5 //---刻度标签与轴线之间的距离
+              // }
             }
           ],
           yAxis: [
             {
               name: "产量(吨)",
-              type: "value",
+              type: "value"
             },
             {
               gridIndex: 1,
@@ -230,15 +276,15 @@ export default {
           series: [
             {
               name: "产量",
-              smooth:true,
+              smooth: true,
               type: "line",
               symbolSize: 8,
               hoverAnimation: false,
-              data:output
+              data: output
             },
             {
               name: "液面高度",
-              smooth:true,
+              smooth: true,
               type: "line",
               xAxisIndex: 1,
               yAxisIndex: 1,
@@ -248,47 +294,42 @@ export default {
             }
           ]
         };
-        this.$refs["lineChart"].initChart(option);
+        this.$nextTick(() => {
+          this.$refs["lineChart"].initChart(option);
+        });
       });
     },
-    //根据时间搜索产量和液面高度柱状图
-    chart_reload(days) {
-      this.dynamic = days;
-      switch (days) {
-        case 1:
-          this.homeData(1);
-          break;
-        case 7:
-          this.homeData(7);
-          break;
-        case 30:
-          this.homeData(30);
-          break;
-        case 90:
-          this.homeData(90);
-          break;
-        case 180:
-          this.homeData(180);
-          break;
-        case 365:
-          this.homeData(365);
-          break;
-      }
-    },
+    // //根据时间搜索产量和液面高度柱状图
+    // chart_reload(days) {
+    //   this.dynamic = days;
+    //   switch (days) {
+    //     // case 1:
+    //     //   this.homeData(1);
+    //     //   break;
+    //     case 7:
+    //       this.homeData(7);
+    //       break;
+    //     case 30:
+    //       this.homeData(30);
+    //       break;
+    //     case 90:
+    //       this.homeData(90);
+    //       break;
+    //     case 180:
+    //       this.homeData(180);
+    //       break;
+    //     case 365:
+    //       this.homeData(365);
+    //       break;
+    //   }
+    // },
     //根据时间搜索平衡度和有功曲线图
     getChart() {
-      var date1 = new Date();
-      var list = this.getDateRange(date1, 7, true);
-      let date = "";
-      if (this.click == true) {
-        date = this.time[0] + "-" + this.time[1];
-      } else {
-        date = list[0] + "-" + list[1];
+      let data1 = {};
+      if (this.click2 == true) {
+        data1 = { daterange: this.time[0] + "-" + this.time[1] };
       }
-      let data = {
-        daterange: date
-      };
-      ApiGetBalance(data).then(({ data }) => {
+      ApiGetBalance(data1).then(({ data }) => {
         let dataList = [];
         let wellName = [];
         let series = [];
@@ -404,16 +445,13 @@ export default {
           this.$refs["balance-rate"].initChart(option3);
         }
       });
-      let data1 = {};
-      if (this.click == true) {
-        data1 = {
-          active: "",
+      let data2 = {};
+      if (this.click2 == true) {
+        data2 = {
           daterange: this.time[0] + "-" + this.time[1]
         };
-      } else {
-        data1 = { active: "" };
       }
-      ApiGetPower(data1).then(({ data }) => {
+      ApiGetPower(data2).then(({ data }) => {
         //时间戳转换函数
         function dateFormat(date) {
           if (date) {
@@ -503,9 +541,14 @@ export default {
         }
       });
     },
-    //判断曲线图是否是根据时间搜索
-    search() {
-      this.click = true;
+    //判断产量和液面高度曲线图是否是根据时间搜索
+    search1() {
+      this.click1 = true;
+      this.getTotalChart();
+    },
+    //判断平衡度和有功曲线图是否是根据时间搜索
+    search2() {
+      this.click2 = true;
       this.getChart();
     },
     //获取首页告警
@@ -605,13 +648,17 @@ export default {
     }
   },
   created() {
-    this.homeData(1);
+    this.homeData();
     this.getChart();
     this.getAlarm();
-    var date1 = new Date();
-    var list = this.getDateRange(date1, 7, true);
-    this.time[0] = list[0];
-    this.time[1] = list[1];
+    this.getTotalChart();
+    var date = new Date();
+    var list1 = this.getDateRange(date, 7, true);
+    var list2 = this.getDateRange(date, 90, true);
+    this.time[0] = list1[0];
+    this.time[1] = list1[1];
+    this.date[0] = list2[0];
+    this.date[1] = list2[1];
   }
 };
 </script>
@@ -658,7 +705,7 @@ export default {
         <el-row class="left" :gutter="15">
           <el-col :lg="24" :sm="24">
             <el-card shadow="always">
-              <div class="btn-group" data-toggle="buttons" aria-label="First group">
+              <!-- <div class="btn-group" data-toggle="buttons" aria-label="First group">
                 <div class="btn" :class="{colorChange:1 == dynamic}" @click="chart_reload(1)">
                   <input type="radio" name="options" id="option1" />今天
                 </div>
@@ -677,13 +724,38 @@ export default {
                 <div class="btn" :class="{colorChange:365 == dynamic}" @click="chart_reload(365)">
                   <input type="radio" name="options" id="option5" />近一年
                 </div>
-              </div>
+              </div>-->
+              <el-row>
+                <el-col :sm="10" :lg="10" style="margin-top:5px">
+                  <span style="font-size:15px">时间：</span>
+                  <el-date-picker
+                    v-model="date"
+                    type="daterange"
+                    style="width:200px"
+                    :picker-options="pickerOptions"
+                    range-separator="-"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                    align="right"
+                    size="mini"
+                    value-format="yyyy/MM/dd"
+                  ></el-date-picker>
+                </el-col>
+                <el-col :sm="4" :lg="4">
+                  <el-button
+                    @click="search1()"
+                    icon="el-icon-search"
+                    style="height:27.99px;margin-top:5px"
+                    type="primary"
+                  />
+                </el-col>
+              </el-row>
               <div>
                 <BarChart
                   @click-item="handleClickChart"
                   ref="lineChart"
                   chart-id="lineChart"
-                  style="height:950px;margin-top:50px"
+                  style="height:950px;margin-top:40px"
                 />
               </div>
             </el-card>
@@ -698,14 +770,14 @@ export default {
               <el-col :lg="12">
                 <el-row class="left-item">
                   <el-col :lg="24">
-                    <el-card shadow="always" style="height:315px">
+                    <el-card shadow="always" style="height:250px">
                       <div>
-                        <div style="color: #6c757d;font-size:15px;margin-top:15px">告警</div>
+                        <div style="color: #6c757d;font-size:15px;">告警</div>
                         <strong
-                          style="color:black;font-size:15px"
+                          style="color:black;font-size:15px;"
                         >已处理: {{this.processedAlarm}} 总计: {{this.totalAlarm}}</strong>
                         <el-progress
-                          style="margin-top:10px;"
+                          style="margin-top:5px;"
                           color="#28a745"
                           :stroke-width="10"
                           :percentage="processedPer"
@@ -724,7 +796,7 @@ export default {
               </el-col>
               <el-col :lg="12">
                 <el-row class="right-item">
-                  <el-col :lg="24">
+                  <!-- <el-col :lg="24">
                     <el-card shadow="always" style="height:90px">
                       <div style="display:flex">
                         <img
@@ -739,18 +811,14 @@ export default {
                       </div>
                     </el-card>
                   </el-col>
-                  <el-col style="height:15px"></el-col>
+                  <el-col style="height:15px"></el-col>-->
                   <el-col :lg="24">
-                    <el-card shadow="always" style="height:210px">
-                      <chart ref="well-status" chart-id="well-status" style="margin-top:-10px"/>
+                    <el-card shadow="always" style="height:250px">
                       <div
-                        style="color: #6c757d;font-size: 15px;"
+                        style="color: #6c757d;font-size: 15px;margin-top:22px"
                       >开井: {{this.openCount}} 关井: {{this.stopCount}} 总计: {{this.stopCount+this.openCount}}</div>
-                      <el-progress
-                        color="#28a745"
-                        :stroke-width="10"
-                        :percentage="openPercentage"
-                      ></el-progress>
+                      <el-progress color="#28a745" :stroke-width="10" :percentage="openPercentage" style="margin-top:5px"></el-progress>
+                      <chart style="margin-top:10px" ref="well-status" chart-id="well-status" />
                     </el-card>
                   </el-col>
                   <!-- <el-col :lg="24">
@@ -781,7 +849,7 @@ export default {
                         </div>
                       </router-link>
                     </el-card>
-                  </el-col> -->
+                  </el-col>-->
                 </el-row>
               </el-col>
             </el-row>
@@ -807,7 +875,7 @@ export default {
                 </el-col>
                 <el-col :sm="4" :lg="4">
                   <el-button
-                    @click="search()"
+                    @click="search2()"
                     icon="el-icon-search"
                     style="height:27.99px;margin-top:5px"
                     type="primary"
@@ -863,7 +931,7 @@ export default {
     margin-bottom: 15px;
     .left {
       .el-card {
-        height: 1125px;
+        height: 1060px;
       }
       .btn-group {
         display: flex;

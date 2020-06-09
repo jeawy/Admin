@@ -1,7 +1,11 @@
 import AXIOS from '@/utils/request'
-//获取首页信息
+//获取首页开关井信息
 export function ApiGetHomedata(params) {
     return AXIOS.get('api/', { params })
+}
+//获取首页产量和液面高度
+export function ApiGetTotalData(params) {
+    return AXIOS.get('/api/stats/totaloutput/', { params })
 }
 //获取平衡度
 export function ApiGetBalance(params) {
