@@ -12,7 +12,8 @@ import {
   ApiGetAlarm,
   ApiGetDept
 } from "@/api/homeData";
-import { ApiGetPower } from "@/api/realdata";
+import { ApiGetPower,ApiGetRealdata } from "@/api/realdata";
+import { getHistoryData } from "@/api/welldetail";
 import dayjs from "dayjs";
 export default {
   name: "HomePage",
@@ -36,6 +37,8 @@ export default {
       total: "",
       wellid: 0,
       wellId: [],
+      wellNum:"",
+      wellList:[],
       alarmStatus: "",
       time: [],
       date: [],
@@ -107,7 +110,8 @@ export default {
       },
       balanceList: [],
       click1: false, //是否点击平衡度和有功搜索按钮
-      click2: false //是否点击平衡度和有功搜索按钮
+      click2: false, //是否点击平衡度和有功搜索按钮
+      singleWell:false
     };
   },
   methods: {
@@ -151,7 +155,7 @@ export default {
         });
       });
     },
-    //获取首页曲线图
+    //获取首页产量和液面高度曲线图
     getTotalChart() {
       let data = {};
       let output = [];
@@ -544,12 +548,11 @@ export default {
     //判断产量和液面高度曲线图是否是根据时间搜索
     search1() {
       this.click1 = true;
-      this.getTotalChart();
-    },
-    //判断平衡度和有功曲线图是否是根据时间搜索
-    search2() {
-      this.click2 = true;
-      this.getChart();
+      if(this.singleWell == true){
+        this.getWellDetails(this.wellNum)
+      }else{
+        this.getTotalChart();
+      }
     },
     //获取首页告警
     getAlarm() {
@@ -599,15 +602,6 @@ export default {
         });
       });
     },
-    //点击产量和液面高度图
-    handleClickChart(params) {
-      this.wellid = this.wellId[params.dataIndex];
-      this.$router.push({
-        name: "well-detail",
-        params: { id: this.wellid },
-        query: { type: params.pro_type }
-      });
-    },
     //点击饼图
     ClickChart(params) {
       this.alarmStatus = params.name;
@@ -616,6 +610,150 @@ export default {
         params: { name: this.alarmStatus },
         query: { type: params.pro_type }
       });
+    },
+    //判断平衡度和有功曲线图是否是根据时间搜索
+    search2() {
+      this.click2 = true;
+      this.getChart();
+    },
+    //获取所有井
+    getWellList(){
+      ApiGetRealdata({realdata:"",pagenum:100}).then(({data}) =>{
+        let wellName = []
+        this.wellList = data.realdata
+      })
+    },
+    //获取单口井的产量和液面高度
+    getWellDetails(id){
+      this.singleWell = true
+      let data = {
+        wellid: id,
+        action: "line",
+        welldetail:"",
+      }
+      if(this.click1 == true){
+        data = {
+          wellid: id,
+          action: "line",
+          daterange: this.date[0] + "-" + this.date[1],
+          welldetail:"",
+        }
+      }
+      getHistoryData(data).then(({ data }) => {
+        let output = [];   //产量
+        let dates_list = [];    //时间
+        let level = [];         //液面高度
+        data.msg.forEach(item => {
+          dates_list.push(this.dataFormat(item.time));
+          output.push(item.output);
+          level.push(item.level);
+        });
+        dates_list.reverse();
+        output.reverse();
+        level.reverse()
+        let option = {
+          title: {
+            text: "当前井产量和液面高度关系图",
+            left: "center"
+          },
+          tooltip: {
+            trigger: "axis",
+            axisPointer: {
+              animation: false
+            }
+          },
+          legend: {
+            data: ["产量", "液面高度"],
+            left: 10
+          },
+          toolbox: {
+            feature: {
+              saveAsImage: {}
+            }
+          },
+          axisPointer: {
+            link: { xAxisIndex: "all" }
+          },
+          dataZoom: [
+            {
+              show: true,
+              realtime: true,
+              start: 30,
+              end: 70,
+              xAxisIndex: [0, 1]
+            },
+            {
+              type: "inside",
+              realtime: true,
+              start: 30,
+              end: 70,
+              xAxisIndex: [0, 1]
+            }
+          ],
+          grid: [
+            {
+              left: 50,
+              right: 50,
+              height: "35%"
+            },
+            {
+              left: 50,
+              right: 50,
+              top: "55%",
+              height: "35%"
+            }
+          ],
+          xAxis: [
+            {
+              name:"时间",
+              type: "category",
+              data: dates_list,
+            },
+            {
+              gridIndex: 1,
+              name:"时间",
+              type: "category",
+              data: dates_list,
+              position: "top",
+            }
+          ],
+          yAxis: [
+            {
+              name: "产量(吨)",
+              type: "value",
+            },
+            {
+              gridIndex: 1,
+              name: "液面高度(米)",
+              type: "value",
+              inverse: true
+            }
+          ],
+          series: [
+            {
+              name: "产量",
+              smooth:true,
+              type: "line",
+              symbolSize: 8,
+              hoverAnimation: false,
+              data:output
+            },
+            {
+              name: "液面高度",
+              smooth:true,
+              type: "line",
+              xAxisIndex: 1,
+              yAxisIndex: 1,
+              symbolSize: 8,
+              hoverAnimation: false,
+              data: level
+            }
+          ]
+        } 
+        this.$nextTick(() => {
+          this.$refs["lineChart"].initChart(option);
+        });
+      })
     },
     //获取近一周时间的函数
     getDateRange(dateNow, intervalDays, bolPastTime) {
@@ -651,6 +789,7 @@ export default {
     this.homeData();
     this.getChart();
     this.getAlarm();
+    this.getWellList();
     this.getTotalChart();
     var date = new Date();
     var list1 = this.getDateRange(date, 7, true);
@@ -681,7 +820,6 @@ export default {
           </router-link>
         </el-card>
       </el-col>
-
       <el-col :sm="12" :lg="6">
         <el-card class="home-header-item3" shadow="always">
           <router-link :to="{name:'deviceAlarm'}">
@@ -690,7 +828,6 @@ export default {
           </router-link>
         </el-card>
       </el-col>
-
       <el-col :sm="12" :lg="6">
         <el-card class="home-header-item4" shadow="always">
           <router-link :to="{name:'deviceStatus'}">
@@ -726,7 +863,7 @@ export default {
                 </div>
               </div>-->
               <el-row>
-                <el-col :sm="10" :lg="10" style="margin-top:5px">
+                <el-col :sm="12" :lg="12" style="margin-top:1px">
                   <span style="font-size:15px">时间：</span>
                   <el-date-picker
                     v-model="date"
@@ -740,19 +877,27 @@ export default {
                     size="mini"
                     value-format="yyyy/MM/dd"
                   ></el-date-picker>
-                </el-col>
-                <el-col :sm="4" :lg="4">
                   <el-button
                     @click="search1()"
                     icon="el-icon-search"
-                    style="height:27.99px;margin-top:5px"
+                    style="height:27.99px;margin-top:5px;"
                     type="primary"
                   />
+                </el-col>
+                <el-col :sm="10" :lg="10" style="margin-top:5px">
+                  <span style="font-size:15px">井号：</span>
+                  <el-select v-model="wellNum" filterable placeholder="请选择井号" @change="getWellDetails(wellNum)">
+                    <el-option
+                      v-for="(item,index) of wellList"
+                      :label="item.name"
+                      :value="item.wellid"
+                      :key="index"
+                    ></el-option>
+                  </el-select> 
                 </el-col>
               </el-row>
               <div>
                 <BarChart
-                  @click-item="handleClickChart"
                   ref="lineChart"
                   chart-id="lineChart"
                   style="height:950px;margin-top:40px"
