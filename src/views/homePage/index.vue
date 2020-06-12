@@ -231,7 +231,7 @@ export default {
             {
               left: 50,
               right: 50,
-              top: "52%",
+              top: "50%",
               height: "35%"
             }
           ],
@@ -284,7 +284,8 @@ export default {
               type: "line",
               symbolSize: 8,
               hoverAnimation: false,
-              data: output
+              data: output,
+              connectNulls:true
             },
             {
               name: "液面高度",
@@ -294,7 +295,8 @@ export default {
               yAxisIndex: 1,
               symbolSize: 8,
               hoverAnimation: false,
-              data: level
+              data: level,
+              connectNulls:true
             }
           ]
         };
@@ -699,7 +701,7 @@ export default {
             {
               left: 50,
               right: 50,
-              top: "55%",
+              top: "50%",
               height: "35%"
             }
           ],
@@ -736,7 +738,8 @@ export default {
               type: "line",
               symbolSize: 8,
               hoverAnimation: false,
-              data:output
+              data:output,
+              connectNulls:true
             },
             {
               name: "液面高度",
@@ -746,7 +749,8 @@ export default {
               yAxisIndex: 1,
               symbolSize: 8,
               hoverAnimation: false,
-              data: level
+              data: level,
+              connectNulls:true
             }
           ]
         } 
