@@ -58,11 +58,14 @@
               <div>工频运行：{{wellDetail.power_frequency_operation?wellDetail.power_frequency_operation:"-"}}</div>
               <div>停机状态：{{wellDetail.stop_status?wellDetail.stop_status:"-"}}</div>
               <div>告警情况：{{wellDetail.warning?wellDetail.warning:"-"}}</div>
-              <div>大平衡块尺寸2(m): {{wellDetail.size_2_big_balance?wellDetail.size_2_big_balance:"-"}}</div>
-              <div>小平衡块尺寸2(m)：{{wellDetail.size_2_small_balance?wellDetail.size_2_small_balance:"-"}}</div>
-              <div>曲柄尺寸2(m)：{{wellDetail.size_2_crank?wellDetail.size_2_crank:"-"}}</div>
-              <div>大平衡块重量2(Kn)：{{wellDetail.weight_2_big_balance?wellDetail.weight_2_big_balance:"-"}}</div>
-              <div>小平衡块重量2(Kn)：{{wellDetail.weight_2_small_balance?wellDetail.weight_2_small_balance:"-"}}</div>
+
+              <div>平衡块尺寸1(m)：{{wellDetail.size_1_small_balance?wellDetail.size_1_small_balance:"-"}}</div>
+              <div>平衡块尺寸3(m)：{{wellDetail.size_1_big_balance?wellDetail.size_1_big_balance:"-"}}</div>
+              <div>平衡块重量1(Kn)：{{wellDetail.weight_1_small_balance?wellDetail.weight_1_small_balances:"-"}}</div>
+              <div>平衡块重量3(Kn)：{{wellDetail.weight_1_big_balance?wellDetail.weight_1_big_balance:"-"}}</div>
+
+              <div>诊断情况：{{wellDetail.diagnosis?wellDetail.diagnosis:"-"}}</div>
+              <div>曲柄尺寸1(m)：{{wellDetail.size_1_crank?wellDetail.size_1_crank:"-"}}</div>
               <div>曲柄重量2(Kn)：{{wellDetail.weight_2_crank?wellDetail.weight_2_crank:"-"}}</div>
               <div>有功2(Kw)：{{wellDetail.active2?wellDetail.active2:"-"}}</div>
               <div>数据更新时间：{{wellDetail.time|dateTimeFormat}}</div>
@@ -86,12 +89,13 @@
               <div>油管外径(mm)：{{wellDetail.tubing_outer_diameter?wellDetail.tubing_outer_diameter:"-"}}</div>
               <div>含水：{{wellDetail.watery?wellDetail.watery:"-"}}</div>
               <div>变频运行：{{wellDetail.frequency_conversion_operation?wellDetail.frequency_conversion_operation:"-"}}</div>
-              <div>诊断情况：{{wellDetail.diagnosis?wellDetail.diagnosis:"-"}}</div>
-              <div>大平衡块尺寸1(m)：{{wellDetail.size_1_big_balance?wellDetail.size_1_big_balance:"-"}}</div>
-              <div>小平衡块尺寸1(m)：{{wellDetail.size_1_small_balance?wellDetail.size_1_small_balance:"-"}}</div>
-              <div>曲柄尺寸1(m)：{{wellDetail.size_1_crank?wellDetail.size_1_crank:"-"}}</div>
-              <div>大平衡块重量1(Kn)：{{wellDetail.weight_1_big_balance?wellDetail.weight_1_big_balance:"-"}}</div>
-              <div>小平衡块重量1(Kn)：{{wellDetail.weight_1_small_balance?wellDetail.weight_1_small_balances:"-"}}</div>
+              <div>平衡块尺寸2(m)：{{wellDetail.size_2_small_balance?wellDetail.size_2_small_balance:"-"}}</div>
+
+              <div>平衡块尺寸4(m): {{wellDetail.size_2_big_balance?wellDetail.size_2_big_balance:"-"}}</div>
+
+              <div>平衡块重量2(Kn)：{{wellDetail.weight_2_small_balance?wellDetail.weight_2_small_balance:"-"}}</div>
+              <div>平衡块重量4(Kn)：{{wellDetail.weight_2_big_balance?wellDetail.weight_2_big_balance:"-"}}</div>
+              <div>曲柄尺寸2(m)：{{wellDetail.size_2_crank?wellDetail.size_2_crank:"-"}}</div>
               <div>曲柄重量1(Kn)：{{wellDetail.weight_1_crank?wellDetail.weight_1_crank:"-"}}</div>
               <div>油套温度(度)：{{wellDetail.oil_jacket_temperature?wellDetail.oil_jacket_temperature:"-"}}</div>
               <div>油藏中深： -</div>
