@@ -60,7 +60,7 @@
         :total="total"
         style="margin-top:10px"
       ></el-pagination>
-    </div> -->
+    </div>-->
     <!-- 导出 -->
     <el-dialog title="Excel文件导出" :visible.sync="uploadVisible" width="400px" hieght="300px">
       <el-row>
@@ -93,22 +93,6 @@ export default {
       pickerOptions: {
         shortcuts: [
           {
-            text: "今天",
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              picker.$emit("pick", [start, end]);
-            }
-          },
-          {
-            text: "昨天",
-            onClick(picker) {
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24);
-              picker.$emit("pick", [start, start]);
-            }
-          },
-          {
             text: "最近7日",
             onClick(picker) {
               const end = new Date();
@@ -123,16 +107,6 @@ export default {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit("pick", [start, end]);
-            }
-          },
-          ,
-          {
-            text: "最近90日",
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
               picker.$emit("pick", [start, end]);
             }
           }
@@ -173,9 +147,9 @@ export default {
     },
     searchWell() {
       this.cutType = 1;
-      let datarange = ""
-      if(this.wellDatePicker !==""){
-        datarange = this.wellDatePicker[0] + "-" + this.wellDatePicker[1]
+      let datarange = "";
+      if (this.wellDatePicker !== "") {
+        datarange = this.wellDatePicker[0] + "-" + this.wellDatePicker[1];
       }
       let data = {
         wellname: this.wellNumber,
@@ -187,9 +161,9 @@ export default {
     },
     // 实时数据导出dialog
     targetUpload() {
-      let datarange = ""
-      if(this.wellDatePicker !==""){
-        datarange = this.wellDatePicker[0] + "-" + this.wellDatePicker[1]
+      let datarange = "";
+      if (this.wellDatePicker !== "") {
+        datarange = this.wellDatePicker[0] + "-" + this.wellDatePicker[1];
       }
       const data = {
         wellname: this.wellNumber,
