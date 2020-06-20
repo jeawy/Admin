@@ -31,9 +31,6 @@ export default function asyncRoutes(params) {
         {
             path: '/realdata',
             component: Layout,
-            // redirect: {
-            //   name: 'home-page'
-            // },
             redirect: 'noRedirect',
             alwaysShow: true,
             meta: {
@@ -48,6 +45,15 @@ export default function asyncRoutes(params) {
                 meta: {
                     title: '实时数据',
                     icon: 'chakan'
+                }
+            },{
+                path: 'dayCoreData',
+                name: 'dayCoreData',
+                component: () =>
+                    import ('@/views/realdata/dayCoreData'),
+                meta: {
+                    title: '日核心数据',
+                    icon: 'rishuju'
                 }
             }]
         },

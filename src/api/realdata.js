@@ -27,3 +27,11 @@ export function ApiGetWellData(params) {
 export function ApiGetUDEleHis(params) {
     return AXIOS.get('/api/realdata/ele/?wellid=97&line', { params })
 }
+//获取日核心数据
+export function ApiGetCoreData(params) {
+    return AXIOS.get('/api/realdata/realdata/?alldays', { params })
+}
+//导出日核心数据
+export function ApiExportCoreData(params) {
+    return AXIOS.get('/api/realdata/realdata/?alldays&print', { params })
+}
