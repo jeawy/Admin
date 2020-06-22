@@ -23,7 +23,7 @@
         </el-col>
         <el-col :span="6">
           <el-button type="primary" class="button" @click="searchWell()">点击查询</el-button>
-          <el-button type="primary" class="button" @click="targetUpload">导出结果</el-button>
+          <el-button type="primary" class="button" @click="targetUpload" :loading="loading">导出结果</el-button>
         </el-col>
       </el-row>
     </div>
@@ -49,7 +49,7 @@
       <el-table-column prop="up" label="上电流" align="center"></el-table-column>
       <el-table-column prop="down" label="下电流" align="center"></el-table-column>
     </el-table>
-    <!-- <div class="block" style="text-align: right">
+    <div class="block" style="text-align: right">
       <el-pagination
         @current-change="handleCurrentChange"
         @size-change="handleSizeChange"
@@ -60,7 +60,7 @@
         :total="total"
         style="margin-top:10px"
       ></el-pagination>
-    </div>-->
+    </div>
     <!-- 导出 -->
     <el-dialog title="Excel文件导出" :visible.sync="uploadVisible" width="400px" hieght="300px">
       <el-row>
@@ -72,8 +72,8 @@
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="uploadVisible = false">取 消</el-button>
-        <el-button type="primary" @click="uploadVisible = false">确定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" @click="uploadExcel">确定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -119,14 +119,15 @@ export default {
       pageSizeList: [10, 30, 50, 100],
       cutType: -1, //分页类型
       clientHeight: "",
-      tableHeight: 0
+      tableHeight: 0,
+      loading:false     //给导出按钮加loading效果
     };
   },
   methods: {
     //分页
     handleSizeChange(val) {
       this.pageSize = val;
-      this.GetRealdata();
+      this.GetCoreData();
     },
     handleCurrentChange(currentPage) {
       this.currentPage = currentPage;
@@ -141,8 +142,9 @@ export default {
       //
     },
     GetCoreData() {
-      ApiGetCoreData().then(({ data }) => {
+      ApiGetCoreData({page:this.currentPage,pagenum:this.pageSize}).then(({ data }) => {
         this.coredata = data.msg;
+        this.total = data.total;
       });
     },
     searchWell() {
@@ -153,14 +155,18 @@ export default {
       }
       let data = {
         wellname: this.wellNumber,
-        daterange: datarange
+        daterange: datarange,
+        page:this.currentPage,
+        pagenum:this.pageSize
       };
       ApiGetCoreData(data).then(({ data }) => {
         this.coredata = data.msg;
+        this.total = data.total;
       });
     },
     // 实时数据导出dialog
     targetUpload() {
+      this.loading = true;
       let datarange = "";
       if (this.wellDatePicker !== "") {
         datarange = this.wellDatePicker[0] + "-" + this.wellDatePicker[1];
@@ -179,7 +185,18 @@ export default {
       const data = this.$store.state.BASE_URL + this.path;
       window.location.href = data;
       this.uploadVisible = false;
-    }
+      this.loading = false
+    },
+    //取消弹框
+    cancel(){
+      this.uploadVisible = false;
+      this.loading = false
+    },
+    //确认下载
+    uploadExcel() {
+      this.uploadVisible = false;
+      this.loading = false
+    },
   },
   created() {
     this.GetCoreData();
