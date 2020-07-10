@@ -41,8 +41,8 @@
       <el-table-column label="上报时间" align="center">
         <template slot-scope="scope">{{scope.row.time|dateTimeFormat}}</template>
       </el-table-column>
-      <el-table-column prop="output" label="产量" align="center"></el-table-column>
-      <el-table-column prop="level" label="液面高度" align="center"></el-table-column>
+      <el-table-column prop="output" label="产量（吨）" align="center"></el-table-column>
+      <el-table-column prop="level" label="液面高度（米）" width="140" align="center"></el-table-column>
       <el-table-column prop="active" label="有功" align="center"></el-table-column>
       <el-table-column prop="electric_current" label="电流" align="center"></el-table-column>
       <el-table-column prop="balance" label="平衡度" align="center"></el-table-column>
