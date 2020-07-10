@@ -56,7 +56,7 @@
         </el-col>
         <el-col :sm="6">
           <el-form-item label="泵深:" prop="depth">
-            <el-input-number v-model="addwellForm.depth" style="width:160px;" :precision="2"></el-input-number>
+            <el-input-number v-model="addwellForm.depth" style="width:160px;" ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :sm="6">
@@ -71,7 +71,7 @@
         </el-col>
         <el-col :sm="6">
           <el-form-item label="含水:" prop="watery">
-            <el-input-number v-model="addwellForm.watery" style="width:160px;" :precision="2"></el-input-number>
+            <el-input-number v-model="addwellForm.watery" style="width:160px;"></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
@@ -130,14 +130,14 @@
         </el-col>
         <el-col :sm="6">
           <el-form-item label="额定功率:" prop="rated_power">
-            <el-input-number v-model="addwellForm.rated_power" style="width:160px;" :precision="2"></el-input-number>
+            <el-input-number v-model="addwellForm.rated_power" style="width:160px;" ></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="15" style="margin-top:10px;">
         <el-col :sm="6">
           <el-form-item label="电机功率:" prop="motor_power">
-            <el-input-number v-model="addwellForm.motor_power" style="width:160px;" :precision="2"></el-input-number>
+            <el-input-number v-model="addwellForm.motor_power" style="width:160px;" ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :sm="6">
@@ -169,7 +169,7 @@
             <el-input-number
               v-model="addwellForm.size_1_small_balance"
               style="width:160px;"
-              :precision="2"
+           
             ></el-input-number>
           </el-form-item>
         </el-col>
@@ -178,7 +178,7 @@
             <el-input-number
               v-model="addwellForm.size_2_small_balance"
               style="width:160px;"
-              :precision="2"
+          
             ></el-input-number>
           </el-form-item>
         </el-col>
@@ -187,7 +187,7 @@
             <el-input-number
               v-model="addwellForm.size_1_big_balance"
               style="width:160px;"
-              :precision="2"
+             
             ></el-input-number>
           </el-form-item>
         </el-col>
@@ -196,7 +196,7 @@
             <el-input-number
               v-model="addwellForm.size_2_big_balance"
               style="width:160px;"
-              :precision="2"
+             
             ></el-input-number>
           </el-form-item>
         </el-col>
@@ -208,7 +208,7 @@
             <el-input-number
               v-model="addwellForm.weight_1_small_balance"
               style="width:160px;"
-              :precision="2"
+             
             ></el-input-number>
           </el-form-item>
         </el-col>
@@ -217,7 +217,7 @@
             <el-input-number
               v-model="addwellForm.weight_2_small_balance"
               style="width:160px;"
-              :precision="2"
+          
             ></el-input-number>
           </el-form-item>
         </el-col>
@@ -226,7 +226,7 @@
             <el-input-number
               v-model="addwellForm.weight_1_big_balance"
               style="width:160px;"
-              :precision="2"
+            
             ></el-input-number>
           </el-form-item>
         </el-col>
@@ -235,7 +235,7 @@
             <el-input-number
               v-model="addwellForm.weight_2_big_balance"
               style="width:160px;"
-              :precision="2"
+              
             ></el-input-number>
           </el-form-item>
         </el-col>
@@ -244,7 +244,7 @@
       <el-row :gutter="15" style="margin-top:10px;">
         <el-col :sm="6">
           <el-form-item label="曲柄尺寸1:" prop="size_1_crank" label-width="130px;">
-            <el-input-number v-model="addwellForm.size_1_crank" style="width:160px;" :precision="2"></el-input-number>
+            <el-input-number v-model="addwellForm.size_1_crank" style="width:160px;" ></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :sm="6">
@@ -252,7 +252,7 @@
             <el-input-number
               v-model="addwellForm.pump_diameter"
               style="width:160px;"
-              :precision="2"
+          
             ></el-input-number>
           </el-form-item>
         </el-col>
@@ -261,7 +261,7 @@
             <el-input-number
               v-model="addwellForm.tubing_outer_diameter"
               style="width:160px;"
-              :precision="2"
+            
             ></el-input-number>
           </el-form-item>
         </el-col>
@@ -270,7 +270,7 @@
             <el-input-number
               v-model="addwellForm.casing_inner_diameter"
               style="width:160px;"
-              :precision="2"
+            
             ></el-input-number>
           </el-form-item>
         </el-col>
@@ -278,7 +278,7 @@
       <el-row :gutter="15" style="margin-top:10px;">
         <el-col :sm="6">
           <el-form-item label="泵挂:" prop="pump_hang">
-            <el-input-number v-model="addwellForm.pump_hang" style="width:160px;" :precision="2"></el-input-number>
+            <el-input-number v-model="addwellForm.pump_hang" style="width:160px;" ></el-input-number>
           </el-form-item>
         </el-col>
         
@@ -413,6 +413,33 @@ export default {
       };
       this.addwellForm = {
         ...this.ActiveRow,
+         motor_power:this.ActiveRow.motor_power==null?undefined:this.ActiveRow.motor_power,
+        size_1_crank:this.ActiveRow.size_1_crank==null?undefined:this.ActiveRow.size_1_crank,
+          size_2_crank:this.ActiveRow.size_2_crank==null?undefined:this.ActiveRow.size_2_crank,
+   weight_1_crank:this.ActiveRow.weight_1_crank==null?undefined:this.ActiveRow.weight_1_crank,
+    weight_2_crank:this.ActiveRow.weight_2_crank==null?undefined:this.ActiveRow.weight_2_crank,
+     rated_power:this.ActiveRow.rated_power==null?undefined:this.ActiveRow.rated_power,
+        big_balance_num:this.ActiveRow.big_balance_num==null?undefined:this.ActiveRow.big_balance_num,
+      small_balance_num:this.ActiveRow.small_balance_num==null?undefined:this.ActiveRow.small_balance_num,
+  size_1_small_balance:this.ActiveRow.size_1_small_balance==null?undefined:this.ActiveRow.size_1_small_balance,
+      size_2_small_balance:this.ActiveRow.size_2_small_balance==null?undefined:this.ActiveRow.size_2_small_balance,
+     size_1_big_balance:this.ActiveRow.size_1_big_balance==null?undefined:this.ActiveRow.size_1_big_balance,
+     size_2_big_balance:this.ActiveRow.size_2_big_balance==null?undefined:this.ActiveRow.size_2_big_balance,
+ weight_1_small_balance:this.ActiveRow.weight_1_small_balance==null?undefined:this.ActiveRow.weight_1_small_balance,
+   weight_2_small_balance:this.ActiveRow.weight_2_small_balance==null?undefined:this.ActiveRow.weight_2_small_balance,
+        weight_1_big_balance:this.ActiveRow.weight_1_big_balance==null?undefined:this.ActiveRow.weight_1_big_balance,
+    weight_2_big_balance:this.ActiveRow.weight_2_big_balance==null?undefined:this.ActiveRow.weight_2_big_balance,
+      pump_diameter:this.ActiveRow.pump_diameter==null?undefined:this.ActiveRow.pump_diameter,
+       pump_hang:this.ActiveRow.pump_hang==null?undefined:this.ActiveRow.pump_hang,
+        tubing_outer_diameter:this.ActiveRow.tubing_outer_diameter==null?undefined:this.ActiveRow.tubing_outer_diameter,
+         casing_inner_diameter:this.ActiveRow.casing_inner_diameter==null?undefined:this.ActiveRow.casing_inner_diameter,
+    watery:this.ActiveRow.watery==null?undefined:this.ActiveRow.watery,
+      //   stroke:this.ActiveRow.stroke==null?undefined:this.ActiveRow.stroke,
+      //  impulse_times:this.ActiveRow.impulse_times==null?undefined:this.ActiveRow.impulse_times,
+      //   ratedImpulse_times:this.ActiveRow.ratedImpulse_times==null?undefined:this.ActiveRow.ratedImpulse_times,
+       depth:this.ActiveRow.depth==null?undefined:this.ActiveRow.depth,
+      //   rated_rowArran:this.ActiveRow.rated_rowArran==null?undefined:this.ActiveRow.rated_rowArran,
+      //  unbalance_waight:this.ActiveRow.unbalance_waight==null?undefined:this.ActiveRow.unbalance_waight,
         belongs: this.ActiveRow.belongs_ids[3],
         status: String(this.ActiveRow.status),
         well_type: String(this.ActiveRow.well_type)
@@ -469,11 +496,16 @@ export default {
           weight_1_small_balance: this.addwellForm.weight_1_small_balance,
           weight_2_small_balance: this.addwellForm.weight_2_small_balance,
           size_1_crank: this.addwellForm.size_1_crank,
+                     size_2_crank: this.addwellForm.size_2_crank,
           pump_diameter: this.addwellForm.pump_diameter,
+           weight_1_crank: this.addwellForm.weight_1_crank,
+          weight_2_crank: this.addwellForm.weight_2_crank,
           tubing_outer_diameter: this.addwellForm.tubing_outer_diameter,
           casing_inner_diameter: this.addwellForm.casing_inner_diameter,
           pump_hang: this.addwellForm.pump_hang,
-          watery: this.addwellForm.watery
+          watery: this.addwellForm.watery,
+           toplimit: this.addwellForm.toplimit,
+            lowerlimit: this.addwellForm.lowerlimit,
         };
 
         if (wellparams.dept_id == undefined) {
