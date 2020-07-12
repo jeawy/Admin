@@ -204,7 +204,7 @@ export default {
             {
                 name: "功率利用率",
                 type: "bar",
-                barWidth: 30,
+                barWidth: 20,
                 barMaxWidth: 50,
                 barCategoryGap: "30%",
                 barGap: "0%",
@@ -299,7 +299,7 @@ export default {
             {
                 name: "频率",
                 type: "bar",
-                barWidth: 30,
+                barWidth: 20,
                 barMaxWidth: 50,
                 barCategoryGap: "30%",
                 barGap: "0%",
@@ -405,7 +405,7 @@ export default {
             {
                 name: "平衡度",
                 type: "bar",
-                barWidth: 30,
+                barWidth: 20,
                 barMaxWidth: 50,
                 barCategoryGap: "30%",
                 barGap: "0%",
@@ -504,7 +504,7 @@ export default {
             {
                 name: "系统效率",
                 type: "bar",
-                barWidth: 30,
+                barWidth: 20,
                 barMaxWidth: 50,
                 barCategoryGap: "30%",
                 barGap: "0%",
