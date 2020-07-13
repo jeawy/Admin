@@ -145,20 +145,29 @@
         </div>
       </el-form>
     </el-dialog>
-    <el-dialog title="发送实测数据" :visible.sync="dialogVisible4" width="450px">
-      <el-form :model="readdataBtn" ref="readdata-btn" :rules="rules">
-        <el-form-item label="声波实测液面值" prop="realLevel ">
-          <el-input-number v-model="readdataBtn.realLevel" :precision="0" :step="1"></el-input-number>
-        </el-form-item>
-        <el-form-item label="计量间实测产量值" prop="dataOutput">
-          <el-input-number v-model="readdataBtn.dataOutput" :precision="0" :step="1"></el-input-number>
-        </el-form-item>
-        <div class="butn">
-          <el-button @click="cancelRealdata">取消</el-button>
-          <el-button type="primary" @click="realdataForm('readdataBtn')">确认</el-button>
-        </div>
-      </el-form>
-    </el-dialog>
+   <el-dialog title="发送实测数据" :visible.sync="dialogVisible4" width="500px">
+            <el-form :model="readdataBtn" ref="readdata-btn" :rules="rules">
+              <el-form-item label="声波实测液面值" prop="realLevel ">
+                  <el-input-number v-model="readdataBtn.realLevel" :precision="0" :step="1"></el-input-number>
+                  <el-button
+                  type="primary"
+                  @click="realdataForm('realLevel')"
+                  class="buttonConfirm"
+                  >确认</el-button>
+              </el-form-item>
+              <el-form-item label="计量间实测产量值" prop="dataOutput">
+                  <el-input-number v-model="readdataBtn.dataOutput" :precision="2" :step="0.01"></el-input-number>
+                  <el-button
+                  type="primary"
+                  @click="realdataForm('dataOutput')"
+                  class="buttonConfirm"
+                  >确认</el-button>
+              </el-form-item>
+              <div class="butn">
+                  <el-button @click="cancelRealdata" class="buttonConfirm">取消</el-button>
+              </div>
+            </el-form>
+          </el-dialog>
     <el-dialog title="指令发送" :visible.sync="dialogVisible5" width="450px">
       <el-form :model="anyOrderModal" ref="any-order-modal" :rules="rules">
         <el-form-item label="十六进制指令" prop="anyOrder">
@@ -416,28 +425,27 @@ export default {
       });
     },
     //发送实测值
+   //发送实测值
     realdataForm(readdataBtn) {
-      let rel = {};
-      rel = {
-        well_no: this.number,
-        real_level: this.readdataBtn.realLevel,
-        data_output: this.readdataBtn.dataOutput
-      };
-      //  if (rel.real_level === 0) {
-      //       delete rel.real_level;
-      //     }
-      //      if (rel.data_output === 0) {
-      //       delete rel.data_output;
-      //     }
+      let rel = {well_no: this.number};
+      switch(readdataBtn){
+        case "realLevel" :
+          rel.real_level = this.readdataBtn.realLevel
+          break;
+        case "dataOutput" :
+          rel.data_output = this.readdataBtn.dataOutput
+          break;
+      }
       ApiCreateOrder(rel).then(res => {
         if (res.data.status === 0) {
-          this.$message.success(res.data.msg);
-          this.dialogVisible4 = false;
-          this.readdataBtn = {};
-          this.getOrderList(this.id);
+          this.$message.success(res.data.msg)
+          this.getOrderList(this.id)
         } else {
           this.$message.error(res.data.msg);
-          this.readdataBtn = {};
+          this.readdataBtn = {
+            realLevel:0,
+            dataOutput:0
+          };
         }
       });
     },
@@ -561,4 +569,10 @@ export default {
   color: #808080;
   cursor: pointer;
 }
+.buttonConfirm{
+    width:60px;
+    height:30px;
+    margin-top:0;
+    margin-left: 10px;
+  }
 </style>
