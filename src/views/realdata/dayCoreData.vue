@@ -38,7 +38,7 @@
     >
       <el-table-column type="index" width="60" label="序号" align="center"></el-table-column>
       <el-table-column prop="well_no__name" label="井号" align="center"></el-table-column>
-      <el-table-column label="上报时间" align="center">
+      <el-table-column label="上报时间" align="center" width="180">
         <template slot-scope="scope">{{scope.row.time|dateTimeFormat}}</template>
       </el-table-column>
       <el-table-column prop="output" label="产量（吨）" align="center"></el-table-column>
