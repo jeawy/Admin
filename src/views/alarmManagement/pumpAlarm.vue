@@ -457,6 +457,7 @@ export default {
       handleMan: null,
       productWay: "",
       way: [
+        
         {
           value: "0",
           label: "系统自动"
@@ -468,7 +469,11 @@ export default {
         {
           value: "2",
           label: "现场设备"
-        }
+        },
+         {
+          value: "-1",
+          label: "全部"
+        },
       ],
       category: [
         {
@@ -615,11 +620,9 @@ export default {
     GetWarnCategory() {
       ApiGetWarnCategory().then(({ data }) => {
         this.warnCategoryList = data.msg;
-        console.log(this.warnCategoryList);
-        // this.total = data.msg.total;
-        // if (data.msg.auth.manage_warning == true) {
-        //   this.disabled = true;
-        // }
+        let xy= {name:"全部",code:  -1}
+      //   this.warnCategoryList.unshift(xy);
+       this.warnCategoryList.push(xy);
       });
     },
     //获取告警列表
