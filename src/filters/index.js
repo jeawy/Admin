@@ -75,6 +75,9 @@ export function alarmWay(code) {
     case 1:
       return "人为手动";
       break;
+      case 2:
+        return "现场设备";
+        break;
   }
 }
 // 告警类型格式化显示

@@ -33,3 +33,7 @@ export function ApiDeleteComment(data) {
 export function ApiGetAuthority(params) {
     return AXIOS.get('api/warning/comment/', { params })
 }
+//告警类型获取
+export function ApiGetWarnCategory(params) {
+    return AXIOS.get('/api/warning/category/', { params })
+}
