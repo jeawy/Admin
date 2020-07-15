@@ -6,8 +6,8 @@
                 <el-card shadow="always">
                     <div class="title">告警详情：</div>
                     <div style="display:flex">
-                      <div class="text">告警产生时间: <span class="row-lg">{{alarmInfo.date|dateTimeFormat}}</span></div>
-                      <div class="text" style="margin-left:80px;">告警产生方式:
+                      <div class="text">产生时间: <span class="row-lg">{{alarmInfo.date|dateTimeFormat}}</span></div>
+                      <div class="text" style="margin-left:80px;">产生方式:
                         <span class="row-lg" v-if="alarmInfo.way==0">
                           系统自动
                           <svg-icon icon-class="xitong" />
@@ -16,21 +16,16 @@
                           人为手动
                           <svg-icon icon-class="renwei" />
                         </span>
+                        <span class="row-lg" v-if="alarmInfo.way==2">
+                          现场设备
+                         
+                        </span>
                       </div>
                     </div>
-                    <div class="text">告警标题: <span class="row-lg">{{alarmInfo.title}}</span></div>
-                    <div class="text">告警类型:
-                      <span class="row-lg" v-if="alarmInfo.category==0">
-                        开关井异常
-                      </span>
-                      <span class="row-lg" v-if="alarmInfo.category==1">
-                        动液面异常
-                      </span>
-                      <span class="row-lg" v-if="alarmInfo.category==2">
-                        日产量告警
-                      </span>
+                    <div class="text">标题: <span class="row-lg">{{alarmInfo.title}}</span></div>
+                    <div class="text">类型: <span class="row-lg">{{alarmInfo.category}}</span>
                     </div>
-                    <div class="text">告警状态:
+                    <div class="text">状态:
                       <span class="row-lg" v-if="alarmInfo.status==0">
                         新增
                         <svg-icon icon-class="xinzeng" />
@@ -51,6 +46,8 @@
                         已处置
                         <svg-icon icon-class="yichuzhi" />
                       </span>
+                    </div>
+                    <div class="text">详情信息: <span class="row-lg">{{alarmInfo.detail}}</span>
                     </div>
                 </el-card>
             </el-row>
@@ -257,7 +254,7 @@ export default {
       }
       .top-item {
         .el-card {
-          height: 220px;
+          height: 240px;
         }
       }
       .bottom-item {
