@@ -148,7 +148,7 @@
    <el-dialog title="发送实测数据" :visible.sync="dialogVisible4" width="500px">
             <el-form :model="readdataBtn" ref="readdata-btn" :rules="rules">
               <el-form-item label="声波实测液面值" prop="realLevel ">
-                  <el-input-number v-model="readdataBtn.realLevel" :precision="0" :step="1"></el-input-number>
+                  <el-input-number v-model="readdataBtn.realLevel" :precision="0" :min="1" :step="1"></el-input-number>
                   <el-button
                   type="primary"
                   @click="realdataForm('realLevel')"
@@ -156,7 +156,7 @@
                   >确认</el-button>
               </el-form-item>
               <el-form-item label="计量间实测产量值" prop="dataOutput">
-                  <el-input-number v-model="readdataBtn.dataOutput" :precision="2" :step="0.01"></el-input-number>
+                  <el-input-number v-model="readdataBtn.dataOutput" :precision="2" :min="0.05" :step="0.01"></el-input-number>
                   <el-button
                   type="primary"
                   @click="realdataForm('dataOutput')"
