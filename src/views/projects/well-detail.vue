@@ -72,15 +72,16 @@
             </el-col>
             <el-col :span="11">
               <div>动液面(米):{{wellDetail.level}}</div>
-              <div>建议调整量1(米)：{{wellDetail.adjustment1}}</div>
-              <div>建议调整量2(米)：{{wellDetail.adjustment2}}</div>
-              <div>建议调整量3(米)：{{wellDetail.adjustment3}}</div>
-              <div>建议调整量4(米)：{{wellDetail.adjustment4}}</div>
-              <div>建议调整量5(米)：{{wellDetail.adjustment5}}</div>
+              <div v-if="wellDetail.well_type == 0">建议调整量1(米)：{{wellDetail.adjustment1}}</div>
+              <div v-if="wellDetail.well_type == 0">建议调整量2(米)：{{wellDetail.adjustment2}}</div>
+              <div v-if="wellDetail.well_type == 0">建议调整量3(米)：{{wellDetail.adjustment3}}</div>
+              <div v-if="wellDetail.well_type == 0">建议调整量4(米)：{{wellDetail.adjustment4}}</div>
+              <div v-if="wellDetail.well_type == 0">建议调整量5(米)：{{wellDetail.adjustment5}}</div>
               <div>流压：</div>
               <div>泵效：</div>
               <div>电流(安培)：{{wellDetail.electric_current}}</div>
-              <div>冲次(次/分) ：{{wellDetail.rush_times}}</div>
+              <div v-if="wellDetail.well_type == 0">冲次(次/分) ：{{wellDetail.rush_times}}</div>
+              <div v-else>转速：{{wellDetail.rush_times}}</div>
               <div>结蜡：</div>
               <div>套压(兆帕)：{{wellDetail.nesting_pressure}}</div>
               <div>沉没度：{{wellDetail.sunken}}</div>
@@ -99,7 +100,7 @@
               <div>曲柄重量1(Kn)：{{wellDetail.weight_1_crank?wellDetail.weight_1_crank:"-"}}</div>
               <div>油套温度(度)：{{wellDetail.oil_jacket_temperature?wellDetail.oil_jacket_temperature:"-"}}</div>
               <div>油藏中深： -</div>
-              <div>偏置角：{{wellDetail.offset_angle?wellDetail.offset_angle:"-"}}</div>
+              <div v-if="wellDetail.well_type == 0">偏置角：{{wellDetail.offset_angle?wellDetail.offset_angle:"-"}}</div>
             </el-col>
           </el-row>
         </div>

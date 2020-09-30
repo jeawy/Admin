@@ -105,11 +105,56 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="adjustment1" label="建议调整量1(米)" width="90px" align="center"></el-table-column>
-      <el-table-column prop="adjustment2" label="建议调整量2(米)" width="90px" align="center"></el-table-column>
-      <el-table-column prop="adjustment3" label="建议调整量3(米)" width="90px" align="center"></el-table-column>
-      <el-table-column prop="adjustment4" label="建议调整量4(米)" width="90px" align="center"></el-table-column>
-      <el-table-column prop="adjustment5" label="建议调整量5(米)" width="90px" align="center"></el-table-column>
+      <el-table-column label="建议调整量1(米)" width="90px" align="center">
+        <template slot-scope="scope">
+          <div v-if="scope.row.welltype=='抽油机'">
+            <span>{{scope.row.adjustment1}}</span>
+          </div>
+          <div v-if="scope.row.welltype=='螺杆泵'">
+            <span>{{"-"}}</span>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="建议调整量2(米)" width="90px" align="center">
+        <template slot-scope="scope">
+          <div v-if="scope.row.welltype=='抽油机'">
+            <span>{{scope.row.adjustment2}}</span>
+          </div>
+          <div v-if="scope.row.welltype=='螺杆泵'">
+            <span>{{"-"}}</span>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="建议调整量3(米)" width="90px" align="center">
+        <template slot-scope="scope">
+          <div v-if="scope.row.welltype=='抽油机'">
+            <span>{{scope.row.adjustment3}}</span>
+          </div>
+          <div v-if="scope.row.welltype=='螺杆泵'">
+            <span>{{"-"}}</span>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="建议调整量4(米)" width="90px" align="center">
+        <template slot-scope="scope">
+          <div v-if="scope.row.welltype=='抽油机'">
+            <span>{{scope.row.adjustment4}}</span>
+          </div>
+          <div v-if="scope.row.welltype=='螺杆泵'">
+            <span>{{"-"}}</span>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="建议调整量5(米)" width="90px" align="center">
+        <template slot-scope="scope">
+          <div v-if="scope.row.welltype=='抽油机'">
+            <span>{{scope.row.adjustment5}}</span>
+          </div>
+          <div v-if="scope.row.welltype=='螺杆泵'">
+            <span>{{"-"}}</span>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column prop="active" label="有功(千瓦)" width="70px" align="center"></el-table-column>
       <el-table-column prop="electric_current" label="电流(安培)" width="70px" align="center"></el-table-column>
       <el-table-column prop="rush_times" label="冲次(次/分)/转速(转/分)" width="120px" align="center"></el-table-column>
