@@ -45,7 +45,16 @@
       <el-table-column prop="level" label="液面高度（米）" width="140" align="center"></el-table-column>
       <el-table-column prop="active" label="有功" align="center"></el-table-column>
       <el-table-column prop="electric_current" label="电流" align="center"></el-table-column>
-      <el-table-column prop="balance" label="平衡度" align="center"></el-table-column>
+      <el-table-column prop="balance" label="平衡度" align="center">
+        <template slot-scope="scope">
+          <div v-if="scope.row.well_no__well_type==0">
+            <span>{{scope.row.balance}}</span>
+          </div>
+          <div v-if="scope.row.well_no__well_type==1">
+            <span>{{"-"}}</span>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column prop="up" label="上电流" align="center"></el-table-column>
       <el-table-column prop="down" label="下电流" align="center"></el-table-column>
     </el-table>
@@ -144,6 +153,7 @@ export default {
     GetCoreData() {
       ApiGetCoreData({page:this.currentPage,pagenum:this.pageSize}).then(({ data }) => {
         this.coredata = data.msg;
+        console.log(this.coredata)
         this.total = data.total;
       });
     },

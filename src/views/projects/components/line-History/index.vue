@@ -5,7 +5,7 @@
     <LineChart ref="ele-chart" chart-id="ele-chart" style="height:350px;margin-top:10px"/>
     <LineChart ref="ele-history" chart-id="ele-history" style="height:350px"/>
     <LineChart ref="power-chart" chart-id="power-chart" style="height:350px;margin-top:10px"/>
-    <LineChart ref="balance-chart" chart-id="balance-chart" style="height:350px;margin-top:10px"/>
+    <LineChart v-if = "well_type == 0" ref="balance-chart" chart-id="balance-chart" style="height:350px;margin-top:10px"/>
     <el-dialog :visible.sync="dialogShow" title="当天数据" :style="styleObject">
       <!-- <el-row style="font-size:16px;margin-bottom:10px">
         <el-col :span="10">井号：{{this.well_name}}</el-col>
@@ -24,7 +24,16 @@
         </el-table-column>
         <el-table-column prop="level" label="动液面(米)" width="130px" align="center"></el-table-column>
         <el-table-column prop="output" label="产量(吨)" width="130px" align="center"></el-table-column>
-        <el-table-column prop="balance" label="平衡度(米)" width="130px" align="center"></el-table-column>
+        <el-table-column prop="balance" label="平衡度(米)" width="130px" align="center">
+          <template slot-scope="scope">
+            <div v-if="well_type==0">
+              <span>{{scope.row.balance}}</span>
+            </div>
+            <div v-if="well_type==1">
+              <span>{{"-"}}</span>
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column prop="active" label="有功(千瓦)" width="130px" align="center"></el-table-column>
         <el-table-column v-if="well_type == 0" prop="up" label="上电流(安培)" width="130px" align="center"></el-table-column>
         <el-table-column v-else prop="electric_current" label="电流(安培)" width="130px" align="center"></el-table-column>
@@ -276,7 +285,7 @@ export default {
     getWellData(){
       ApiGetWellData({well_id:this.wellId,time:this.time}).then(({data}) =>{
         this.realdata = data.msg
-        console.log(data.msg)
+        console.log(this.realdata)
       })
     },
     //电流曲线图
