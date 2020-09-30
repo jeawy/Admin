@@ -154,7 +154,8 @@
             </el-tabs>
           </el-row>
           <el-row>
-            <dataOperation ref="dataOperation" />
+            <dataOperation ref="dataOperation"  :wellDetail="wellDetail" :auth="auth"
+              @getWellDetails="getWellDetails"/>
           </el-row>
         </div>
       </el-col>
