@@ -1,6 +1,6 @@
 <template>
   <div id="built">
-    <el-form :model="addwellForm" status-icon ref="addwellForm" label-width="90px">
+    <el-form :model="addwellForm" status-icon ref="addwellForm" label-width="120px">
       <el-row :gutter="15">
         <el-col :sm="6">
           <el-form-item label="归属:" prop="belongs">
@@ -136,114 +136,7 @@
       </el-row>
       <el-row :gutter="15" style="margin-top:10px;">
         <el-col :sm="6">
-          <el-form-item label="电机功率:" prop="motor_power">
-            <el-input-number v-model="addwellForm.motor_power" style="width:160px;" ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :sm="6">
-          <el-form-item label="电机类型:" prop="motor_type">
-            <el-select v-model="addwellForm.motor_type" placeholder="请选择" style="width:160px;">
-              <el-option
-                v-for="item in motorType"
-                :key="item.value"
-                :label="item.label"
-                :value="item.label"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :sm="6">
-          <el-form-item label="大平衡块数量:" prop="big_balance_num" label-width="130px;">
-            <el-input-number v-model="addwellForm.big_balance_num" style="width:160px;"></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :sm="6">
-          <el-form-item label="小平衡块数量:" prop="small_balance_num" label-width="130px;">
-            <el-input-number v-model="addwellForm.small_balance_num" style="width:160px;"></el-input-number>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="15" style="margin-top:10px;">
-          <el-col :sm="6">
-          <el-form-item label="平衡块尺寸1:" prop="size_1_small_balance" label-width="130px;">
-            <el-input-number
-              v-model="addwellForm.size_1_small_balance"
-              style="width:160px;"
-           
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :sm="6">
-          <el-form-item label="平衡块尺寸2:" prop="size_2_small_balance" label-width="130px;">
-            <el-input-number
-              v-model="addwellForm.size_2_small_balance"
-              style="width:160px;"
-          
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :sm="6">
-          <el-form-item label="平衡块尺寸3:" prop="size_1_big_balance" label-width="130px;">
-            <el-input-number
-              v-model="addwellForm.size_1_big_balance"
-              style="width:160px;"
-             
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :sm="6">
-          <el-form-item label="平衡块尺寸4:" prop="size_2_big_balance" label-width="130px;">
-            <el-input-number
-              v-model="addwellForm.size_2_big_balance"
-              style="width:160px;"
-             
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-      
-      </el-row>
-      <el-row :gutter="15" style="margin-top:10px;">
-          <el-col :sm="6">
-          <el-form-item label="平衡块重量1:" prop="weight_1_small_balance" label-width="130px;">
-            <el-input-number
-              v-model="addwellForm.weight_1_small_balance"
-              style="width:160px;"
-             
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :sm="6">
-          <el-form-item label="平衡块重量2:" prop="weight_2_small_balance" label-width="130px;">
-            <el-input-number
-              v-model="addwellForm.weight_2_small_balance"
-              style="width:160px;"
-          
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :sm="6">
-          <el-form-item label="平衡块重量3:" prop="weight_1_big_balance" label-width="130px;">
-            <el-input-number
-              v-model="addwellForm.weight_1_big_balance"
-              style="width:160px;"
-            
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :sm="6">
-          <el-form-item label="平衡块重量4:" prop="weight_2_big_balance" label-width="130px;">
-            <el-input-number
-              v-model="addwellForm.weight_2_big_balance"
-              style="width:160px;"
-              
-            ></el-input-number>
-          </el-form-item>
-        </el-col>
-      
-      </el-row>
-      <el-row :gutter="15" style="margin-top:10px;">
-        <el-col :sm="6">
-          <el-form-item label="曲柄尺寸1:" prop="size_1_crank" label-width="130px;">
+          <el-form-item label="曲柄尺寸1:" prop="size_1_crank">
             <el-input-number v-model="addwellForm.size_1_crank" style="width:160px;" ></el-input-number>
           </el-form-item>
         </el-col>
@@ -310,8 +203,8 @@
           </el-form-item>
         </el-col>
          <el-col :sm="6">
-          <el-form-item label="冲次(转速)上限值:" prop="toplimit">
-            <el-input-number v-model="addwellForm.toplimit" style="width:160px;" 
+          <el-form-item label="冲次(转速)上限值:" prop="toplimit" width="2000px">
+            <el-input-number v-model="addwellForm.toplimit" style="width:140px;" 
              :min="0&&addwellForm.lowerlimit"></el-input-number>
           </el-form-item>
         </el-col>
@@ -319,6 +212,113 @@
           <el-form-item label="冲次(转速)下限值:" prop="lowerlimit">
             <el-input-number v-model="addwellForm.lowerlimit" style="width:160px;"
              :min="0"  :max="addwellForm.toplimit" ></el-input-number>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="15" style="margin-top:10px;">
+          <el-col :sm="6">
+          <el-form-item v-if="addwellForm.well_type==0" label="平衡块尺寸1:" prop="size_1_small_balance">
+            <el-input-number
+              v-model="addwellForm.size_1_small_balance"
+              style="width:160px;"
+           
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :sm="6">
+          <el-form-item v-if="addwellForm.well_type==0" label="平衡块尺寸2:" prop="size_2_small_balance">
+            <el-input-number
+              v-model="addwellForm.size_2_small_balance"
+              style="width:160px;"
+          
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :sm="6">
+          <el-form-item v-if="addwellForm.well_type==0" label="平衡块尺寸3:" prop="size_1_big_balance">
+            <el-input-number
+              v-model="addwellForm.size_1_big_balance"
+              style="width:160px;"
+             
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :sm="6">
+          <el-form-item v-if="addwellForm.well_type==0" label="平衡块尺寸4:" prop="size_2_big_balance">
+            <el-input-number
+              v-model="addwellForm.size_2_big_balance"
+              style="width:160px;"
+             
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+      
+      </el-row>
+      <el-row :gutter="15" style="margin-top:10px;">
+          <el-col :sm="6">
+          <el-form-item v-if="addwellForm.well_type==0" label="平衡块重量1:" prop="weight_1_small_balance">
+            <el-input-number
+              v-model="addwellForm.weight_1_small_balance"
+              style="width:160px;"
+             
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :sm="6">
+          <el-form-item v-if="addwellForm.well_type==0" label="平衡块重量2:" prop="weight_2_small_balance">
+            <el-input-number
+              v-model="addwellForm.weight_2_small_balance"
+              style="width:160px;"
+          
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :sm="6">
+          <el-form-item v-if="addwellForm.well_type==0" label="平衡块重量3:" prop="weight_1_big_balance">
+            <el-input-number
+              v-model="addwellForm.weight_1_big_balance"
+              style="width:160px;"
+            
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :sm="6">
+          <el-form-item v-if="addwellForm.well_type==0" label="平衡块重量4:" prop="weight_2_big_balance">
+            <el-input-number
+              v-model="addwellForm.weight_2_big_balance"
+              style="width:160px;"
+              
+            ></el-input-number>
+          </el-form-item>
+        </el-col>
+      
+      </el-row>
+      <el-row :gutter="15" style="margin-top:10px;">
+        <el-col :sm="6">
+          <el-form-item label="电机功率:" prop="motor_power">
+            <el-input-number v-model="addwellForm.motor_power" style="width:160px;" ></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :sm="6">
+          <el-form-item label="电机类型:" prop="motor_type">
+            <el-select v-model="addwellForm.motor_type" placeholder="请选择" style="width:160px;">
+              <el-option
+                v-for="item in motorType"
+                :key="item.value"
+                :label="item.label"
+                :value="item.label"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :sm="6">
+          <el-form-item v-if="addwellForm.well_type==0" label="大平衡块数量:" prop="big_balance_num">
+            <el-input-number v-model="addwellForm.big_balance_num" style="width:160px;"></el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :sm="6">
+          <el-form-item v-if="addwellForm.well_type==0" label="小平衡块数量:" prop="small_balance_num">
+            <el-input-number v-model="addwellForm.small_balance_num" style="width:160px;"></el-input-number>
           </el-form-item>
         </el-col>
       </el-row>
@@ -826,7 +826,7 @@ export default {
   },
   created() {
     this.getDeptList();
-  }
+  },
 };
 </script>
 <style lang="scss">
