@@ -106,10 +106,27 @@
             ></el-input>
           </el-form-item>
         </el-col>
-        <el-col :sm="6">
+        <el-col :sm="5" v-if="addwellForm.well_type == '0'">
           <el-form-item label="机型:" prop="machine_type">
-            <el-input v-model="addwellForm.machine_type" style="width:160px;"></el-input>
+            <!-- <el-input v-model="addwellForm.machine_type" style="width:160px;"></el-input> -->
+            <el-select
+              v-model="addwellForm.machine_type"
+              placeholder="请选择"
+              style="width:140px;"
+              filterable
+              @change="changePumpType"
+            >
+              <el-option
+                v-for="item in machinetype"
+                :key="item.value"
+                :label="item.type_name"
+                :value="item.id"
+              ></el-option>
+            </el-select>
           </el-form-item>
+        </el-col>
+        <el-col :sm="1" v-if="addwellForm.well_type == '0'">
+          <addPumpType @event1="change($event)" />
         </el-col>
       </el-row>
       <el-row :gutter="15" style="margin-top:10px;">
@@ -330,9 +347,19 @@
   </div>
 </template>
 <script>
-import { ApiAddWell, ApiGetWellList, ApiAlterWell } from "@/api/wellList";
+import { 
+  ApiAddWell, 
+  ApiGetWellList, 
+  ApiAlterWell,
+  ApiSearchPumping,
+  ApiPumpDetail 
+} from "@/api/wellList";
 import { getDept } from "@/api/admin";
+import addPumpType from "./components/add-pumpType";
 export default {
+  components: {
+    addPumpType
+  },
   data() {
     return {
       id: this.$route.params.id || "",
@@ -342,6 +369,7 @@ export default {
       depts: [],
       addwellForm: {
         //  belongs:[1,2,3,5],
+        well_type: "0"
       },
       // value:"0",
 
@@ -380,7 +408,19 @@ export default {
           value: "1",
           label: "永磁YC"
         }
-      ]
+      ],
+      machinetype: [],
+      hourHand:[
+        {
+          value: "0",
+          label: "顺时针"
+        },
+        {
+          value: "1",
+          label: "逆时针"
+        }
+      ],
+      turn:'',
     };
   },
   computed: {
@@ -822,6 +862,27 @@ export default {
         this.wellList = res.data.msg.well_list;
         // this.total = res.data.msg.total;
       });
+    },
+    change(data) {
+      this.machinetype = data;
+    },
+    changePumpType(value){
+      console.log(value)
+      if(value != null){
+        ApiPumpDetail({id:value}).then(({ data })=>{
+          let pumpDetail = data.msg
+          console.log(pumpDetail)
+          switch (pumpDetail.turn){
+            case 0 :
+              this.turn = "0"
+              break;
+            case 1:
+              this.turn = "1"
+              break;
+          }
+        })
+      }
+      
     }
   },
   created() {

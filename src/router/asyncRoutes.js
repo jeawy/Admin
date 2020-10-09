@@ -95,6 +95,15 @@ export default function asyncRoutes(params) {
                     title: '油井列表',
                     icon: 'wellList'
                 }
+            }, {
+                path: 'pumpType',
+                name: 'pumpType',
+                component: () =>
+                    import ('@/views/basicInformation/pumpType'),
+                meta: {
+                    title: '机型列表',
+                    icon: 'wellList'
+                }
             },{
                 path: 'new-built',
                 name: 'new-built',

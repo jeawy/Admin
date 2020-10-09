@@ -15,3 +15,19 @@ export function ApiAlterWell(data) {
 export function ApiDeleteWellList(data) {
     return AXIOS.post ('/api/well/well/', data)
 }
+//机型查询
+export function ApiSearchPumping(params) {
+    return AXIOS.get('/api/well/pumping/', { params })
+}
+//机型详情
+export function ApiPumpDetail(params) {
+    return AXIOS.get('/api/well/pumping/?id', { params })
+}
+//添加机型
+export function ApiAddPumpType(data) {
+    return AXIOS.post ('/api/well/pumping/', data)
+}
+//删除机型
+export function ApiDeletePumpType(data) {
+    return AXIOS.post ('/api/well/pumping/', data)
+}

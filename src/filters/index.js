@@ -66,6 +66,17 @@ export function welltype(code) {
       break;
   }
 }
+// 油井的机型转向
+export function wellTurn(code) {
+  switch (code) {
+    case 0:
+      return "顺时针";
+      break;
+    case 1:
+      return "逆时针";
+      break;
+  }
+}
 // 告警方式格式化显示
 export function alarmWay(code) {
   switch (code) {
