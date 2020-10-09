@@ -136,7 +136,7 @@
       <el-table-column prop="rod" label="光杆规范" width="130" align="center"></el-table-column>
       <el-table-column prop="cover" label="套管规范" width="130" align="center"></el-table-column>
       <el-table-column prop="pipe" label="油管规范" width="130" align="center"></el-table-column>
-      <el-table-column prop="machine_type" label="机型" width="130" align="center"></el-table-column>
+      <!-- <el-table-column prop="machine_type" label="机型" width="130" align="center"></el-table-column> -->
       <el-table-column prop="machine" label="电机" width="130" align="center"></el-table-column>
       <el-table-column prop="crank" label="曲柄" width="130" align="center"></el-table-column>
       <el-table-column prop="box" label="配电箱" width="130" align="center"></el-table-column>
