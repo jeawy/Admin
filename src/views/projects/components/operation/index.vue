@@ -49,7 +49,7 @@
         <div class="diag-footer">
           <el-dialog title="参量调整" :visible.sync="dialogVisible1" width="500px">
             <el-form :model="paramModal" ref="param-modal" :rules="rules">
-              <el-form-item label="含水 (升)" prop="container">
+              <el-form-item label="含水率" prop="container">
                 <el-input-number
                 v-model="paramModal.container"
                 :precision="3"
@@ -150,7 +150,7 @@
               <el-form-item label="永磁电动机额定功率 (千瓦)" 
                prop="permanent_magnet_motor_rated_power" 
                placeholder="千瓦" 
-               v-if="wellDetail.well_type ==1">
+               v-if="wellDetail.motor_type ==1">
                   <el-input-number
                   v-model="paramModal.permanent_magnet_motor_rated_power"
                   :step="0.01"
@@ -167,7 +167,7 @@
               <el-form-item label="异步电动机额定功率 (千瓦)" 
                 prop="asynchronous_motor_rated_power" 
                 placeholder="千瓦" 
-                v-if="wellDetail.well_type ==0">
+                v-if="wellDetail.motor_type ==0">
                   <el-input-number
                   v-model="paramModal.asynchronous_motor_rated_power"
                   :step="0.01"
