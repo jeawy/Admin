@@ -78,7 +78,7 @@
                   @click="paramForm('stroke')"
                   >确认</el-button>
               </el-form-item>
-              <el-form-item label="泵型 (毫米)" prop="pumptype" v-if="wellDetail.well_type ==1">
+              <el-form-item label="泵型 (毫米)" prop="pumptype">
                 <el-select 
                   v-model="paramModal.pumptype" 
                   filterable
@@ -98,7 +98,7 @@
                   @click="paramForm('pumptype')"
                   >确认</el-button>
               </el-form-item>
-              <el-form-item label="泵挂 (米)" prop="pumphanging" v-if="wellDetail.well_type ==1">
+              <el-form-item label="泵挂 (米)" prop="pumphanging">
                   <el-input-number 
                   v-model="paramModal.pumphanging" 
                   :min="0" 
@@ -150,7 +150,7 @@
               <el-form-item label="永磁电动机额定功率 (千瓦)" 
                prop="permanent_magnet_motor_rated_power" 
                placeholder="千瓦" 
-               v-if="wellDetail.motor_type ==1">
+               v-if="wellDetail.well_type ==1">
                   <el-input-number
                   v-model="paramModal.permanent_magnet_motor_rated_power"
                   :step="0.01"
@@ -167,7 +167,7 @@
               <el-form-item label="异步电动机额定功率 (千瓦)" 
                 prop="asynchronous_motor_rated_power" 
                 placeholder="千瓦" 
-                v-if="wellDetail.motor_type ==0">
+                v-if="wellDetail.well_type ==0">
                   <el-input-number
                   v-model="paramModal.asynchronous_motor_rated_power"
                   :step="0.01"
