@@ -149,8 +149,7 @@
               </el-form-item>
               <el-form-item label="永磁电动机额定功率 (千瓦)" 
                prop="permanent_magnet_motor_rated_power" 
-               placeholder="千瓦" 
-               v-if="wellDetail.motor_type ==1">
+               placeholder="千瓦" >
                   <el-input-number
                   v-model="paramModal.permanent_magnet_motor_rated_power"
                   :step="0.01"
@@ -166,8 +165,7 @@
               </el-form-item>
               <el-form-item label="异步电动机额定功率 (千瓦)" 
                 prop="asynchronous_motor_rated_power" 
-                placeholder="千瓦" 
-                v-if="wellDetail.motor_type ==0">
+                placeholder="千瓦" >
                   <el-input-number
                   v-model="paramModal.asynchronous_motor_rated_power"
                   :step="0.01"
@@ -608,8 +606,8 @@ export default {
             banlence: this.banlence_num==null?undefined:this.banlence_num,
             outer_diameter: this.wellDetail.tubing_outer_diameter==null?undefined:this.wellDetail.tubing_outer_diameter,
             pumping_id :this.machine_type==null?undefined:this.machine_type,
-            permanent_magnet_motor_rated_power: this.wellDetail.motor_power==null?undefined:this.wellDetail.motor_power,
-            asynchronous_motor_rated_power: this.wellDetail.motor_power==null?undefined:this.wellDetail.motor_power,
+            permanent_magnet_motor_rated_power: this.wellDetail.motor_type==0?this.wellDetail.motor_power:undefined,
+            asynchronous_motor_rated_power: this.wellDetail.motor_type==1?this.wellDetail.motor_power:undefined,
             param_cechan:this.zhouqixing_cechan,
             param_huan_jiansuqi:this.drive_type==null?undefined:this.drive_type,
             param_balance_big_weight:this.wellDetail.weight_1_big_balance==null?undefined:this.wellDetail.weight_1_big_balance,
@@ -662,8 +660,8 @@ export default {
           banlence: this.balance_num==null?undefined:this.balance_num,
           outer_diameter: this.wellDetail.tubing_outer_diameter==null?undefined:this.wellDetail.tubing_outer_diameter,
           pumping_id :this.machine_type==null?undefined:this.machine_type,
-          permanent_magnet_motor_rated_power: this.wellDetail.motor_power==null?undefined:this.wellDetail.motor_power,
-          asynchronous_motor_rated_power: this.wellDetail.motor_power==null?undefined:this.wellDetail.motor_power,
+          permanent_magnet_motor_rated_power: this.wellDetail.motor_type==0?this.wellDetail.motor_power:undefined,
+          asynchronous_motor_rated_power: this.wellDetail.motor_type==1?this.wellDetail.motor_power:undefined,
           param_cechan:this.zhouqixing_cechan,
           param_huan_jiansuqi:this.drive_type==null?undefined:this.drive_type,
           param_balance_big_weight:this.wellDetail.weight_1_big_balance==null?undefined:this.wellDetail.weight_1_big_balance,
