@@ -78,7 +78,20 @@
                   @click="paramForm('stroke')"
                   >确认</el-button>
               </el-form-item>
-              <el-form-item label="泵型 (毫米)" prop="pumptype">
+              <el-form-item label="泵径 (毫米)" prop="pumptype" v-if="wellDetail.well_type ==0">
+                <el-input-number
+                  v-model="paramModal.pumptype"
+                  :step="1"
+                  :min="0"
+                  size="medium"
+                  ></el-input-number>
+                  <el-button
+                  type="primary"
+                  class="buttonConfirm"
+                  @click="paramForm('pumptype')"
+                  >确认</el-button>
+              </el-form-item>
+              <el-form-item label="泵型 (毫米)" prop="pumptype" v-if="wellDetail.well_type ==1">
                 <el-select 
                   v-model="paramModal.pumptype" 
                   filterable
