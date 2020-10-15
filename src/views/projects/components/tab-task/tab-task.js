@@ -1029,73 +1029,83 @@ export default {
       this.FormList[0].content = this.datacontent[0].content
     },
     // 给某一资产添加环节
-    addLinks() {
+    addLinks(formName) {
       function dataFormat(params) {
         return new Date(params).toLocaleDateString() // 'yyyy/mm/dd hh:mm:ss'
       }
-      this.FormList.forEach((item, index) => {
-        this.FormList[index] = Object.assign({}, this.FormList[index], {
-          dept: this.FormList[index].dept[this.FormList[index].dept.length - 1],
-          asset: this.asset
-        })
-
-        if (
-          'datetime' in this.FormList[index] &&
-          this.FormList[index].datetime.length
-        ) {
-          this.FormList[index] = {
-            ...this.FormList[index],
-            date_start: dataFormat(this.FormList[index].datetime[0]),
-            date_end: dataFormat(this.FormList[index].datetime[1])
-          }
-          delete this.FormList[index].datetime
-        }
-        if (index === 0) {
-          this.FormList[index].pid = 0
-        } else {
-          this.FormList[index].pid = this.FormList[index - 1].dept
-        }
-      })
-      this.createLoading = true
-
-      addLinks({
-        links: [...this.FormList]
-      })
-        .then(({
-          data
-        }) => {
-          this.createLoading = false
-
-          if (data.status === 0) {
-            this.$message.success(data.msg)
-            this.$emit('refresh')
-            this.$emit('refresh_assetList')
-            this.isLinkDialogShow = false
-            this.FormList = [{}]
-            this.mainTaskShow = true
-            this.TaskForm.asset = this.asset
-            getLinks({
-              asset: this.TaskForm.asset
-            }).then(({
-              data
-            }) => {
-              const linkData = [...data.msg]
-              this.LinkList = []
-              linkData.forEach(item => {
-                item.forEach(ct => {
-                  this.LinkList.push(ct)
-                })
+        this.$refs[formName][0].validate((valid) => {
+          if(valid){ 
+            this.FormList.forEach((item, index) => {
+              this.FormList[index] = Object.assign({}, this.FormList[index], {
+                dept: this.FormList[index].dept[this.FormList[index].dept.length - 1],
+                asset: this.asset
               })
+  
+              if (
+                'datetime' in this.FormList[index] &&
+                this.FormList[index].datetime.length
+              ) {
+                this.FormList[index] = {
+                  ...this.FormList[index],
+                  date_start: dataFormat(this.FormList[index].datetime[0]),
+                  date_end: dataFormat(this.FormList[index].datetime[1])
+                }
+                // delete this.FormList[index].datetime
+              }
+              if (index === 0) {
+                this.FormList[index].pid = 0
+              } else {
+                this.FormList[index].pid = this.FormList[index - 1].dept
+              }
             })
-            this.active = 1
-          } else {
-            this.$message.error(data.msg)
+            this.createLoading = true
+  
+            addLinks({
+              links: [...this.FormList]
+            })
+              .then(({
+                data
+              }) => {
+                this.createLoading = false
+  
+                if (data.status === 0) {
+                  this.$message.success(data.msg)
+                  this.$emit('refresh')
+                  this.$emit('refresh_assetList')
+                  this.isLinkDialogShow = false
+                  this.FormList = [{}]
+                  this.mainTaskShow = true
+                  this.TaskForm.asset = this.asset
+                  getLinks({
+                    asset: this.TaskForm.asset
+                  }).then(({
+                    data
+                  }) => {
+                    const linkData = [...data.msg]
+                    this.LinkList = []
+                    linkData.forEach(item => {
+                      item.forEach(ct => {
+                        this.LinkList.push(ct)
+                      })
+                    })
+                  })
+                  this.active = 1
+                } else {
+                  this.$message.error(data.msg)
+                  this.isDialogShow = true;
+                  for(var i=0;i<this.FormList.length;i++){
+                    this.FormList[i].dept = ''
+                  }
+                }
+              })
+              .catch(err => {
+                this.isDialogShow = false
+                this.createLoading = false
+              })
+          }else {
+            return false;
           }
-        })
-        .catch(err => {
-          this.isDialogShow = false
-          this.createLoading = false
-        })
+        })     
     },
     formatList() {
       function changeList(arr) {

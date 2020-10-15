@@ -866,7 +866,7 @@
           <el-button type="text" icon="el-icon-plus" @click="after(index)">后续</el-button>
         </el-col>
         <el-col :span="18">
-          <el-form :model="item" label-width="90px">
+          <el-form :model="item" label-width="90px" ref="item">
             <el-form-item
               label="环节内容"
               prop="content"
@@ -917,7 +917,7 @@
       </el-row>
       <el-row type="flex" justify="end">
         <el-button @click="cancel">取消</el-button>
-        <el-button :loading="createLoading" type="primary" @click="addLinks()">立即创建</el-button>
+        <el-button :loading="createLoading" type="primary" @click="addLinks('item')">立即创建</el-button>
       </el-row>
     </el-dialog>
     <!-- 任务导出 -->
