@@ -48,7 +48,7 @@
         </div>
         <div class="diag-footer">
           <el-dialog title="参量调整" :visible.sync="dialogVisible1" width="500px">
-            <el-form :model="paramModal" ref="param-modal" :rules="rules">
+            <el-form :model="paramModal" ref="paramModal" :rules="rules">
               <el-form-item label="含水率" prop="container">
                 <el-input-number
                 v-model="paramModal.container"
@@ -91,9 +91,11 @@
                   @click="paramForm('pumptype')"
                   >确认</el-button>
               </el-form-item>
-              <el-form-item label="泵型 (毫米)" prop="pumptype" v-if="wellDetail.well_type ==1">
+              <el-form-item label="泵型 (毫米)" prop="pumptype"
+              :rules="[{type: 'number', message: '请输入数字' }]"
+               v-if="wellDetail.well_type ==1">
                 <el-select 
-                  v-model="paramModal.pumptype" 
+                  v-model.number="paramModal.pumptype" 
                   filterable
                   placeholder="请选择"
                   allow-create
@@ -509,22 +511,18 @@ export default {
       drive_type : '',//驱动装置
       zhouqixing_cechan : '',//周期测产，自动0，停止5000
       pumptypeList:[
-        {value:"40"},
-        {value:"65"},
-        {value:"75"},
-        {value:"90"},
-        {value:"104"},
-        {value:"120"},
-        {value:"200"},
-        {value:"300"},
-        {value:"400"},
-        {value:"500"},
-        {value:"555"},
-        {value:"800"},
-        {value:"1200"},
-        {value:"1400"},
-        {value:"1600"},
-        {value:"2000"},
+        {value:"28"},
+        {value:"32"},
+        {value:"38"},
+        {value:"44"},
+        {value:"45"},
+        {value:"51"},
+        {value:"56"},
+        {value:"57"},
+        {value:"64"},
+        {value:"70"},
+        {value:"83"},
+        {value:"95"},
         ],
       readdataBtn: {
         realLevel: 0,
@@ -665,110 +663,114 @@ export default {
     },
      //参量调整
     paramForm(paramModal) {
-      let paramModalAgo = {
-         container: this.wellDetail.watery==null?undefined:this.wellDetail.watery,
-          stroke: this.wellDetail.stroke?this.wellDetail.stroke:undefined,
-          pumptype: this.wellDetail.pump_diameter==null?undefined:this.wellDetail.pump_diameter,
-          pumphanging: this.wellDetail.pump_hang==null?undefined:this.wellDetail.pump_hang,
-          banlence: this.balance_num==null?undefined:this.balance_num,
-          outer_diameter: this.wellDetail.tubing_outer_diameter==null?undefined:this.wellDetail.tubing_outer_diameter,
-          pumping_id :this.machine_type==null?undefined:this.machine_type,
-          permanent_magnet_motor_rated_power: this.wellDetail.motor_type==0?this.wellDetail.motor_power:undefined,
-          asynchronous_motor_rated_power: this.wellDetail.motor_type==1?this.wellDetail.motor_power:undefined,
-          param_cechan:this.zhouqixing_cechan,
-          param_huan_jiansuqi:this.drive_type==null?undefined:this.drive_type,
-          param_balance_big_weight:this.wellDetail.weight_1_big_balance==null?undefined:this.wellDetail.weight_1_big_balance,
-          param_balance_small_weight:this.wellDetail.weight_1_small_balance==null?undefined:this.wellDetail.weight_1_small_balance,
-          param_balance_size1:this.wellDetail.size_1_big_balance?this.wellDetail.size_1_big_balance:0,
-          param_balance_size2:this.wellDetail.size_2_big_balance?this.wellDetail.size_2_big_balance:0,
-          param_small_balance_size1:this.wellDetail.size_1_small_balance?this.wellDetail.size_1_small_balance:0,
-          param_small_balance_size2:this.wellDetail.size_2_small_balance?this.wellDetail.size_2_small_balance:0,
-          param_qubing_weight:this.wellDetail.weight_1_crank?this.wellDetail.weight_1_crank:0,
-          param_xiaozi_weight:this.wellDetail.crank_pin_weight?this.wellDetail.crank_pin_weight:0,
-          param_qubing_size:this.wellDetail.size_1_crank?this.wellDetail.size_1_crank:0,
-      }
-      let param = {
-        well_no: this.number,
-        param: "",
-      };
-      switch(paramModal){
-        case "container" :
-          param.container = this.paramModal.container;
-          break;
-        case "stroke" :
-          param.stroke = this.paramModal.stroke;
-          break;
-        case "pumptype" :
-          param.pumptype = this.paramModal.pumptype;
-          break;
-        case "pumphanging" :
-          param.pumphanging = this.paramModal.pumphanging;
-          break;
-        case "banlence" :
-          param.banlence = this.paramModal.banlence;
-          break;
-        case "outer_diameter" :
-          param.outer_diameter = this.paramModal.outer_diameter;
-          break;
-        case "machine_type" :
-          param.pumping_id = this.paramModal.pumping_id;
-          this.options.forEach((item,index)=>{
-            if(item.id == param.pumping_id){
-              param.machine_type = item.series
+      this.$refs["paramModal"].validate((valid) => {
+        if (valid) {
+          let paramModalAgo = {
+            container: this.wellDetail.watery==null?undefined:this.wellDetail.watery,
+              stroke: this.wellDetail.stroke?this.wellDetail.stroke:undefined,
+              pumptype: this.wellDetail.pump_diameter==null?undefined:this.wellDetail.pump_diameter,
+              pumphanging: this.wellDetail.pump_hang==null?undefined:this.wellDetail.pump_hang,
+              banlence: this.balance_num==null?undefined:this.balance_num,
+              outer_diameter: this.wellDetail.tubing_outer_diameter==null?undefined:this.wellDetail.tubing_outer_diameter,
+              pumping_id :this.machine_type==null?undefined:this.machine_type,
+              permanent_magnet_motor_rated_power: this.wellDetail.motor_type==0?this.wellDetail.motor_power:undefined,
+              asynchronous_motor_rated_power: this.wellDetail.motor_type==1?this.wellDetail.motor_power:undefined,
+              param_cechan:this.zhouqixing_cechan,
+              param_huan_jiansuqi:this.drive_type==null?undefined:this.drive_type,
+              param_balance_big_weight:this.wellDetail.weight_1_big_balance==null?undefined:this.wellDetail.weight_1_big_balance,
+              param_balance_small_weight:this.wellDetail.weight_1_small_balance==null?undefined:this.wellDetail.weight_1_small_balance,
+              param_balance_size1:this.wellDetail.size_1_big_balance?this.wellDetail.size_1_big_balance:0,
+              param_balance_size2:this.wellDetail.size_2_big_balance?this.wellDetail.size_2_big_balance:0,
+              param_small_balance_size1:this.wellDetail.size_1_small_balance?this.wellDetail.size_1_small_balance:0,
+              param_small_balance_size2:this.wellDetail.size_2_small_balance?this.wellDetail.size_2_small_balance:0,
+              param_qubing_weight:this.wellDetail.weight_1_crank?this.wellDetail.weight_1_crank:0,
+              param_xiaozi_weight:this.wellDetail.crank_pin_weight?this.wellDetail.crank_pin_weight:0,
+              param_qubing_size:this.wellDetail.size_1_crank?this.wellDetail.size_1_crank:0,
+          }
+          let param = {
+            well_no: this.number,
+            param: "",
+          };
+          switch(paramModal){
+            case "container" :
+              param.container = this.paramModal.container;
+              break;
+            case "stroke" :
+              param.stroke = this.paramModal.stroke;
+              break;
+            case "pumptype" :
+              param.pumptype = this.paramModal.pumptype;
+              break;
+            case "pumphanging" :
+              param.pumphanging = this.paramModal.pumphanging;
+              break;
+            case "banlence" :
+              param.banlence = this.paramModal.banlence;
+              break;
+            case "outer_diameter" :
+              param.outer_diameter = this.paramModal.outer_diameter;
+              break;
+            case "machine_type" :
+              param.pumping_id = this.paramModal.pumping_id;
+              this.options.forEach((item,index)=>{
+                if(item.id == param.pumping_id){
+                  param.machine_type = item.series
+                }
+              })
+              break;
+            case "permanent_magnet_motor_rated_power" :
+              param.permanent_magnet_motor_rated_power = this.paramModal.permanent_magnet_motor_rated_power;
+              break;
+            case "asynchronous_motor_rated_power" :
+              param.asynchronous_motor_rated_power = this.paramModal.asynchronous_motor_rated_power;
+              break;
+            case "param_cechan" :
+              param.param_cechan = this.paramModal.param_cechan==true?5000:0;
+              break;
+            case "param_huan_jiansuqi" :
+              param.param_huan_jiansuqi = this.paramModal.param_huan_jiansuqi;
+              break;
+            case "param_balance_big_weight" :
+              param.param_balance_big_weight = this.paramModal.param_balance_big_weight;
+              break;
+            case "param_balance_small_weight" :
+              param.param_balance_small_weight = this.paramModal.param_balance_small_weight;
+              break;
+            case "param_balance_size1" :
+              param.param_balance_size1 = this.paramModal.param_balance_size1;
+              break;
+            case "param_balance_size2" :
+              param.param_balance_size2 = this.paramModal.param_balance_size2;
+              break;
+            case "param_small_balance_size1" :
+              param.param_small_balance_size1 = this.paramModal.param_small_balance_size1;
+              break;
+            case "param_small_balance_size2" :
+              param.param_small_balance_size2 = this.paramModal.param_small_balance_size2;
+              break;
+            case "param_qubing_weight" :
+              param.param_qubing_weight = this.paramModal.param_qubing_weight;
+              break;
+            case "param_xiaozi_weight" :
+              param.param_xiaozi_weight = this.paramModal.param_xiaozi_weight;
+              break;
+            case "param_qubing_size" :
+              param.param_qubing_size = this.paramModal.param_qubing_size;
+              break;
+          }
+          ApiCreateOrder(param).then(res => {
+            if (res.data.status === 0) {
+              this.$message.success(res.data.msg);
+              this.getOrderList();
+              // // 调用父组件的“获取指令列表”函数
+              this.$emit("getWellDetails")
+            } else {
+              this.$message.error(res.data.msg);
+              this.paramModal = paramModalAgo
             }
-          })
-          break;
-        case "permanent_magnet_motor_rated_power" :
-          param.permanent_magnet_motor_rated_power = this.paramModal.permanent_magnet_motor_rated_power;
-          break;
-        case "asynchronous_motor_rated_power" :
-          param.asynchronous_motor_rated_power = this.paramModal.asynchronous_motor_rated_power;
-          break;
-        case "param_cechan" :
-          param.param_cechan = this.paramModal.param_cechan==true?5000:0;
-          break;
-        case "param_huan_jiansuqi" :
-          param.param_huan_jiansuqi = this.paramModal.param_huan_jiansuqi;
-          break;
-        case "param_balance_big_weight" :
-          param.param_balance_big_weight = this.paramModal.param_balance_big_weight;
-          break;
-        case "param_balance_small_weight" :
-          param.param_balance_small_weight = this.paramModal.param_balance_small_weight;
-          break;
-        case "param_balance_size1" :
-          param.param_balance_size1 = this.paramModal.param_balance_size1;
-          break;
-        case "param_balance_size2" :
-          param.param_balance_size2 = this.paramModal.param_balance_size2;
-          break;
-        case "param_small_balance_size1" :
-          param.param_small_balance_size1 = this.paramModal.param_small_balance_size1;
-          break;
-        case "param_small_balance_size2" :
-          param.param_small_balance_size2 = this.paramModal.param_small_balance_size2;
-          break;
-        case "param_qubing_weight" :
-          param.param_qubing_weight = this.paramModal.param_qubing_weight;
-          break;
-        case "param_xiaozi_weight" :
-          param.param_xiaozi_weight = this.paramModal.param_xiaozi_weight;
-          break;
-        case "param_qubing_size" :
-          param.param_qubing_size = this.paramModal.param_qubing_size;
-          break;
-      }
-      ApiCreateOrder(param).then(res => {
-        if (res.data.status === 0) {
-          this.$message.success(res.data.msg);
-           this.getOrderList();
-          // // 调用父组件的“获取指令列表”函数
-          this.$emit("getWellDetails")
-        } else {
-          this.$message.error(res.data.msg);
-          this.paramModal = paramModalAgo
+          });
         }
-      });
+      })
     },
     //固定调参
     freguencyForm(freguencyModal) {
