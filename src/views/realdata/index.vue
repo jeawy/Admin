@@ -73,10 +73,10 @@
            </div>
          </template>
       </el-table-column> 
-      <el-table-column label="上报时间" width="150px" align="center">
+      <el-table-column label="上报时间" width="110px" align="center">
         <template slot-scope="scope">{{scope.row.time|dateTimeFormat}}</template>
       </el-table-column>
-      <el-table-column label="开/关井时间" width="150px" align="center">
+      <el-table-column label="开/关井时间" width="110px" align="center">
         <template slot-scope="scope">{{scope.row.changed_time|dateTimeFormat}}</template>
       </el-table-column>
       <el-table-column prop="last_time" label="持续时长" width="90px" align="center"></el-table-column>

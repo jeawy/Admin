@@ -88,7 +88,7 @@
            </div>
          </template>
       </el-table-column> 
-      <el-table-column label="上报时间" width="150px" align="center">
+      <el-table-column label="上报时间" width="110px" align="center">
         <template slot-scope="scope">{{scope.row.time|dateTimeFormat}}</template>
       </el-table-column>
       <el-table-column prop="frequency" label="频率(Hz)" width="60px" align="center"></el-table-column>

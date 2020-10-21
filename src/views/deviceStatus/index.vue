@@ -42,7 +42,7 @@
            </div>
          </template>
       </el-table-column>
-      <el-table-column label="DTU状态变更时间" width="160" align="center">
+      <el-table-column label="DTU状态变更时间" width="170" align="center">
         <template slot-scope="scope">{{scope.row.dtu_changed_time|dateTimeFormat}}</template>
       </el-table-column>
       <el-table-column  label="现场设备状态" align="center"  width="130">
