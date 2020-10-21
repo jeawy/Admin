@@ -21,7 +21,7 @@
       :row-style="{fontSize:'16px',color:'#212529;',fontWeight:400}"
     >
       <el-table-column type="index" width="80" label="序号" align="center"></el-table-column>
-      <el-table-column label="井" width="120" prop="well" align="center">
+      <el-table-column label="井" width="150" prop="well" align="center">
         <!-- <template slot-scope="scope">
           <router-link
             style="cursor: pointer;"
@@ -42,7 +42,7 @@
            </div>
          </template>
       </el-table-column>
-      <el-table-column label="DTU状态变更时间" width="200" align="center">
+      <el-table-column label="DTU状态变更时间" width="220" align="center">
         <template slot-scope="scope">{{scope.row.dtu_changed_time|dateTimeFormat}}</template>
       </el-table-column>
       <el-table-column  label="现场设备状态" align="center"  width="130">
@@ -59,7 +59,7 @@
            </div>
          </template>
       </el-table-column>
-      <el-table-column label="现场设备状态变更时间" width="200" align="center">
+      <el-table-column label="现场设备状态变更时间" width="220" align="center">
         <template slot-scope="scope">{{scope.row.dev_changed_time|dateTimeFormat}}</template>
       </el-table-column>
     </el-table>

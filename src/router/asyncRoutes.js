@@ -195,7 +195,8 @@ export default function asyncRoutes(params) {
                         import ('@/views/alarmManagement/waxAlarm'),
                     meta: {
                         title: '结蜡告警',
-                        icon: 'alarmQuery'
+                        icon: 'alarmQuery',
+                        roles: false
                     }
                 },
                 {
@@ -205,7 +206,8 @@ export default function asyncRoutes(params) {
                         import ('@/views/alarmManagement/productAlarm'),
                     meta: {
                         title: '生产告警',
-                        icon: 'alarmQuery'
+                        icon: 'alarmQuery',
+                        roles: false
                     }
                 }, {
                     path: 'deviceAlarm/全部',
@@ -214,7 +216,8 @@ export default function asyncRoutes(params) {
                         import ('@/views/alarmManagement/deviceAlarm'),
                     meta: {
                         title: '设备告警',
-                        icon: 'alarmQuery'
+                        icon: 'alarmQuery',
+                        roles: false
                     }
                 }
             ]
