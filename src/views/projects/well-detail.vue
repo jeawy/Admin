@@ -408,6 +408,11 @@ export default {
                 this.$route.params.id
               );
             });
+            this.$nextTick(() => {
+              this.$refs["lineHistory"].getDisplaceChart(
+                this.$route.params.id,this.wellType
+              );
+            });
           }
         }
       );

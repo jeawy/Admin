@@ -6,6 +6,7 @@
     <LineChart ref="ele-history" chart-id="ele-history" style="height:350px"/>
     <LineChart ref="power-chart" chart-id="power-chart" style="height:350px;margin-top:10px"/>
     <LineChart v-if = "well_type == 0" ref="balance-chart" chart-id="balance-chart" style="height:350px;margin-top:10px"/>
+    <LineChart v-if = "well_type == 0" ref="displace-chart" chart-id="displace-chart" style="height:350px;margin-top:10px"/>
     <el-dialog :visible.sync="dialogShow" title="当天数据" :style="styleObject">
       <!-- <el-row style="font-size:16px;margin-bottom:10px">
         <el-col :span="10">井号：{{this.well_name}}</el-col>
@@ -657,6 +658,71 @@ export default {
         this.$nextTick(()=>{
           this.$refs["balance-chart"].initChart(option3);
         })
+      })
+    },
+    //获取位移曲线图
+    getDisplaceChart(id,wellType){
+      ApiGetElectdata({id:id,p_type:'1',json:''}).then(({data}) =>{
+        console.log(data)
+        let P144data = data.datas;
+        let time = data.time;
+        let y_data = []
+        if(wellType == 0){
+          this.styleObject = {
+            width:'1960px'
+          }
+        }
+        for(let i = 0;i < P144data.length;i++){
+          y_data.push(P144data[i])
+        }
+        console.log(y_data)
+        let  x_list = []
+        var j = 0; 
+        for (let i = 0 ; i < 145; i ++)
+          x_list.push(i)
+        let customOption = {
+          title: {
+            text: "悬点轨迹:"+time,
+            left: "center"
+          },
+          grid: [
+            {
+              left: 50
+            }
+          ],
+          xAxis: {
+            name:"点位数",
+            type: "category",
+            data: x_list,
+          },
+          yAxis: {
+            type: "value",
+            name: "位移",
+            axisLabel: {
+              fontSize: 14
+            }
+          },
+          series: {
+            name: "位移",
+            smooth: true, //光滑
+            type: "line",
+            data: y_data,
+            itemStyle: {
+              normal: {
+                label: {
+                  show: false, //开启显示
+                  position: "top", //在上方显示
+                  textStyle: {
+                    //数值样式
+                    color: "black",
+                    fontSize: 16
+                  }
+                }
+              }
+            }
+          }
+        };
+        this.$refs["displace-chart"].initChart(customOption);
       })
     },
     //点击产量和液面高度图
