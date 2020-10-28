@@ -128,13 +128,41 @@ export default {
           let balance = []
           // 系统效率
           let system_efficiency = []
+          // 功率利用率对应的井名
+          let power_well = []
+          // 频率对应的井号
+          let fre_well = []
+          // 平衡度对应的井号
+          let balance_well = []
+          // 系统效率对应的井号
+          let sys_well = []
           // 循环放进数组
           chartData.msg.forEach(item => {
-            well_name.push(item.well_name)
-            frequency.push(item.frequency)
+            if(item.rated_power == null){
+              power_well.push('')
+            }else{
+              power_well.push(item.well_name)
+            }
+            if(item.frequency == 0){
+              fre_well.push('')
+            }else{
+              fre_well.push(item.well_name)
+            }
+            if(item.balance == 0){
+              balance_well.push('')
+            }else{
+              balance_well.push(item.well_name)
+            }
+            if(item.system_efficiency == 0){
+              sys_well.push('')
+            }else{
+              sys_well.push(item.well_name)
+            }
             rated_power.push(item.rated_power)
+            frequency.push(item.frequency)
             balance.push(item.balance)
             system_efficiency.push(item.system_efficiency)
+            well_name.push(item.well_name)
             this.well_ids.push(item.well_id)
           });
 
@@ -152,14 +180,16 @@ export default {
             tooltip: {
                 trigger: "axis",
                 axisPointer: {
-                    type: "shadow"
+                  type: "shadow"
                 },
                 formatter:function(params){
-                 var tip = "";
-                 let marker = params[0].marker;
-                 tip = params[0].axisValue+'<br />';
-                 tip  = tip + marker+'功率利用率:'+params[0].value+'%';
-                 return tip;
+                  var tip = "";
+                  let marker = params[0].marker;
+                  if(params[0].axisValue){
+                    tip = params[0].axisValue+'<br />';
+                    tip  = tip + marker+'功率利用率:'+params[0].value+'%';
+                    return tip;
+                  }
                 }
             },
             grid: {
@@ -177,7 +207,7 @@ export default {
                 nameTextStyle:{fontSize:16},
                 type: "category",
                 triggerEvent:true,
-                data: well_name,
+                data: power_well,
                 // nameGap :15,
                 axisLabel: {
                     //---坐标轴 标签
@@ -204,8 +234,8 @@ export default {
             {
                 name: "功率利用率",
                 type: "bar",
-                barWidth: 20,
-                barMaxWidth: 50,
+                barWidth: 15,
+                barMaxWidth: 20,
                 barCategoryGap: "30%",
                 barGap: "0%",
                 data: rated_power,
@@ -251,9 +281,17 @@ export default {
             tooltip: {
                 trigger: "axis",
                 axisPointer: {
-                    type: "shadow"
+                  type: "shadow"
                 },
-                
+                formatter:function(params){
+                  var tip = "";
+                  let marker = params[0].marker;
+                  if(params[0].axisValue != 0){
+                    tip = params[0].axisValue+'<br />';
+                    tip  = tip + marker+'频率:'+params[0].value;
+                    return tip;
+                  }
+                }
             },
             grid: {
                 left: "3%",
@@ -272,7 +310,7 @@ export default {
                 nameTextStyle:{fontSize:16},
                 type: "category",
                 triggerEvent:true,
-                data: well_name,
+                data: fre_well,
                 // nameGap :15,
                 axisLabel: {
                     //---坐标轴 标签
@@ -299,8 +337,8 @@ export default {
             {
                 name: "频率",
                 type: "bar",
-                barWidth: 20,
-                barMaxWidth: 50,
+                barWidth: 15,
+                barMaxWidth: 20,
                 barCategoryGap: "30%",
                 barGap: "0%",
                 data: frequency,
@@ -358,9 +396,11 @@ export default {
                 formatter:function(params){
                  var tip = "";
                  let marker = params[0].marker;
-                 tip = params[0].axisValue+'<br />';
-                 tip  = tip + marker+'平衡度:'+params[0].value+'%';
-                 return tip;
+                 if (params[0].axisValue != 0){
+                  tip = params[0].axisValue+'<br />';
+                  tip  = tip + marker+'平衡度:'+params[0].value+'%';
+                  return tip;
+                 }
                 }
             },
             grid: {
@@ -378,7 +418,7 @@ export default {
                 nameTextStyle:{fontSize:16},
                 type: "category",
                 triggerEvent:true,
-                data: well_name,
+                data: balance_well,
                 // nameGap :15,
                 axisLabel: {
                     //---坐标轴 标签
@@ -405,8 +445,8 @@ export default {
             {
                 name: "平衡度",
                 type: "bar",
-                barWidth: 20,
-                barMaxWidth: 50,
+                barWidth: 15,
+                barMaxWidth: 20,
                 barCategoryGap: "30%",
                 barGap: "0%",
                 data: balance,
@@ -457,9 +497,11 @@ export default {
                 formatter:function(params){
                  var tip = "";
                  let marker = params[0].marker;
-                 tip = params[0].axisValue+'<br />';
-                 tip  = tip + marker+'系统效率:'+params[0].value+'%';
-                 return tip;
+                 if (params[0].axisValue != 0){
+                  tip = params[0].axisValue+'<br />';
+                  tip  = tip + marker+'系统效率:'+params[0].value+'%';
+                  return tip;
+                 }
                 }
             },
             grid: {
@@ -477,7 +519,7 @@ export default {
                 nameTextStyle:{fontSize:16},
                 type: "category",
                 triggerEvent:true,
-                data: well_name,
+                data: sys_well,
                 // nameGap :15,
                 axisLabel: {
                     //---坐标轴 标签
@@ -504,8 +546,8 @@ export default {
             {
                 name: "系统效率",
                 type: "bar",
-                barWidth: 20,
-                barMaxWidth: 50,
+                barWidth: 15,
+                barMaxWidth: 20,
                 barCategoryGap: "30%",
                 barGap: "0%",
                 data: system_efficiency,
