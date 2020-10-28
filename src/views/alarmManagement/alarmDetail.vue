@@ -61,8 +61,11 @@
                       <span v-if="alarmInfo.way == 0"> 
                         系统自动创建了告警
                       </span>
-                      <span v-else>
+                      <span v-if="alarmInfo.way == 1">
                         {{alarmInfo.username}}手动创建了告警
+                      </span>
+                      <span v-if="alarmInfo.way == 2">
+                        {{alarmInfo.username}}现场设备上报告警
                       </span>
                     </div>
                     <!-- <div v-if="alarmInfo.modify_date!==alarmInfo.date"> -->
