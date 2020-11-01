@@ -197,42 +197,46 @@ export default {
         {
           value: "2",
           label: "已移除"
+        },
+        {
+          value: "",
+          label: "全部"
         }
       ],
-           pickerOptions: {
-          shortcuts: [{
-            text: '今天',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              picker.$emit('pick', [start, end]);
-            }
-          },{
-            text: '昨天',
-            onClick(picker) {
-              // const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24);
-              picker.$emit('pick', [start, start]);
-            }
-          },{
-            text: '最近7日',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: '最近30日',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
-            }
-          }]
-        },
+      pickerOptions: {
+        shortcuts: [{
+          text: '今天',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            picker.$emit('pick', [start, end]);
+          }
+        },{
+          text: '昨天',
+          onClick(picker) {
+            // const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24);
+            picker.$emit('pick', [start, start]);
+          }
+        },{
+          text: '最近7日',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近30日',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            picker.$emit('pick', [start, end]);
+          }
+        }]
+      },
       total: 0,
       currentPage: 1,
       pageSize: 50,
@@ -297,7 +301,7 @@ export default {
     },
     handleSizeChange(val) {
       this.pageSize = val;
-      this.GetwellList();
+      this.searchWell();
     },
     // 分页
     handleCurrentChange(currentPage) {
@@ -342,7 +346,8 @@ export default {
         well_type: this.wellCategory,
         wellno: this.wellNumber,
         status: this.wellStatus,
-        daterange:this.wellDatePicker[0]+'-'+this.wellDatePicker[1],
+        pagenum: this.pageSize
+        // daterange:this.wellDatePicker[0]+'-'+this.wellDatePicker[1],
       };
       ApiGetWellList(data).then(res => {
         this.wellList = res.data.msg.well_list;
