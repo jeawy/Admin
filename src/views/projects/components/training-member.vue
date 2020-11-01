@@ -139,7 +139,7 @@ export default {
   methods: {
     // 打开个人排名抽屉
     openRanking(row) {
-      console.log(row)
+      // console.log(row)
       this.usernameTitle = row.username;
       this.teamId = row.id;
       this.user_id = row.userid;

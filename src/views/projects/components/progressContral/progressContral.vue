@@ -448,7 +448,7 @@ export default {
     },
     //解决索引旨在当前页排序的问题，增加函数自定义索引序号
     indexMethod(index) {
-      console.log(index)
+      // console.log(index)
       return (this.currentPage2 - 1) * this.pageSize2 + index + 1;
     },
     //任务预判断超前分页

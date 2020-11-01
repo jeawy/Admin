@@ -144,7 +144,7 @@ export default {
       data = { ...data, project: this.$route.params.id };
       //提交jsons数据
 
-      console.log(data);
+      // console.log(data);
       return;
       this.uploadLoading = true;
       HTTP.uploadAssets(data)

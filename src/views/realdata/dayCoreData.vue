@@ -154,7 +154,7 @@ export default {
     GetCoreData() {
       ApiGetCoreData({page:this.currentPage,pagenum:this.pageSize}).then(({ data }) => {
         this.coredata = data.msg;
-        console.log(this.coredata)
+        // console.log(this.coredata)
         this.total = data.total;
       });
     },

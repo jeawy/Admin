@@ -280,7 +280,7 @@ export default {
     changeVolume: function(type) {
       if (this.videoPlayerIsShow) {
         this.videoPlayer.muted(false);
-        console.log(this.playerVolume);
+        // console.log(this.playerVolume);
         if ("add" == type) {
           if (this.playerVolume < 1) {
             this.playerVolume += 0.1;
@@ -304,7 +304,7 @@ export default {
     handleSliderChange(data) {
       if (this.videoPlayerIsShow) {
         let time = (this.playerDuration * data) / 100;
-        console.log(time);
+        // console.log(time);
         this.videoPlayer.currentTime(time);
       } else {
         this.$message.error("处于视频标注模式");

@@ -425,7 +425,7 @@ export default {
   methods: {
     //批量删除
     mulDelMaterial() {
-      console.log(this.multipleSelection);
+      // console.log(this.multipleSelection);
       const ids = this.multipleSelection.map(item => item.id);
       this.$confirm("此操作将永久删除属性, 是否继续?", "提示", {
         confirmButtonText: "确定",

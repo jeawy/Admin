@@ -218,13 +218,11 @@ export default {
   methods: {
     submitForm(resetPassForm) {
       // console.log(this.resetPassForm)
-       console.log(this.multipleSelection)
+      //  console.log(this.multipleSelection)
       this.$refs[resetPassForm].validate(valid => {
         if (valid) {
           const id = this.multipleSelection.map(item => item.id).join(",");
           editUserDetail({ method: "put", userid: id ,password:this.resetPassForm.pass }).then(({ data }) => {
-            console.log("data");
-            console.log(data);
             if (data.status === 0) {
               this.$message.success(data.msg);
               this.dialogShow2 = false;
@@ -281,7 +279,7 @@ export default {
       }).then(() => {
         const ids = this.multipleSelection.map(item => item.id).join(",");
         deleteUser({ ids: ids, method: "delete" }).then(({ data }) => {
-          console.log(data.msg);
+          // console.log(data.msg);
           if (data.status === 0) {
             this.getAllUserlist();
             this.$message.success(data.msg);
