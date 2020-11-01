@@ -159,6 +159,7 @@
             ref="dataOperation"  
             :wellDetail="wellDetail" 
             :auth="auth"
+            :wellid="wellid"
             @getWellDetails="getWellDetails"/>
           </el-row>
         </div>
@@ -235,6 +236,7 @@ export default {
       lowerlimit:"",
       toplimit:"",
       well_type:"",
+      wellid:this.$route.params.id,
     };
   },
   methods: {

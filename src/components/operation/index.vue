@@ -442,7 +442,7 @@ import {
 import { ApiSearchPumping } from "@/api/wellList";
 import dayjs from "dayjs";
 export default {
-  props:["wellDetail","auth"],
+  props:["wellDetail","auth","wellid"],
   data() {
     return {
       explainVisible: false,
@@ -551,7 +551,7 @@ export default {
     },
     //获取指令列表
     getOrderList() {
-      ApiGetOrders({ wellid: this.id }).then(res => {
+      ApiGetOrders({ wellid: this.wellid }).then(res => {
         this.orderList = res.data.msg;
         // console.log(this.orderList)
       });

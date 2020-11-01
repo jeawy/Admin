@@ -128,6 +128,7 @@
         ref="dataOperation"  
         :wellDetail="wellDetail" 
         :auth="auth"
+        :wellid="wellid"
         @getWellDetails="getWellDetails"/>
     </el-row>
   </div>
@@ -182,12 +183,13 @@ export default {
       process:"",
       wellDetail: [],
       auth: "",
+      wellid:this.$route.params.wellid,
     };
   },
   methods: {
     //井的详情信息
     getWellDetails() {
-      getWellDetail({ id: this.$route.params.wellid, json: "" }).then(
+      getWellDetail({ id: this.wellid, json: "" }).then(
         ({ data }) => {
           this.wellDetail = data.well;
           this.auth = data.auth.order;
