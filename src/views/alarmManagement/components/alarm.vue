@@ -353,7 +353,7 @@
         <template slot-scope="scope">
           <router-link
             style="cursor: pointer;color:blue"
-            :to="{name:'alarmDetail',params:{id:scope.row.id},query:{type:scope.row.pro_type}}"
+            :to="{name:'alarmDetail',params:{id:scope.row.id,wellid:scope.row.wellid},query:{type:scope.row.pro_type}}"
           >处置详情</router-link>
         </template>
       </el-table-column>
@@ -753,7 +753,7 @@ export default {
     // 导出Excel
     download() {
       const data = this.$store.state.BASE_URL + this.path;
-      console.log(this.$store.state.BASE_URL)
+      // console.log(this.$store.state.BASE_URL)
       window.location.href = data;
       this.uploadVisible = false;
     },
@@ -762,9 +762,9 @@ export default {
     },
     //修改告警状态
     editAlarm(row) {
-      console.log(row)
+      // console.log(row)
       this.list = JSON.stringify(row);
-      console.log(this.list)
+      // console.log(this.list)
       if (this.disabled == true) {
         if (this.iconShow === true) {
           this.$confirm("当前修改未保存", "注意", {
