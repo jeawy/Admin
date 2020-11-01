@@ -354,7 +354,8 @@ export default {
     //分页
      handleSizeChange(val) {
       this.pageSize = val;
-      this.GetRealdata();
+      this.currentPage = 1;
+      this.searchWell();
     },
     handleCurrentChange(currentPage) {
       this.currentPage = currentPage;
@@ -404,6 +405,7 @@ export default {
       this.cutType=1;
       let data = {
         page: this.currentPage,
+        pagenum:this.pageSize,
         well_type: this.wellCategory,
         number: this.wellNumber,
         status: this.wellStatus,
