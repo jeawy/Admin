@@ -136,6 +136,7 @@ export default {
     //分页
     handleSizeChange(val) {
       this.pageSize = val;
+      this.currentPage = 1;
       this.GetCoreData();
     },
     handleCurrentChange(currentPage) {

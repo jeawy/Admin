@@ -292,7 +292,8 @@ export default {
   methods: {
      handleSizeChange(val) {
       this.pageSize = val;
-      this.GetcomprehensiveData();
+      this.currentPage =1;
+      this.searchWell();
     },
     //分页
     handleCurrentChange(currentPage) {
@@ -317,6 +318,7 @@ export default {
       this.cutType = 1;
       let data = {
         page: this.currentPage,
+        pagenum:this.pageSize,
         well_type: this.wellCategory,
         number: this.wellNumber,
         status: this.wellStatus,
