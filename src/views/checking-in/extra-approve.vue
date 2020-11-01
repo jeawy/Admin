@@ -218,7 +218,7 @@ export default {
       });
     },
     editAfter(index) {
-      console.log(index);
+      // console.log(index);
       this.updateForm.splice(index + 1, 0, {});
       this.updateForm.forEach((item, index) => {
         item.level = index + 1;

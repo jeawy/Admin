@@ -647,7 +647,7 @@ export default {
         .then(({ data }) => {
           this.userGantTable = [];
           let arr = [...data.msg];
-          console.log(arr,'arr')
+          // console.log(arr,'arr')
           arr.map(item => {
             this.userGantTable.push({
               id: item[0],
@@ -683,7 +683,7 @@ export default {
                   this.ganttStatData.push(obj);
                 }
               });
-              console.log(this.ganttStatData,'this.ganttStatData')
+              // console.log(this.ganttStatData,'this.ganttStatData')
             });
           } else {
             this.ganttStatData = [];

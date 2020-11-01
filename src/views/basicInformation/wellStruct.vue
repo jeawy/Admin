@@ -283,7 +283,7 @@ export default {
     },
     //点击油井关联图中的某一项
     clickGraph(params) {
-      console.log(params);
+      // console.log(params);
       if(params.data.category == 5){
         this.wellid = this.idList[params.dataIndex];
         this.$router.push({

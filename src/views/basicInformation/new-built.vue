@@ -867,11 +867,11 @@ export default {
       this.machinetype = data;
     },
     changePumpType(value){
-      console.log(value)
+      // console.log(value)
       if(value != null){
         ApiPumpDetail({id:value}).then(({ data })=>{
           let pumpDetail = data.msg
-          console.log(pumpDetail)
+          // console.log(pumpDetail)
           switch (pumpDetail.turn){
             case 0 :
               this.turn = "0"

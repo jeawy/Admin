@@ -286,7 +286,7 @@ export default {
     getWellData(){
       ApiGetWellData({well_id:this.wellId,time:this.time}).then(({data}) =>{
         this.realdata = data.msg
-        console.log(this.realdata)
+        // console.log(this.realdata)
       })
     },
     //电流曲线图
@@ -663,7 +663,7 @@ export default {
     //获取位移曲线图
     getDisplaceChart(id,wellType){
       ApiGetElectdata({id:id,p_type:'1',json:''}).then(({data}) =>{
-        console.log(data)
+        // console.log(data)
         let P144data = data.datas;
         let time = data.time;
         let y_data = []
@@ -675,7 +675,7 @@ export default {
         for(let i = 0;i < P144data.length;i++){
           y_data.push(P144data[i])
         }
-        console.log(y_data)
+        // console.log(y_data)
         let  x_list = []
         var j = 0; 
         for (let i = 0 ; i < 145; i ++)
