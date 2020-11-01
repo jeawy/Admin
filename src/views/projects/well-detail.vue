@@ -155,8 +155,11 @@
             </el-tabs>
           </el-row>
           <el-row>
-            <dataOperation ref="dataOperation"  :wellDetail="wellDetail" :auth="auth"
-              @getWellDetails="getWellDetails"/>
+            <dataOperation 
+            ref="dataOperation"  
+            :wellDetail="wellDetail" 
+            :auth="auth"
+            @getWellDetails="getWellDetails"/>
           </el-row>
         </div>
       </el-col>
@@ -170,7 +173,7 @@ import lineHistory from "./components/line-History/index";
 import tableHistory from "./components/table-History/index";
 import recordHistory from "./components/record-History/index";
 import relMeasure from "./components/rel-measure/index";
-import dataOperation from "./components/operation/index";
+import dataOperation from "@/components/operation/index";
 import dayjs from "dayjs";
 import { ApiGetElectdata } from "@/api/realdata";
 import {

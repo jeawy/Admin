@@ -123,6 +123,13 @@
         </el-card>
       </el-col>
     </el-row>
+    <el-row :lg="24" class="bottom">
+        <dataOperation 
+        ref="dataOperation"  
+        :wellDetail="wellDetail" 
+        :auth="auth"
+        @getWellDetails="getWellDetails"/>
+    </el-row>
   </div>
 </template>
 
@@ -133,7 +140,14 @@ import {
   ApiDeleteComment,
   ApiGetAuthority 
 } from "@/api/alarmManagement";
+import dataOperation from "@/components/operation/index";
+import {
+  getWellDetail,
+} from "@/api/welldetail";
 export default {
+  components:{
+    dataOperation
+  },
   data() {
     return {
       alarmInfo:[],
@@ -165,14 +179,24 @@ export default {
       commentContent:"",
       authority:false,
       comment:[],
-      process:""
+      process:"",
+      wellDetail: [],
+      auth: "",
     };
   },
   methods: {
+    //井的详情信息
+    getWellDetails() {
+      getWellDetail({ id: this.$route.params.wellid, json: "" }).then(
+        ({ data }) => {
+          this.wellDetail = data.well;
+          this.auth = data.auth.order;
+        }
+      );
+    },
     //告警详情
     GetalarmDetail() {
       ApiAlarmDetail({id: this.$route.params.id}).then(({data}) => {
-        console.log(data)
         this.alarmInfo = data.msg;
         this.process = data.msg.process;
         this.comment = data.msg.comment
@@ -224,6 +248,10 @@ export default {
   created() {
     this.GetalarmDetail();
     this.GetAuthority();
+    if(this.$route.params.wellid){
+      this.getWellDetails();
+    }
+    
   }
 }
 </script>
@@ -234,6 +262,7 @@ export default {
   background-color: #f4f5f5;
   position: relative;
   $border: 1px solid #dcdfe6;
+  height: 100%;
   .home-header {
     .text{
       font-size:15px;
@@ -290,6 +319,10 @@ export default {
         margin-left:8px;
       }
     }
+  }
+  .bottom{
+    background-color: #ffffff;
+    margin-top: 10px;
   }
 }
 </style>

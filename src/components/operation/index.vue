@@ -455,7 +455,7 @@ export default {
       number: "",
       // auth: "",
       well_type:"",
-      id: this.$route.params.id,
+      id: this.$route.params.wellid,
       orderList: [],
       data: "",
       rules: {},
@@ -553,6 +553,7 @@ export default {
     getOrderList() {
       ApiGetOrders({ wellid: this.id }).then(res => {
         this.orderList = res.data.msg;
+        // console.log(this.orderList)
       });
     },
     Order_type: function(row, column) {
