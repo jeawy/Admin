@@ -14,6 +14,7 @@ import {
 } from "@/api/homeData";
 import { ApiGetPower,ApiGetRealdata } from "@/api/realdata";
 import { getHistoryData } from "@/api/welldetail";
+import { ApiGetWellList } from "@/api/wellList";
 import dayjs from "dayjs";
 export default {
   name: "HomePage",
@@ -111,8 +112,21 @@ export default {
       balanceList: [],
       click1: false, //是否点击平衡度和有功搜索按钮
       click2: false, //是否点击平衡度和有功搜索按钮
-      singleWell:false
+      singleWell:false,
+      wellListlen:0,//油井列表的长度
+      currentpage:1,//获取油井列表的分页
+      wellListTotal:0,//返回的所有油井列表总数
     };
+  },
+  watch:{
+    wellListlen(newval){
+      if(newval<this.wellListTotal){
+        this.currentpage++
+        this.getWellList(this.currentpage)
+      }else{
+        this.currentpage = 1
+      }
+    }
   },
   methods: {
     //格式化时间日期
@@ -619,11 +633,16 @@ export default {
       this.getChart();
     },
     //获取所有井
-    getWellList(){
-      ApiGetRealdata({realdata:"",pagenum:100}).then(({data}) =>{
-        let wellName = []
-        this.wellList = data.realdata
-      })
+    getWellList(page){
+      ApiGetWellList({ page: page, pagenum: 10 }).then(({data}) => {
+        if(page ==1){
+          this.wellList =data.msg.well_list;
+          this.wellListTotal = data.msg.total
+        }else{
+          this.wellList = this.wellList.concat(data.msg.well_list);
+        }
+        this.wellListlen = this.wellList.length
+      });
     },
     //获取单口井的产量和液面高度
     getWellDetails(id){
@@ -793,7 +812,7 @@ export default {
     // this.homeData();
     this.getChart();
     this.getAlarm();
-    this.getWellList();
+    this.getWellList(1);//刚进来，调取第一页数据
     this.getTotalChart();
     var date = new Date();
     var list1 = this.getDateRange(date, 7, true);
@@ -894,7 +913,7 @@ export default {
                     <el-option
                       v-for="(item,index) of wellList"
                       :label="item.name"
-                      :value="item.wellid"
+                      :value="item.id"
                       :key="index"
                     ></el-option>
                   </el-select> 
