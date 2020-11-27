@@ -583,6 +583,12 @@ export default {
         case 1:
           return "已执行";
           break;
+        case 2:
+          return "已发送";
+          break;
+        case 3:
+          return "发送失败";
+          break;
       }
     },
     openDialog(Type) {
