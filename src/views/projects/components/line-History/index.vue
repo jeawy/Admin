@@ -7,6 +7,7 @@
     <LineChart ref="power-chart" chart-id="power-chart" style="height:350px;margin-top:10px"/>
     <LineChart v-if = "well_type == 0" ref="balance-chart" chart-id="balance-chart" style="height:350px;margin-top:10px"/>
     <LineChart v-if = "well_type == 0" ref="displace-chart" chart-id="displace-chart" style="height:350px;margin-top:10px"/>
+    <LineChart ref="active-chart" chart-id="active-chart" style="height:350px;margin-top:10px"/>
     <el-dialog :visible.sync="dialogShow" title="当天数据" :style="styleObject">
       <!-- <el-row style="font-size:16px;margin-bottom:10px">
         <el-col :span="10">井号：{{this.well_name}}</el-col>
@@ -47,7 +48,7 @@
 <script>
 import LineChart from "@/components/ECharts/LineMarker";
 import { getHistoryData,viewPowersMonth } from "@/api/welldetail";
-import { ApiGetElectdata,ApiGetPower,ApiGetEleHistory,ApiGetWellData,ApiGetUDEleHis} from "@/api/realdata";
+import { ApiGetElectdata,ApiGetPowerdata,ApiGetPower,ApiGetEleHistory,ApiGetWellData,ApiGetUDEleHis} from "@/api/realdata";
 import dayjs from "dayjs";
 export default {
   name: "lineHistory",
@@ -723,6 +724,85 @@ export default {
           }
         };
         this.$refs["displace-chart"].initChart(customOption);
+      })
+    },
+    //获取最新的位移和有功曲线图
+    getActiveChart(id,wellType){
+      function dateTimeFormat(date) {
+        if (date) {
+          date *= 1000
+          return dayjs(date).format('YYYY/MM/DD HH:mm:ss')
+        } else {
+          return ''
+        }
+      }
+      ApiGetPowerdata({id:id}).then(({data}) =>{
+        let displacement = data.displacement.displacement
+        let active = data.active.displacement
+        let time = dateTimeFormat(data.active.time);
+        let y_data = []
+        this.styleObject = {
+          width:'1960px'
+        }
+        for(let i = 0;i < active.length;i++){
+          y_data.push(active[i])
+        }
+        // console.log(y_data)
+        let  x_list = []
+        let name = ""
+        var j = 0; 
+        if(wellType == 0){
+          for (let i = 0 ; i < displacement.length; i ++)
+            x_list.push(displacement[i])
+            name = "位移"
+        }else{
+          for (let i = 0 ; i < 145; i ++)
+            x_list.push(i)
+            name = "点位数"
+        }
+        let customOption = {
+          title: {
+            text: "有功曲线:"+time,
+            left: "center"
+          },
+          grid: [
+            {
+              left: 50
+            }
+          ],
+          xAxis: {
+            name:name,
+            type: "category",
+            data: x_list,
+          },
+          yAxis: {
+            type: "value",
+            name: "有功",
+            axisLabel: {
+              fontSize: 14
+            }
+          },
+          series: {
+            name: "有功",
+            smooth: true, //光滑
+            type: "line",
+            data: y_data,
+            itemStyle: {
+              normal: {
+                label: {
+                  show: false, //开启显示
+                  position: "top", //在上方显示
+                  textStyle: {
+                    //数值样式
+                    color: "black",
+                    fontSize: 16
+                  }
+                }
+              }
+            }
+          }
+        };
+        this.$refs["active-chart"].initChart(customOption);
       })
     },
     //点击产量和液面高度图

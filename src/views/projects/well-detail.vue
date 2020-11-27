@@ -176,7 +176,7 @@ import recordHistory from "./components/record-History/index";
 import relMeasure from "./components/rel-measure/index";
 import dataOperation from "@/components/operation/index";
 import dayjs from "dayjs";
-import { ApiGetElectdata } from "@/api/realdata";
+import { ApiGetElectdata,ApiGetPowerdata } from "@/api/realdata";
 import {
   getWellDetail,
   viewPowersMonth,
@@ -419,7 +419,12 @@ export default {
               );
             });
           }
-        }
+          this.$nextTick(() => {
+            this.$refs["lineHistory"].getActiveChart(
+              this.$route.params.id,this.wellType
+              );
+            });
+          }
       );
       var date = new Date();
       var list = this.getDateRange(date,90,true)
