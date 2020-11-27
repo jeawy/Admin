@@ -88,6 +88,7 @@
            </div>
          </template>
       </el-table-column> 
+      <el-table-column prop="belongs" label="归属" width="230" align="center"></el-table-column>
       <el-table-column label="上报时间" width="110px" align="center">
         <template slot-scope="scope">{{scope.row.time|dateTimeFormat}}</template>
       </el-table-column>

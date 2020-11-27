@@ -291,7 +291,14 @@
           <div v-if="scope.row.category==2">{{scope.row.category|alarmCategory}}</div>
         </template> -->
       </el-table-column>
-      <el-table-column prop="title" width="240" label="告警标题" align="left"></el-table-column>
+      <el-table-column width="240" label="告警标题" align="left">
+        <template slot-scope="scope">
+          <router-link
+            style="cursor: pointer;"
+            :to="{name:'well-detail',params:{id:scope.row.wellid},query:{type:scope.row.pro_type}}"
+          >{{scope.row.title}}</router-link>
+        </template>
+      </el-table-column>
       <el-table-column width="140" label="产生方式" align="left">
         <template slot-scope="scope">
           <div v-if="scope.row.way==0">
