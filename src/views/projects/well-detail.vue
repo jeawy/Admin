@@ -418,13 +418,16 @@ export default {
                 this.$route.params.id,this.wellType
               );
             });
+            this.$nextTick(() => {
+              this.$refs["lineHistory"].getBalanceChart(this.$route.params.id);
+            });
           }
           this.$nextTick(() => {
             this.$refs["lineHistory"].getActiveChart(
               this.$route.params.id,this.wellType
-              );
-            });
-          }
+            );
+          });
+        }
       );
       var date = new Date();
       var list = this.getDateRange(date,90,true)
@@ -440,9 +443,6 @@ export default {
         this.$refs["lineHistory"].getPowerChart(
           this.$route.params.id
         );
-      });
-      this.$nextTick(() => {
-        this.$refs["lineHistory"].getBalanceChart(this.$route.params.id);
       });
       this.$nextTick(() => {
         this.$refs["tableHistory"].getHistoryData(this.$route.params.id);
