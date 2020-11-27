@@ -15,6 +15,10 @@ export function ApiGetHistorydata(params) {
 export function ApiGetElectdata(params) {
     return AXIOS.get('api/p144/p144/', { params })
 }
+//获取最新的位移和有功曲线
+export function ApiGetPowerdata(params) {
+    return AXIOS.get('/api/p144/newestp144/', { params })
+}
 //获取电流历史数据
 export function ApiGetEleHistory(params) {
     return AXIOS.get('/api/realdata/realdata/?electricity', { params })
