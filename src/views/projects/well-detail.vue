@@ -50,7 +50,7 @@
               <!-- <div>现场视频：</div> -->
               <div>冲程(米)：{{wellDetail.stroke}}</div>
               <div>油压(兆帕)：{{wellDetail.oil_pressure}}</div>
-              <div>偏磨：</div>
+              <!-- <div>偏磨：</div> -->
               <div>电机功率(Kw)：{{wellDetail.power?wellDetail.power:"-"}}</div>
               <div v-if="wellDetail.well_type == 0">大平衡块数量：{{wellDetail.num_big_balance?wellDetail.num_big_balance:"-"}}</div>
               <div>泵径(mm)：{{wellDetail.pump_diameter?wellDetail.pump_diameter:"-"}}</div>
@@ -81,7 +81,7 @@
               <div>电流(安培)：{{wellDetail.electric_current}}</div>
               <div v-if="wellDetail.well_type == 0">冲次(次/分) ：{{wellDetail.rush_times}}</div>
               <div v-else>转速：{{wellDetail.rush_times}}</div>
-              <div>结蜡：</div>
+              <!-- <div>结蜡：</div> -->
               <div>套压(兆帕)：{{wellDetail.nesting_pressure}}</div>
               <div>沉没度：{{wellDetail.sunken}}</div>
               <div>电机类型：{{wellDetail.motor_type?wellDetail.motor_type:"异步"}}</div>
