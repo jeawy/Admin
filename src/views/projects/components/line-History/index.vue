@@ -283,6 +283,88 @@ export default {
         });
       })
     },
+    //获取有功曲线图
+    getPowerChart(id,date){
+      ApiGetPower({
+        well_id:id,
+        daterange:date
+      }).then(({data}) =>{
+        let active = [];
+        let dates_list = [];
+        data.msg.forEach(item => {
+          dates_list.push(this.dataFormat(item.time));
+          active.push(item.active);
+        });
+        dates_list.reverse();
+        active.reverse()
+        let power = {
+          title: {
+            text: "有功曲线",
+            left: "center"
+          },
+          tooltip: {
+            trigger: "axis"
+          },
+          grid: [
+            {
+              left: 50
+            }
+          ],
+          dataZoom: [
+            {
+              show: true,
+              realtime: true,
+              start: 30,
+              end: 70,
+              xAxisIndex: 0
+            },
+            {
+              type: "inside",
+              realtime: true,
+              start: 30,
+              end: 70,
+              xAxisIndex: 0
+            }
+          ],
+          xAxis: {
+            type: "category",
+            name: "时间",
+            data: dates_list
+          },
+          yAxis: {
+            type: "value",
+            name: "千瓦",
+            axisLabel: {
+              fontSize: 14
+            }
+          },
+          series: [
+            {
+              name: "功率",
+              smooth: true, //光滑
+              data: active,
+              type: "line",
+              itemStyle: {
+                normal: {
+                  label: {
+                    show: false, //开启显示
+                    position: "top", //在上方显示
+                    textStyle: {
+                      //数值样式
+                      color: "black",
+                      fontSize: 16
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+        this.$nextTick(()=>{
+          this.$refs["power-chart"].initChart(power);
+        });
+      })
+    },
     //获取井的实时数据
     getWellData(){
       ApiGetWellData({well_id:this.wellId,time:this.time}).then(({data}) =>{
@@ -496,88 +578,6 @@ export default {
         }
         this.$nextTick(()=>{
           this.$refs["udEle-chart"].initChart(udEle);
-        });
-      })
-    },
-    //获取有功曲线图
-    getPowerChart(id,date){
-      ApiGetPower({
-        well_id:id,
-        daterange:date
-      }).then(({data}) =>{
-        let active = [];
-        let dates_list = [];
-        data.msg.forEach(item => {
-          dates_list.push(this.dataFormat(item.time));
-          active.push(item.active);
-        });
-        dates_list.reverse();
-        active.reverse()
-        let power = {
-          title: {
-            text: "有功曲线",
-            left: "center"
-          },
-          tooltip: {
-            trigger: "axis"
-          },
-          grid: [
-            {
-              left: 50
-            }
-          ],
-          dataZoom: [
-            {
-              show: true,
-              realtime: true,
-              start: 30,
-              end: 70,
-              xAxisIndex: 0
-            },
-            {
-              type: "inside",
-              realtime: true,
-              start: 30,
-              end: 70,
-              xAxisIndex: 0
-            }
-          ],
-          xAxis: {
-            type: "category",
-            name: "时间",
-            data: dates_list
-          },
-          yAxis: {
-            type: "value",
-            name: "千瓦",
-            axisLabel: {
-              fontSize: 14
-            }
-          },
-          series: [
-            {
-              name: "功率",
-              smooth: true, //光滑
-              data: active,
-              type: "line",
-              itemStyle: {
-                normal: {
-                  label: {
-                    show: false, //开启显示
-                    position: "top", //在上方显示
-                    textStyle: {
-                      //数值样式
-                      color: "black",
-                      fontSize: 16
-                    }
-                  }
-                }
-              }
-            }
-          ]
-        }
-        this.$nextTick(()=>{
-          this.$refs["power-chart"].initChart(power);
         });
       })
     },
