@@ -108,6 +108,10 @@
           </div>
         </template>
       </el-table-column>
+      <el-table-column prop="active" label="有功(千瓦)" width="70px" align="center"></el-table-column>
+      <el-table-column prop="electric_current" label="电流(安培)" width="70px" align="center"></el-table-column>
+      <el-table-column prop="rush_times" label="冲次(次/分)/转速(转/分)" width="120px" align="center"></el-table-column>
+      <el-table-column prop="stroke" label="冲程(米)" align="center" width="70px"></el-table-column>
       <el-table-column prop="adjustment1" label="建议调整量1(米)" width="90px" align="center">
         <template slot-scope="scope">
           <div v-if="scope.row.welltype=='抽油机'">
@@ -158,10 +162,6 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="active" label="有功(千瓦)" width="70px" align="center"></el-table-column>
-      <el-table-column prop="electric_current" label="电流(安培)" width="70px" align="center"></el-table-column>
-      <el-table-column prop="rush_times" label="冲次(次/分)/转速(转/分)" width="120px" align="center"></el-table-column>
-      <el-table-column prop="stroke" label="冲程(米)" align="center" width="70px"></el-table-column>
       <el-table-column prop="oil_pressure" label="油压(兆帕)" width="70px" align="center"></el-table-column>
       <el-table-column prop="nesting_pressure" label="套压(兆帕)" width="70px" align="center"></el-table-column>
       
