@@ -31,8 +31,8 @@
                    <div v-if="wellDetail.well_type == 1"  style="margin-top:10px;">井类别：螺杆泵</div>
                    <div v-if="wellDetail.status == 0">开机时间:{{wellDetail.changed_date|dateTimeFormat}}</div>
                    <div v-if="wellDetail.status == 1">关机时间:{{wellDetail.changed_date|dateTimeFormat}}</div>
-                  <div>最大/小载荷:</div>
-                  <div>配产：</div>
+                  <!-- <div>最大/小载荷:</div> -->
+                  <!-- <div>配产：</div> -->
                    
                 </el-row>
               </div>
@@ -47,7 +47,7 @@
               <div>日耗电(千瓦时)：{{wellDetail.power_consumption}}</div>
               <div v-if="wellDetail.well_type == 0">平衡度(米)：{{wellDetail.balance}}</div>
               <div>有功(千瓦)：{{wellDetail.active}}</div>
-              <div>现场视频：</div>
+              <!-- <div>现场视频：</div> -->
               <div>冲程(米)：{{wellDetail.stroke}}</div>
               <div>油压(兆帕)：{{wellDetail.oil_pressure}}</div>
               <div>偏磨：</div>
@@ -55,19 +55,18 @@
               <div v-if="wellDetail.well_type == 0">大平衡块数量：{{wellDetail.num_big_balance?wellDetail.num_big_balance:"-"}}</div>
               <div>泵径(mm)：{{wellDetail.pump_diameter?wellDetail.pump_diameter:"-"}}</div>
               <div>泵挂(m)：{{wellDetail.pump_hanging?wellDetail.pump_hanging:"-"}}</div>
-              <div>工频运行：{{wellDetail.power_frequency_operation?wellDetail.power_frequency_operation:"-"}}</div>
-              <div>停机状态：{{wellDetail.stop_status?wellDetail.stop_status:"-"}}</div>
-              <div>告警情况：{{wellDetail.warning?wellDetail.warning:"-"}}</div>
+              <!-- <div>工频运行：{{wellDetail.power_frequency_operation?wellDetail.power_frequency_operation:"-"}}</div> -->
+              <!-- <div>停机状态：{{wellDetail.stop_status?wellDetail.stop_status:"-"}}</div> -->
+              <!-- <div>告警情况：{{wellDetail.warning?wellDetail.warning:"-"}}</div> -->
               <div v-if="wellDetail.well_type == 0">
               <div>平衡块尺寸1(m)：{{wellDetail.size_1_small_balance?wellDetail.size_1_small_balance:"-"}}</div>
               <div>平衡块尺寸3(m)：{{wellDetail.size_1_big_balance?wellDetail.size_1_big_balance:"-"}}</div>
               <div>平衡块重量1(Kn)：{{wellDetail.weight_1_small_balance?wellDetail.weight_1_small_balances:"-"}}</div>
               <div>平衡块重量3(Kn)：{{wellDetail.weight_1_big_balance?wellDetail.weight_1_big_balance:"-"}}</div>
               </div>
-              <div>诊断情况：{{wellDetail.diagnosis?wellDetail.diagnosis:"-"}}</div>
+              <!-- <div>诊断情况：{{wellDetail.diagnosis?wellDetail.diagnosis:"-"}}</div> -->
               <div>曲柄尺寸1(m)：{{wellDetail.size_1_crank?wellDetail.size_1_crank:"-"}}</div>
               <div>曲柄重量2(Kn)：{{wellDetail.weight_2_crank?wellDetail.weight_2_crank:"-"}}</div>
-              <div>有功2(Kw)：{{wellDetail.active2?wellDetail.active2:"-"}}</div>
               <div>数据更新时间：{{wellDetail.time|dateTimeFormat}}</div>
             </el-col>
             <el-col :span="11">
@@ -77,7 +76,7 @@
               <div v-if="wellDetail.well_type == 0">建议调整量3(米)：{{wellDetail.adjustment3}}</div>
               <div v-if="wellDetail.well_type == 0">建议调整量4(米)：{{wellDetail.adjustment4}}</div>
               <div v-if="wellDetail.well_type == 0">建议调整量5(米)：{{wellDetail.adjustment5}}</div>
-              <div>流压：</div>
+              <!-- <div>流压：</div> -->
               <div>泵效：</div>
               <div>电流(安培)：{{wellDetail.electric_current}}</div>
               <div v-if="wellDetail.well_type == 0">冲次(次/分) ：{{wellDetail.rush_times}}</div>
@@ -89,7 +88,7 @@
               <div v-if="wellDetail.well_type == 0">小平衡块数量：{{wellDetail.num_small_balance?wellDetail.num_small_balance:"-"}}</div>
               <div>油管外径(mm)：{{wellDetail.tubing_outer_diameter?wellDetail.tubing_outer_diameter:"-"}}</div>
               <div>含水：{{wellDetail.watery?wellDetail.watery:"-"}}</div>
-              <div>变频运行：{{wellDetail.frequency_conversion_operation?wellDetail.frequency_conversion_operation:"-"}}</div>
+              <!-- <div>变频运行：{{wellDetail.frequency_conversion_operation?wellDetail.frequency_conversion_operation:"-"}}</div> -->
               <div v-if="wellDetail.well_type == 0">
               <div>平衡块尺寸2(m)：{{wellDetail.size_2_small_balance?wellDetail.size_2_small_balance:"-"}}</div>
               <div>平衡块尺寸4(m): {{wellDetail.size_2_big_balance?wellDetail.size_2_big_balance:"-"}}</div>
@@ -101,6 +100,7 @@
               <div>油套温度(度)：{{wellDetail.oil_jacket_temperature?wellDetail.oil_jacket_temperature:"-"}}</div>
               <div>油藏中深： -</div>
               <div v-if="wellDetail.well_type == 0">偏置角：{{wellDetail.offset_angle?wellDetail.offset_angle:"-"}}</div>
+              <div>有功2(Kw)：{{wellDetail.active2?wellDetail.active2:"-"}}</div>
             </el-col>
           </el-row>
         </div>
