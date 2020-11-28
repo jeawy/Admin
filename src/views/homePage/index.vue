@@ -14,7 +14,7 @@ import {
 } from "@/api/homeData";
 import { ApiGetPower,ApiGetRealdata } from "@/api/realdata";
 import { getHistoryData } from "@/api/welldetail";
-import { ApiGetWellList } from "@/api/wellList";
+import { ApiGetSimpleWellList } from "@/api/wellList";
 import dayjs from "dayjs";
 export default {
   name: "HomePage",
@@ -115,18 +115,7 @@ export default {
       singleWell:false,
       wellListlen:0,//油井列表的长度
       currentpage:1,//获取油井列表的分页
-      wellListTotal:0,//返回的所有油井列表总数
     };
-  },
-  watch:{
-    wellListlen(newval){
-      if(newval<this.wellListTotal){
-        this.currentpage++
-        this.getWellList(this.currentpage)
-      }else{
-        this.currentpage = 1
-      }
-    }
   },
   methods: {
     //格式化时间日期
@@ -632,16 +621,10 @@ export default {
       this.click2 = true;
       this.getChart();
     },
-    //获取所有井
-    getWellList(page){
-      ApiGetWellList({ page: page, pagenum: 10 }).then(({data}) => {
-        if(page ==1){
+    //获取所有井名和id
+    getWellList(){
+      ApiGetSimpleWellList().then(({data}) => {
           this.wellList =data.msg.well_list;
-          this.wellListTotal = data.msg.total
-        }else{
-          this.wellList = this.wellList.concat(data.msg.well_list);
-        }
-        this.wellListlen = this.wellList.length
       });
     },
     //获取单口井的产量和液面高度
@@ -812,7 +795,7 @@ export default {
     // this.homeData();
     this.getChart();
     this.getAlarm();
-    this.getWellList(1);//刚进来，调取第一页数据
+    this.getWellList();//刚进来，调取获取油井列表数据
     this.getTotalChart();
     var date = new Date();
     var list1 = this.getDateRange(date, 7, true);
