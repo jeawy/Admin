@@ -3,6 +3,10 @@ import AXIOS from '@/utils/request'
 export function ApiGetHomedata(params) {
     return AXIOS.get('api/', { params })
 }
+//获取首页开关井信息（只有开井和关井数量）
+export function ApiGetWellCount(params) {
+    return AXIOS.get('/api/well/well/?status_count', { params })
+}
 //获取首页产量和液面高度
 export function ApiGetTotalData(params) {
     return AXIOS.get('/api/stats/totaloutput/', { params })

@@ -6,7 +6,7 @@ import BarChart from "@/components/ECharts/BarMarker";
 import BaiduMap from "@/components/ECharts/BaiduMap";
 import GraphChart from "@/components/ECharts/GraphChart";
 import {
-  ApiGetHomedata,
+  ApiGetWellCount,
   ApiGetTotalData,
   ApiGetBalance,
   ApiGetAlarm,
@@ -129,12 +129,13 @@ export default {
     },
     // 获取首页开关井信息
     homeData() {
-      ApiGetHomedata().then(res => {
-        let chartData = res.data;
-        this.openCount = chartData.open_count;
-        this.stopCount = chartData.stop_count;
-        this.openPercentage = chartData.open_percentage;
-        this.total = chartData.total;
+      ApiGetWellCount().then(res => {
+        let chartData = res.data.msg;
+        this.openCount = chartData.open;
+        this.stopCount = chartData.closed;
+        
+        this.total = chartData.open + chartData.closed;
+        this.openPercentage = Math.round((chartData.open/this.total)*100);
         // chartData.results.forEach(item => {
         //   wellName.push(item.well.name);
         //   output.push(item.output);
@@ -145,11 +146,11 @@ export default {
         let chart1 = [
           {
             name: "开井",
-            value: res.data.open_count
+            value: chartData.open
           },
           {
             name: "关井",
-            value: res.data.stop_count
+            value: chartData.closed
           }
         ];
         let colorList = ["#28a745", "#c23531"];
