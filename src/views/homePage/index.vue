@@ -127,37 +127,37 @@ export default {
         return "";
       }
     },
-    //获取首页开关井信息
-    // homeData() {
-    //   ApiGetHomedata().then(res => {
-    //     let chartData = res.data;
-    //     this.openCount = chartData.open_count;
-    //     this.stopCount = chartData.stop_count;
-    //     this.openPercentage = chartData.open_percentage;
-    //     this.total = chartData.total;
-    //     // chartData.results.forEach(item => {
-    //     //   wellName.push(item.well.name);
-    //     //   output.push(item.output);
-    //     //   level.push(item.level);
-    //     //   this.wellId.push(item.well.id);
-    //     // });
-    //     //开关井状态
-    //     let chart1 = [
-    //       {
-    //         name: "开井",
-    //         value: res.data.open_count
-    //       },
-    //       {
-    //         name: "关井",
-    //         value: res.data.stop_count
-    //       }
-    //     ];
-    //     let colorList = ["#28a745", "#c23531"];
-    //     this.$nextTick(() => {
-    //       this.$refs["well-status"].initChart("", chart1, colorList);
-    //     });
-    //   });
-    // },
+    // 获取首页开关井信息
+    homeData() {
+      ApiGetHomedata().then(res => {
+        let chartData = res.data;
+        this.openCount = chartData.open_count;
+        this.stopCount = chartData.stop_count;
+        this.openPercentage = chartData.open_percentage;
+        this.total = chartData.total;
+        // chartData.results.forEach(item => {
+        //   wellName.push(item.well.name);
+        //   output.push(item.output);
+        //   level.push(item.level);
+        //   this.wellId.push(item.well.id);
+        // });
+        //开关井状态
+        let chart1 = [
+          {
+            name: "开井",
+            value: res.data.open_count
+          },
+          {
+            name: "关井",
+            value: res.data.stop_count
+          }
+        ];
+        let colorList = ["#28a745", "#c23531"];
+        this.$nextTick(() => {
+          this.$refs["well-status"].initChart("", chart1, colorList);
+        });
+      });
+    },
     //获取首页产量和液面高度曲线图
     getTotalChart() {
       let data = {};
@@ -792,7 +792,7 @@ export default {
     }
   },
   created() {
-    // this.homeData();
+    this.homeData();
     this.getChart();
     this.getAlarm();
     this.getWellList();//刚进来，调取获取油井列表数据
