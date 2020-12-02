@@ -16,7 +16,7 @@
       <el-table-column prop="level" label="动液面(米)" width="100px" align="center"></el-table-column>
       <el-table-column prop="output" label="产量(吨)" align="center"></el-table-column>
       <el-table-column prop="power_consumption" label="日耗电(千瓦时)" width="150px" align="center"></el-table-column>
-      <el-table-column label="平衡度(米)" width="100px" align="center">
+      <el-table-column label="平衡度" width="100px" align="center">
         <template slot-scope="scope">
           <div v-if="scope.row.welltype=='抽油机'">
             <span>{{scope.row.balance}}</span>

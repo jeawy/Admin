@@ -26,7 +26,7 @@
         </el-table-column>
         <el-table-column prop="level" label="动液面(米)" width="130px" align="center"></el-table-column>
         <el-table-column prop="output" label="产量(吨)" width="130px" align="center"></el-table-column>
-        <el-table-column prop="balance" label="平衡度(米)" width="130px" align="center">
+        <el-table-column prop="balance" label="平衡度" width="130px" align="center">
           <template slot-scope="scope">
             <div v-if="well_type==0">
               <span>{{scope.row.balance}}</span>

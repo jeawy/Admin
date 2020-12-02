@@ -98,7 +98,7 @@
       <el-table-column prop="power_consumption" label="日耗电(千瓦时)" width="80px" align="center"></el-table-column>
       <el-table-column prop="sunken" label="沉没度(米)" width="80px" align="center"></el-table-column>
       <el-table-column prop="frequency" label="频率(Hz)" width="60px" align="center"></el-table-column>
-      <el-table-column prop="balance" label="平衡度(米)" width="80px" align="center">
+      <el-table-column prop="balance" label="平衡度" width="80px" align="center">
         <template slot-scope="scope">
           <div v-if="scope.row.welltype=='抽油机'">
             <span>{{scope.row.balance}}</span>

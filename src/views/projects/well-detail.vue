@@ -45,7 +45,7 @@
               <div>油温：</div>
               <div>电压：</div>
               <div>日耗电(千瓦时)：{{wellDetail.power_consumption}}</div>
-              <div v-if="wellDetail.well_type == 0">平衡度(米)：{{wellDetail.balance}}</div>
+              <div v-if="wellDetail.well_type == 0">平衡度：{{wellDetail.balance}}</div>
               <div>有功(千瓦)：{{wellDetail.active}}</div>
               <!-- <div>现场视频：</div> -->
               <div>冲程(米)：{{wellDetail.stroke}}</div>
