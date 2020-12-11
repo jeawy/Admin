@@ -386,6 +386,14 @@ export default {
         this.$route.params.id,
         dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
       );
+      this.$refs["recordHistory"].getWork(
+        this.$route.params.id,
+        dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
+      );
+      this.$refs["recordHistory"].getEleWork(
+        this.$route.params.id,
+        dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
+      );
     },
     //井的详情信息
     getWellDetails() {
@@ -405,7 +413,7 @@ export default {
             this.$refs["dataOperation"].auth = this.auth;
           });
           this.$nextTick(() => {
-            this.$refs["lineHistory"].getEleChart(this.$route.params.id,this.wellType);
+            this.$refs["lineHistory"].getSingleEleChart(this.$route.params.id,this.wellType);
           });
           if(this.wellType == 0){
             this.$nextTick(() => {
@@ -425,6 +433,16 @@ export default {
           this.$nextTick(() => {
             this.$refs["lineHistory"].getActiveChart(
               this.$route.params.id,this.wellType
+            );
+          });
+          this.$nextTick(() => {
+            this.$refs["lineHistory"].getWork(
+              this.$route.params.id
+            );
+          });
+          this.$nextTick(() => {
+            this.$refs["lineHistory"].getEleWork(
+              this.$route.params.id
             );
           });
         }
