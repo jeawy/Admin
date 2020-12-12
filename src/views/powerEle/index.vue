@@ -23,7 +23,7 @@
               ></el-option>
             </el-select>
           </el-col>
-          <el-col :lg="5" class="row-bg">
+          <el-col :lg="6" class="row-bg">
             时间范围：
             <el-date-picker
               style="width:200px"
