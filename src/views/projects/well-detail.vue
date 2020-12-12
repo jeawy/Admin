@@ -386,14 +386,14 @@ export default {
         this.$route.params.id,
         dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
       );
-      this.$refs["recordHistory"].getWork(
-        this.$route.params.id,
-        dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
-      );
-      this.$refs["recordHistory"].getEleWork(
-        this.$route.params.id,
-        dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
-      );
+      // this.$refs["recordHistory"].getWork(
+      //   this.$route.params.id,
+      //   dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
+      // );
+      // this.$refs["recordHistory"].getEleWork(
+      //   this.$route.params.id,
+      //   dataFormat(this.time[0]) + "-" + dataFormat(this.time[1])
+      // );
     },
     //井的详情信息
     getWellDetails() {
@@ -435,16 +435,16 @@ export default {
               this.$route.params.id,this.wellType
             );
           });
-          this.$nextTick(() => {
-            this.$refs["lineHistory"].getWork(
-              this.$route.params.id
-            );
-          });
-          this.$nextTick(() => {
-            this.$refs["lineHistory"].getEleWork(
-              this.$route.params.id
-            );
-          });
+          // this.$nextTick(() => {
+          //   this.$refs["lineHistory"].getWork(
+          //     this.$route.params.id
+          //   );
+          // });
+          // this.$nextTick(() => {
+          //   this.$refs["lineHistory"].getEleWork(
+          //     this.$route.params.id
+          //   );
+          // });
         }
       );
       var date = new Date();
