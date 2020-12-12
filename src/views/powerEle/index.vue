@@ -161,7 +161,7 @@
         <span style="font-weight:bold">
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           选中下方表格第一列中的任意复选框，然后点击"堆叠对比"按钮,
-          则在"有功堆叠对比"曲线图中会展示表中选中的有功数据的对比图。
+          则在"有功堆叠对比"曲线图中会堆叠展示表中选中的有功数据。
         </span>
       </div>
     </el-dialog>
