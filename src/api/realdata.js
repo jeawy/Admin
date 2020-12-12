@@ -43,3 +43,7 @@ export function ApiGetCoreData(params) {
 export function ApiExportCoreData(params) {
     return AXIOS.get('/api/realdata/realdata/?alldays&print', { params })
 }
+//获取有功历史数据
+export function ApiPowerData(params) {
+    return AXIOS.get('/api/p144/p144history/', { params })
+}

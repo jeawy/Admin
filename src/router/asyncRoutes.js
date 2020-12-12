@@ -58,6 +58,26 @@ export default function asyncRoutes(params) {
             }]
         },
         {
+            path: '/',
+            component: Layout,
+            redirect: 'noRedirect',
+            meta: {
+                breadcrumb: false,
+                title: '',
+                icon: 'comprehensiveQuery'
+            },
+            children: [{
+                path: 'powerEle',
+                name: 'powerEle',
+                component: () =>
+                    import ('@/views/powerEle'),
+                meta: {
+                    title: '有功与电流',
+                    icon: 'chakan'
+                }
+            }]
+        },
+        {
             path: '/comprehensiveQuery',
             component: Layout,
             redirect: 'noRedirect',
