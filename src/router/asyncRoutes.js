@@ -55,18 +55,7 @@ export default function asyncRoutes(params) {
                     title: '日核心数据',
                     icon: 'rishuju'
                 }
-            }]
-        },
-        {
-            path: '/',
-            component: Layout,
-            redirect: 'noRedirect',
-            meta: {
-                breadcrumb: false,
-                title: '',
-                icon: 'comprehensiveQuery'
-            },
-            children: [{
+            },{
                 path: 'powerEle',
                 name: 'powerEle',
                 component: () =>

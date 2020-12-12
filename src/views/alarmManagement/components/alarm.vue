@@ -283,7 +283,14 @@
       :row-style="{fontSize:'16px',color:'#212529;',fontWeight:400,}"
     >
       <el-table-column type="index" width="95" label="序号" align="left"></el-table-column>
-      <el-table-column prop="well" width="140" label="井" align="left" ></el-table-column>
+      <el-table-column width="140" label="井" align="left" >
+        <template slot-scope="scope">
+          <router-link
+            style="cursor: pointer;"
+            :to="{name:'powerEle',params:{id:scope.row.wellid},query:{type:scope.row.pro_type}}"
+          >{{scope.row.well}}</router-link>
+        </template>
+      </el-table-column>
       <el-table-column width="140" label="告警类型" align="left" prop="category">
         <!-- <template slot-scope="scope">
           <div v-if="scope.row.category==0">{{scope.row.category|alarmCategory}}</div>

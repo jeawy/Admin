@@ -1,7 +1,7 @@
 <template>
   <div id="powerele">
     <div class="data-title">
-      <div class="title-text">历史数据曲线</div>
+      <!-- <div class="title-text">历史数据曲线</div> -->
     </div>
     <div class="data-header">
       <el-card shadow="never">
@@ -62,7 +62,10 @@
               <el-button icon="el-icon-arrow-left" @click="leftWorkLine" :disabled="leftWorkDis"></el-button>
               <el-button icon="el-icon-arrow-right" @click="rightWorkLine" :disabled="rightWorkDis"></el-button>
               <span class="dailylength" style="margin-left:20px;">历史数据个数:{{worklength}}</span>
-              <span class="dailylength" style="margin-left:20px" v-show="currentDiasbled">当前展示第{{this.start_index+1}}、{{this.start_index+2}}、{{this.start_index+3}}组数据</span>
+              <span class="dailylength" style="margin-left:20px" v-show="currentDiasbled">
+                当前展示第{{this.start_index+1}}({{time[this.start_index]}})、
+                {{this.start_index+2}}({{time[this.start_index+1]}})、
+                {{this.start_index+3}}({{time[this.start_index+2]}})组数据</span>
             </div>
           </div>
         </el-card>
@@ -70,44 +73,48 @@
     </div>
     <div class="data-table">
         <el-card shadow="never" body-style="padding:0px;">
-            <div>
-                <el-button class="compare" type="primary" @click="powercompare()">堆叠对比</el-button>
-            </div>
-            <el-table
-              ref="multipleTable"
-              stripe
-              :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" 
-              :border="true"
-              class="power-table"
-              tooltip-effect="dark"
-              style="width: 98%"
-              :max-height="340"
-              :header-cell-style="{color:'#212529',fontSize:'16px',fontWeight:400,'text-align':'center'}"
-              :row-style="{fontSize:'16px',color:'#212529;',fontWeight:400,'text-align':'center'}"
-              @selection-change="handleSelectionChange"
-            >
-            <el-table-column type="selection" width="60" align="center"></el-table-column>
-            <el-table-column type="index" width="60" label="序号" align="center"></el-table-column>
-            <el-table-column label="时间" align="center">
-                <template slot-scope="scope">{{ scope.row.time }}</template>
-            </el-table-column>
-            <el-table-column prop="name" label="有功">
-              <template slot-scope="scope">
-                {{scope.row.p144_data == null?'':scope.row.p144_data.join(' ')}}<br>
-              </template>
-            </el-table-column>
-            </el-table>
-            <div style="margin:15px">
-             <el-pagination
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page.sync="currentPage"
-                :page-sizes="[10, 20, 30, 50]"
-                :page-size="pagesize"
-                layout="total, sizes, prev, pager, next"
-                :total="powertabletotal">
-              </el-pagination>
-            </div>
+          <div style="display:flex">
+            <el-button class="compare" type="primary" @click="powercompare()">堆叠对比</el-button>
+            <span @click="openExplain()" style="margin:20px">
+              提示:
+              <svg-icon icon-class="wenhao" />
+            </span>
+          </div>
+          <el-table
+            ref="multipleTable"
+            stripe
+            :data="tableData.slice((currentPage-1)*pagesize,currentPage*pagesize)" 
+            :border="true"
+            class="power-table"
+            tooltip-effect="dark"
+            style="width: 98%"
+            :max-height="340"
+            :header-cell-style="{color:'#212529',fontSize:'16px',fontWeight:400,'text-align':'center'}"
+            :row-style="{fontSize:'16px',color:'#212529;',fontWeight:400,'text-align':'center'}"
+            @selection-change="handleSelectionChange"
+          >
+          <el-table-column type="selection" width="60" align="center" ></el-table-column>
+          <el-table-column type="index" width="60" label="序号" align="center"></el-table-column>
+          <el-table-column label="时间" width="180" align="center">
+              <template slot-scope="scope">{{ scope.row.time }}</template>
+          </el-table-column>
+          <el-table-column prop="name" label="有功">
+            <template slot-scope="scope">
+              {{scope.row.p144_data == null?'':scope.row.p144_data.join(' ')}}<br>
+            </template>
+          </el-table-column>
+          </el-table>
+          <div style="margin:15px">
+            <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page.sync="currentPage"
+              :page-sizes="[10, 20, 30, 50]"
+              :page-size="pagesize"
+              layout="total, sizes, prev, pager, next"
+              :total="powertabletotal">
+            </el-pagination>
+          </div>
         </el-card>
     </div>
     <div class="data-chart">
@@ -149,6 +156,15 @@
         </el-card>
       </el-row>
     </div>
+    <el-dialog title="堆叠对比操作说明" :visible.sync="explainVisible" width="365px">
+      <div style="font-size:14px">
+        <span style="font-weight:bold">
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          选中下方表格第一列中的任意复选框，然后点击"堆叠对比"按钮,
+          则在"有功堆叠对比"曲线图中会展示表中选中的有功数据的对比图。
+        </span>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -252,7 +268,8 @@ export default {
         // 当前页
         currentPage: 1,
         // 每页的数据总量
-        pagesize:10
+        pagesize:10,
+        explainVisible:false
     };
   },
   mounted() {},
@@ -302,16 +319,20 @@ export default {
     },
     // 获取井号
     GetwellList() {
-      ApiGetWellList().then(({data}) => {
+      ApiGetWellList({page:1,pagenum:10000}).then(({data}) => {
         this.wellList = data.msg.well_list;
         this.wellid = data.msg.well_list.map(item => {
           return item.id;
         });
-        this.wellname = this.wellid[0];
+        if(this.$route.params.id){
+          this.wellname = parseInt(this.$route.params.id);
+        }else{
+          this.wellname = this.wellid[0];
+        }
         this.getPower(this.wellname,this.date);
         this.getOutputChart(this.wellname,this.date);
         this.getEleHistory(this.wellname,this.date);
-        this.powercompare()
+        this.powercompare();
       });
     },
     // 查看井详情
@@ -565,6 +586,10 @@ export default {
         this.rightWorkDis = true;
         this.leftWorkDis = false;
       }
+    },
+    // 打开提示
+    openExplain() {
+      this.explainVisible = true;
     },
     // 堆叠对比
     powercompare(){
@@ -901,8 +926,8 @@ export default {
 
   created() {
     var date = new Date();
+    console.log(this.$route.query.wellid)
     var list = this.getDateRange(date,7,true)
-    console.log(this.datePicker)
     this.datePicker[0] = this.timeFormat(list[0])
     this.datePicker[1] = this.timeFormat(list[1])
     this.date = this.datePicker[0] + "-" + this.datePicker[1]
@@ -927,6 +952,9 @@ export default {
       font-size: 20px;
     }
   }
+  .el-checkbox__inner{
+    border: 1px solid #000 !important;
+  }
   .data-header {
     margin: 10px;
   }
@@ -939,9 +967,6 @@ export default {
   }
   .compare,.power-table{
     margin:15px
-  }
-  .el-table td,.el-table th{
-    text-align: center !important;
   }
   .history-middle {
     margin: 10px 20px;
