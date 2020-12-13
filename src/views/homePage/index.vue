@@ -334,10 +334,10 @@ export default {
     //   }
     // },
     //根据时间搜索平衡度和有功曲线图
-    getChart() {
+    getChart(date_0,date_1) {
       let data1 = {};
       if (this.click2 == true) {
-        data1 = { daterange: this.time[0] + "-" + this.time[1] };
+        data1 = { daterange: date_0 + "-" + date_1 };
       }
       ApiGetBalance(data1).then(({ data }) => {
         let dataList = [];
@@ -458,7 +458,7 @@ export default {
       let data2 = {};
       if (this.click2 == true) {
         data2 = {
-          daterange: this.time[0] + "-" + this.time[1]
+          daterange: date_0 + "-" + date_1,
         };
       }
       ApiGetPower(data2).then(({ data }) => {
@@ -559,6 +559,9 @@ export default {
       }else{
         this.getTotalChart();
       }
+      // 右下角的平均平衡度和平均有功获取
+      this.click2 = true;
+      this.getChart(this.date[0],this.date[1]);
     },
     //获取首页告警
     getAlarm() {
@@ -618,10 +621,10 @@ export default {
       });
     },
     //判断平衡度和有功曲线图是否是根据时间搜索
-    search2() {
-      this.click2 = true;
-      this.getChart();
-    },
+    // search2() {
+    //   this.click2 = true;
+    //   this.getChart();
+    // },
     //获取所有井名和id
     getWellList(){
       ApiGetSimpleWellList().then(({data}) => {
@@ -793,18 +796,19 @@ export default {
     }
   },
   created() {
+    var date = new Date();
+    // var list1 = this.getDateRange(date, 7, true);
+    var list2 = this.getDateRange(date, 90, true);
+    // this.time[0] = list1[0];
+    // this.time[1] = list1[1];
+    this.date[0] = list2[0];
+    this.date[1] = list2[1];
     this.homeData();
-    this.getChart();
+    this.getChart(list2[0],list2[1]);
     this.getAlarm();
     this.getWellList();//刚进来，调取获取油井列表数据
     this.getTotalChart();
-    var date = new Date();
-    var list1 = this.getDateRange(date, 7, true);
-    var list2 = this.getDateRange(date, 90, true);
-    this.time[0] = list1[0];
-    this.time[1] = list1[1];
-    this.date[0] = list2[0];
-    this.date[1] = list2[1];
+    
   }
 };
 </script>
@@ -1009,7 +1013,7 @@ export default {
           <el-col :lg="24" style="height:15px" />
           <el-col :lg="24">
             <el-card shadow="always">
-              <el-row>
+              <!-- <el-row>
                 <el-col :sm="10" :lg="10" style="margin-top:5px">
                   <span style="font-size:15px">时间：</span>
                   <el-date-picker
@@ -1033,7 +1037,7 @@ export default {
                     type="primary"
                   />
                 </el-col>
-              </el-row>
+              </el-row> -->
               <LineChart
                 ref="balance-rate"
                 chart-id="balance-rate"
