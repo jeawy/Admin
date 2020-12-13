@@ -16,10 +16,23 @@
           </el-select>
         </el-col>
         <el-col :span="2" class="col-bg">
+          归属:
+        </el-col>
+        <el-col :span="5">
+          <el-cascader
+              :options="deptsbelong"
+              v-model="belong"
+              :props="{expandTrigger: 'hover'}"
+              placeholder="请选择归属"
+              type="text"
+              style="width:230px;"
+            ></el-cascader>
+        </el-col>
+        <el-col :span="2" class="col-bg">
           井号:
         </el-col>
-        <el-col :span="2">
-          <el-input v-model="wellNumber"></el-input>
+        <el-col :span="1">
+          <el-input v-model="wellNumber" style="width:130px;"></el-input>
         </el-col>
         <el-col :span="2" class="col-bg">
           状态:
@@ -270,6 +283,7 @@ import lineHistory from './components/line-history'
 import tableRecord from './components/table-record'
 import barchartHistory from './components/barchart-history';
 import { ApiGetRealdata  } from "@/api/realdata";
+import { getDept } from "@/api/admin";
 export default {
   // components: {tableHistory, lineHistory ,barchartHistory,tableRecord},
   data() {
@@ -348,10 +362,37 @@ export default {
       pageSizeList: [10,  30, 50, 100],
       cutType: -1, //分页类型
       clientHeight:"",
-      tableHeight:0
+      tableHeight:0,
+      depts: [],
+      deptsbelong: [],
+      belong:'',
     };
   },
   methods: {
+    getDeptList() {
+      getDept().then(res => {
+        this.depts = res.data.msg;
+        this.formatMemberList()
+      });
+    },
+    //获取归属列表
+    async formatMemberList() {
+      function changeList(arr) {
+        for (const item of arr) {
+          if (item["children"] && item["children"].length) {
+            changeList(item["children"]);
+          } else {
+            item["children"] = null;
+          }
+        }
+      }
+      this.deptsbelong = JSON.parse(
+        JSON.stringify(this.depts)
+          .replace(/name/g, "label")
+          .replace(/id/g, "value")
+      );
+      changeList(this.deptsbelong);  
+    },
     //分页
      handleSizeChange(val) {
       this.pageSize = val;
@@ -410,7 +451,8 @@ export default {
         well_type: this.wellCategory,
         number: this.wellNumber,
         status: this.wellStatus,
-        realdata: ""
+        realdata: "",
+        belong_id:this.belong[this.belong.length-1]
       };
       ApiGetRealdata(data).then(res => {
         this.realdata = res.data.realdata;
@@ -444,6 +486,7 @@ export default {
     },
   },
   created() {
+    this.getDeptList();
     this.GetRealdata();
     this.clientHeight =   `${document.documentElement.clientHeight}`          //document.body.clientWidth;
     this.tableHeight = this.clientHeight - 214

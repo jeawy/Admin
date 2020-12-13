@@ -15,10 +15,23 @@
           </el-select>
         </el-col>
         <el-col :span="2" class="col-bg">
+          归属:
+        </el-col>
+        <el-col :span="3">
+          <el-cascader
+              :options="deptsbelong"
+              v-model="belong"
+              :props="{expandTrigger: 'hover'}"
+              placeholder="请选择归属"
+              type="text"
+              style="width:230px;"
+            ></el-cascader>
+        </el-col>
+        <el-col :span="2" class="col-bg">
           井号:
         </el-col>
         <el-col :span="2">
-          <el-input v-model="wellNumber"></el-input>
+          <el-input v-model="wellNumber" style="width:130px;"></el-input>
         </el-col>
         <el-col :span="2" class="col-bg">
           状态:
@@ -204,6 +217,7 @@
 </template>
 <script>
 import { ApiGetRealdata, getDetail } from "@/api/realdata";
+import { getDept } from "@/api/admin";
 export default {
   data() {
     return {
@@ -287,10 +301,37 @@ export default {
       cutType: -1, //分页类型
       pageSizeList: [20, 30, 50, 100],
       clientHeight:"",
-      tableHeight:0
+      tableHeight:0,
+      depts: [],
+      deptsbelong: [],
+      belong:'',
     };
   },
   methods: {
+    getDeptList() {
+      getDept().then(res => {
+        this.depts = res.data.msg;
+        this.formatMemberList()
+      });
+    },
+    //获取归属列表
+    async formatMemberList() {
+      function changeList(arr) {
+        for (const item of arr) {
+          if (item["children"] && item["children"].length) {
+            changeList(item["children"]);
+          } else {
+            item["children"] = null;
+          }
+        }
+      }
+      this.deptsbelong = JSON.parse(
+        JSON.stringify(this.depts)
+          .replace(/name/g, "label")
+          .replace(/id/g, "value")
+      );
+      changeList(this.deptsbelong);  
+    },
      handleSizeChange(val) {
       this.pageSize = val;
       this.currentPage =1;
@@ -323,6 +364,7 @@ export default {
         well_type: this.wellCategory,
         number: this.wellNumber,
         status: this.wellStatus,
+        belong_id:this.belong[this.belong.length-1],
         daterange:this.wellDatePicker[0]+'-'+this.wellDatePicker[1],
       };
       ApiGetRealdata(data).then(res => {
@@ -370,6 +412,7 @@ export default {
     }
   },
   created() {
+    this.getDeptList();
     this.GetcomprehensiveData();
     this.clientHeight =   `${document.documentElement.clientHeight}`          //document.body.clientWidth;
     this.tableHeight = this.clientHeight - 208
