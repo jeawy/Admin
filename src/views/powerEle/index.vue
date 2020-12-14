@@ -43,7 +43,7 @@
               type="primary"
               @click="submitDate"
               style="margin-top: -10px"
-              >时间范围查询</el-button
+              >查询</el-button
             >
           </el-col>
         </el-row>
@@ -63,9 +63,9 @@
               <el-button icon="el-icon-arrow-right" @click="rightWorkLine" :disabled="rightWorkDis"></el-button>
               <span class="dailylength" style="margin-left:20px;">历史数据个数:{{worklength}}</span>
               <span class="dailylength" style="margin-left:20px" v-show="currentDiasbled">
-                当前展示第{{this.start_index+1}}({{time[this.start_index]}})、
-                {{this.start_index+2}}({{time[this.start_index+1]}})、
-                {{this.start_index+3}}({{time[this.start_index+2]}})组数据</span>
+                当前展示第{{this.start_index+1}}({{time[0]}})、
+                {{this.start_index+2}}({{time[1]}})、
+                {{this.start_index+3}}({{time[2]}})组数据</span>
             </div>
           </div>
         </el-card>
@@ -95,7 +95,7 @@
           >
           <el-table-column type="selection" width="60" align="center" ></el-table-column>
           <el-table-column type="index" width="60" label="序号" align="center"></el-table-column>
-          <el-table-column label="时间" width="180" align="center">
+          <el-table-column label="时间" width="110" align="center">
               <template slot-scope="scope">{{ scope.row.time }}</template>
           </el-table-column>
           <el-table-column prop="name" label="有功">
@@ -357,6 +357,9 @@ export default {
     },
     // 初始化有功
     getPower(id,daterange){
+      let array_datas = [];
+      this.active_list = [];
+      this.time = [];
       ApiPowerData({id:id,daterange:daterange}).then(({data}) =>{
         this.tableData = data.msg
         this.powertabletotal = this.tableData.length
@@ -378,21 +381,25 @@ export default {
         if(this.power_current_page > 1){
           this.P144Workdata = [...this.P144Workdata,...data.msg];
         }
-        let array_datas = [];
-        for (let i = this.start_index; i < this.end_index; i++) {
-          array_datas.push(this.P144Workdata[i]);
-        }
-        if (array_datas[2] == undefined) {
-          array_datas.pop();
-        }
-        if (array_datas[1] == undefined) {
-          array_datas.pop();
-        }
-        if (array_datas[0] !== undefined) {
-          array_datas.forEach(item => {
-            this.active_list = this.active_list.concat(item.p144_data);
-            this.time = this.time.concat(item.time)
-          });
+        if(this.P144Workdata.length > 0){
+          for (let i = this.start_index; i < this.end_index; i++) {
+            array_datas.push(this.P144Workdata[i]);
+          }
+          if (array_datas[2] == undefined) {
+            array_datas.pop();
+          }
+          if (array_datas[1] == undefined) {
+            array_datas.pop();
+          }
+          if (array_datas[0] !== undefined) {
+            array_datas.forEach(item => {
+              this.active_list = this.active_list.concat(item.p144_data);
+              this.time = this.time.concat(item.time)
+            });
+          }
+        }else{
+          this.active_list = []
+          this.time = []
         }
         this.getPowerChart(this.active_list,this.time)
         if (this.worklength > 3) {
@@ -530,6 +537,7 @@ export default {
     leftWorkLine() {
       this.loading = true;
       this.active_list = [];
+      this.time = [];
       let width = 3;
       this.start_index += 1;
       this.end_index = this.start_index + width;
@@ -545,8 +553,8 @@ export default {
         array_datas.forEach(item => {
           this.active_list = this.active_list.concat(item.p144_data);
           this.time = this.time.concat(item.time)
-          this.getPowerChart(this.active_list,this.time);
         });
+        this.getPowerChart(this.active_list,this.time);
       }
       if (this.end_index <= this.worklength) {
         this.rightWorkDis = false;
@@ -562,6 +570,7 @@ export default {
     rightWorkLine() {
       this.loading = true;
       this.active_list = [];
+      this.time = []
       let width = 3;
       this.start_index -= 1;
       this.end_index = this.start_index + width;
@@ -573,11 +582,10 @@ export default {
         array_datas.forEach(item => {
           this.active_list = this.active_list.concat(item.p144_data);
           this.time = this.time.concat(item.time)
-          this.getPowerChart(this.active_list,this.time);
         });
+        this.getPowerChart(this.active_list,this.time);
       }
       if (this.start_index >= 0) {
-        // this.getWorkChart();
         this.leftWorkDis = false;
         if (this.start_index == 0) {
           this.rightWorkDis = true;
@@ -926,7 +934,6 @@ export default {
 
   created() {
     var date = new Date();
-    console.log(this.$route.query.wellid)
     var list = this.getDateRange(date,7,true)
     this.datePicker[0] = this.timeFormat(list[0])
     this.datePicker[1] = this.timeFormat(list[1])
@@ -952,8 +959,8 @@ export default {
       font-size: 20px;
     }
   }
-  .el-checkbox__inner{
-    border: 1px solid #000 !important;
+  /deep/ .el-checkbox__inner{
+    border: 1px solid #000;
   }
   .data-header {
     margin: 10px;
