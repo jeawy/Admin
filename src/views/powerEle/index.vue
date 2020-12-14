@@ -541,10 +541,6 @@ export default {
       let width = 3;
       this.start_index += 1;
       this.end_index = this.start_index + width;
-      if (this.end_index % 20 === 0){
-        this.power_current_page += 1;
-        this.getPower();
-      }
       let array_datas = [];
       for (let i = this.start_index; i < this.end_index; i++) {
         array_datas.push(this.P144Workdata[i]);
