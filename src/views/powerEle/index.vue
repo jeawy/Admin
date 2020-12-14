@@ -3,7 +3,7 @@
     <div class="data-title">
       <!-- <div class="title-text">历史数据曲线</div> -->
     </div>
-    <!-- <div class="data-header">
+    <div class="data-header">
       <el-card shadow="never">
         <el-row class="row-bg">
           <el-col :lg="4">
@@ -38,66 +38,47 @@
               value-format="yyyy/MM/dd"
             ></el-date-picker>
           </el-col>
-          <el-col :lg="3" class="col-bg">
+          <el-col :lg="4" class="row-bg">
             <el-button
               type="primary"
               @click="searchall"
-              style="margin-top: -10px"
-              >查询</el-button
-            >
+              >查询</el-button>
+            <el-button type="primary" @click="showstack()" v-if="showchart">
+              隐藏堆叠对比
+            </el-button>
+            <el-button type="primary" @click="showstack()" v-else>
+              展示堆叠对比
+            </el-button>
           </el-col>
-          <el-button class="compare" type="primary" @click="powercompare()">堆叠对比</el-button>
         </el-row>
       </el-card>
-    </div> -->
+    </div>
     <div class="data-chart">
-      <el-card shadow="never" body-style="padding:0px;" v-loading="loading">
+      <el-row :gutter="15" class="elchart">
+        <el-card shadow="never" body-style="padding:0px;">
+          <div class="chart">
+            <LineChart
+              ref="power_chart"
+              chart-id="power_chart"
+              style="height: 350px"
+            />
+            <div style="text-align:center;">
+              <el-button icon="el-icon-arrow-left" @click="leftWorkLine" :disabled="leftWorkDis"></el-button>
+              <el-button icon="el-icon-arrow-right" @click="rightWorkLine" :disabled="rightWorkDis"></el-button>
+              <span class="dailylength" style="margin-left:20px;">历史数据个数:{{worklength}}</span>
+              <span class="dailylength" style="margin-left:20px" v-show="currentDiasbled">
+                当前展示第{{this.start_index+1}}({{time[0]}})、
+                {{this.start_index+2}}({{time[1]}})、
+                {{this.start_index+3}}({{time[2]}})组数据</span>
+            </div>
+          </div>
+        </el-card>
+      </el-row>
+    </div>
+    <div class="data-chart">
+      <el-card shadow="never" body-style="padding:0px;" v-loading="loading" v-show="showchart">
         <el-row :gutter="15" class="elchart">
           <el-col :lg="6" style="margin-top:15px">
-            <el-card shadow="never" body-style="padding:0px;" class="left-mark">
-            <div class="left-mark">
-              井&nbsp;&nbsp;&nbsp;&nbsp;
-                &nbsp; 名：
-              <el-select
-                v-model="wellname"
-                placeholder="请选择"
-                style="width: 200px"
-                @change="getWellDetails(wellname)"
-                filterable
-              >
-                <el-option
-                  v-for="(item, index) of wellList"
-                  :label="item.name"
-                  :value="item.id"
-                  :key="index"
-                ></el-option>
-              </el-select>
-            </div>
-            <div class="left-mark">
-              时间范围：
-              <el-date-picker
-                style="width:200px"
-                v-model="datePicker_all"
-                type="daterange"
-                align="right"
-                range-separator="-"
-                start-placeholder="开始时间"
-                end-placeholder="结束时间"
-                size="mini"
-                :picker-options="pickerOptions_all"
-                value-format="yyyy/MM/dd"
-              ></el-date-picker>
-            </div>
-            <div class="left-mark">
-              <el-button type="primary" @click="searchall()">查询</el-button>
-              <el-button type="primary" @click="showstack()" v-if="showchart">
-                隐藏堆叠对比
-              </el-button>
-              <el-button type="primary" @click="showstack()" v-else>
-                展示堆叠对比
-              </el-button>
-            </div>
-            </el-card>
             <el-card shadow="never" body-style="padding:0px;" class="left-mark">
                 <div class="left-mark">
                 请选择检测时间点
@@ -106,11 +87,10 @@
                   ref="multipleTable"
                   :data="tableData" 
                   stripe
-
                   class="power-table"
                   tooltip-effect="dark"
                   style="width:85%"
-                  :max-height="380"
+                  :max-height="320"
                   :header-cell-style="{color:'#212529',fontSize:'16px'}"
                   :row-style="{fontSize:'16px',color:'#212529;'}"
                   @selection-change="handleSelectionChange"
@@ -127,22 +107,6 @@
           </el-col>
           <el-col :lg="18">
             <div class="chart">
-              <LineChart
-                ref="power_chart"
-                chart-id="power_chart"
-                style="height: 350px"
-              />
-              <div style="text-align:center;">
-                <el-button icon="el-icon-arrow-left" @click="leftWorkLine" :disabled="leftWorkDis"></el-button>
-                <el-button icon="el-icon-arrow-right" @click="rightWorkLine" :disabled="rightWorkDis"></el-button>
-                <span class="dailylength" style="margin-left:20px;">历史数据个数:{{worklength}}</span>
-                <span class="dailylength" style="margin-left:20px" v-show="currentDiasbled">
-                  当前展示第{{this.start_index+1}}({{time[0]}})、
-                  {{this.start_index+2}}({{time[1]}})、
-                  {{this.start_index+3}}({{time[2]}})组数据</span>
-              </div>
-            </div>
-            <div class="chart" v-show="showchart">
               <LineChart
                 ref="power_stack"
                 chart-id="power_stack"
