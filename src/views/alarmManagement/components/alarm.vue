@@ -287,7 +287,7 @@
         <template slot-scope="scope">
           <router-link
             style="cursor: pointer;"
-            :to="{name:'powerEle',params:{id:scope.row.wellid},query:{type:scope.row.pro_type}}"
+            :to="{name:'powerEle',params:{id:scope.row.wellid,date:scope.row.date},query:{type:scope.row.pro_type}}"
           >{{scope.row.well}}</router-link>
         </template>
       </el-table-column>

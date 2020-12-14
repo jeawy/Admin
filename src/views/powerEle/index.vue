@@ -1072,13 +1072,25 @@ export default {
 
   created() {
     var date = new Date();
+    var day_millisecond = 60*60*24; //一天的毫秒数
+    var before_day = ""
+    var after_day = ""
     var list = this.getDateRange(date,7,true)
-    this.datePicker_all[0] = this.timeFormat(list[0])
-    this.datePicker_all[1] = this.timeFormat(list[1])
+    this.loading = true;
+    if(this.$route.params.date){
+      before_day = this.$route.params.date - day_millisecond*2;
+      after_day = this.$route.params.date + day_millisecond
+      before_day = this.dateFormat(before_day)
+      after_day = this.dateFormat(after_day)
+      this.datePicker_all[0] = before_day
+      this.datePicker_all[1] = after_day
+    }else{
+      this.datePicker_all[0] = this.timeFormat(list[0])
+      this.datePicker_all[1] = this.timeFormat(list[1])
+    }
     this.date_all = this.datePicker_all[0] + "-" + this.datePicker_all[1]
     this.datePicker_output = this.datePicker_all
     this.GetwellList();
-    this.loading = true;
   },
 };
 </script>
