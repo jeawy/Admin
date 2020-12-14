@@ -55,14 +55,14 @@
     </div>
     <div class="data-chart">
       <el-row :gutter="15" class="elchart">
-        <el-card shadow="never" body-style="padding:0px;">
+        <el-card shadow="never" body-style="padding:0px;" v-loading="loading">
           <div class="chart">
             <LineChart
               ref="power_chart"
               chart-id="power_chart"
               style="height: 350px"
             />
-            <div style="text-align:center;">
+            <div style="text-align:center;margin:10px">
               <el-button icon="el-icon-arrow-left" @click="leftWorkLine" :disabled="leftWorkDis"></el-button>
               <el-button icon="el-icon-arrow-right" @click="rightWorkLine" :disabled="rightWorkDis"></el-button>
               <span class="dailylength" style="margin-left:20px;">历史数据个数:{{worklength}}</span>
@@ -76,9 +76,9 @@
       </el-row>
     </div>
     <div class="data-chart">
-      <el-card shadow="never" body-style="padding:0px;" v-loading="loading" v-show="showchart">
+      <el-card shadow="never" body-style="padding:0px;" v-show="showchart">
         <el-row :gutter="15" class="elchart">
-          <el-col :lg="6" style="margin-top:15px">
+          <el-col :lg="6" style="margin-top:5px">
             <el-card shadow="never" body-style="padding:0px;" class="left-mark">
                 <div class="left-mark">
                 请选择检测时间点
@@ -89,8 +89,8 @@
                   stripe
                   class="power-table"
                   tooltip-effect="dark"
-                  style="width:85%"
-                  :max-height="320"
+                  style="width:90%"
+                  :max-height="290"
                   :header-cell-style="{color:'#212529',fontSize:'16px'}"
                   :row-style="{fontSize:'16px',color:'#212529;'}"
                   @selection-change="handleSelectionChange"
@@ -100,8 +100,9 @@
                     <template slot-scope="scope">{{ scope.row.time }}</template>
                   </el-table-column>
                 </el-table>
-                <div class="left-mark">
+                <div class="left-mark" style="display:flex">
                   <el-button type="primary" @click="powercompare()">堆叠对比</el-button>
+                  <el-button type="primary" @click="reset()">重置</el-button>
                 </div>
             </el-card>
           </el-col>
@@ -110,7 +111,7 @@
               <LineChart
                 ref="power_stack"
                 chart-id="power_stack"
-                style="height: 350px"
+                style="height: 470px"
               />
             </div>
           </el-col>
@@ -769,7 +770,7 @@ export default {
           {
             left: 50,
             right: 50,
-            height: "70%"
+            height: "78%"
           }
         ],
         tooltip: {
@@ -823,8 +824,17 @@ export default {
         this.$refs["power_stack"].initChart(customOption);
       })
     },
+    // 重置
+    reset(){
+      // 删除后清空之前选择的数据
+      this.$refs.multipleTable.clearSelection();
+      this.multipleSelection = []
+      this.powercompare()
+    },
     // 选中表格中的数
     handleSelectionChange(val) {
+      console.log(val)
+      console.log(this.multipleSelection)
       this.multipleSelection = val;
     },
     // 是否展示有功堆叠图
@@ -834,6 +844,9 @@ export default {
     //搜索日产量折线图
     getOutputChart(id,date) {
       let lines = {};
+      let output_list = [];
+      let dates_list = [];
+      let level = [];
       lines = {
         wellid: id,
         action: "line",
@@ -841,9 +854,6 @@ export default {
         welldetail:"",
       };
       getHistoryData(lines).then(({ data }) => {
-        let output_list = [];
-        let dates_list = [];
-        let level = [];
         data.msg.forEach(item => {
           dates_list.push(this.dateFormat(item.time));
           output_list.push(item.output);
@@ -881,6 +891,7 @@ export default {
               realtime: true,
               start: 30,
               end: 70,
+              filterMode: 'empty',
               xAxisIndex: [0, 1]
             },
             {
@@ -888,6 +899,7 @@ export default {
               realtime: true,
               start: 30,
               end: 70,
+              filterMode: 'empty',
               xAxisIndex: [0, 1]
             }
           ],
@@ -956,12 +968,13 @@ export default {
     },
     //获取电流历史数据
     getEleHistory(id,date){
+      let time_list = []
+      let electrics = []
       ApiGetEleHistory({well_id:id,time_range:date}).then(({data}) =>{
-        let time_list = []
         data.msg.times.forEach(item => {
           time_list.push(this.dateFormat(item));
         });
-        let electrics = data.msg.electrics
+        electrics = data.msg.electrics
         time_list.reverse()
         electrics.reverse()
         let option = {
@@ -983,6 +996,7 @@ export default {
               realtime: true,
               start: 30,
               end: 70,
+              filterMode: 'empty',
               xAxisIndex: 0
             },
             {
@@ -990,6 +1004,7 @@ export default {
               realtime: true,
               start: 30,
               end: 70,
+              filterMode: 'empty',
               xAxisIndex: 0
             }
           ],
