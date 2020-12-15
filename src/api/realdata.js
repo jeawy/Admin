@@ -7,6 +7,10 @@ export function ApiGetRealdata(params) {
 export function ApiGetPower(params) {
     return AXIOS.get('/api/realdata/realdata/?active', { params })
 }
+// 能耗查询
+export function ApiSearchPower(params) {
+    return AXIOS.get('/api/realdata/realdata/?real', { params })
+}
 //获取历史数据
 export function ApiGetHistorydata(params) {
     return AXIOS.get('api/clientdata/clientdata/', { params })
