@@ -12,7 +12,7 @@ import {
   ApiGetAlarm,
   ApiGetDept
 } from "@/api/homeData";
-import { ApiGetPower,ApiGetRealdata } from "@/api/realdata";
+import { ApiGetPower,ApiGetRealdata,ApiGetAverage } from "@/api/realdata";
 import { getHistoryData } from "@/api/welldetail";
 import { ApiGetSimpleWellList } from "@/api/wellList";
 import dayjs from "dayjs";
@@ -335,54 +335,23 @@ export default {
     // },
     //根据时间搜索平衡度和有功曲线图
     getChart(date_0,date_1) {
-      let data1 = {};
-      if (this.click2 == true) {
-        data1 = { daterange: date_0 + "-" + date_1 };
-      }
-      ApiGetBalance(data1).then(({ data }) => {
-        let dataList = [];
-        let wellName = [];
-        let series = [];
-        let time_list = [];
-        let balance_list = [];
-        let name = "";
-        data.msg.forEach(item => {
-          dataList.push(item.list);
-          wellName.push(item.well_name);
+       let parm = { daterange: date_0 + "-" + date_1 };
+      ApiGetAverage(parm).then(({ data }) => {
+        let balance_list = [];//平衡度
+        let active_list = [];//有功
+        let datatime = [];
+        data.realavelst.forEach(item => {
+          balance_list.push(item.balance);
+          active_list.push(item.active);
+          datatime.push(this.dataFormat(item.time))
         });
-        if (dataList == "") {
-          this.length = dataList.length + 1;
-        } else {
-          this.length = dataList.length;
-        }
-        for (let i = 0; i < this.length; i++) {
-          if (dataList == "") {
-            time_list = [];
-            balance_list = [];
-            name = "";
-          } else {
-            this.balanceList = dataList[i];
-            time_list = dataList[0].map(item => {
-              return item.date;
-            });
-            balance_list = this.balanceList.map(item => {
-              return item.balance;
-            });
-            name = wellName[i];
-          }
-          time_list.reverse();
-          balance_list.reverse();
-          let item = {
-            name: name,
-            smooth: true, //光滑
-            data: balance_list,
-            type: "line"
-          };
-          series.push(item);
+        balance_list.reverse();
+        active_list.reverse();
+        datatime.reverse();
           //平衡度曲线图
           let option3 = {
             title: {
-              text: "平衡度"
+              text: "平均平衡度"
             },
             grid: {
               left: "8%"
@@ -403,12 +372,6 @@ export default {
                 xAxisIndex: 0
               }
             ],
-            // legend: {//图例
-            //   data: wellName,// 名字
-            //   tooltip: {
-            //     show: true,
-            //   },
-            // },
             tooltip: {
               trigger: "axis",
               position: function(point, params, dom, rect, size) {
@@ -441,7 +404,7 @@ export default {
             xAxis: {
               type: "category",
               name: "时间",
-              data: time_list
+              data: datatime
             },
             yAxis: {
               type: "value",
@@ -450,65 +413,20 @@ export default {
                 fontSize: 14
               }
             },
-            series: series
+            series: [{
+              name: "平均平衡度",
+              smooth: true,
+              type: "line",
+              symbolSize: 8,
+              hoverAnimation: false,
+              data: balance_list,
+              connectNulls:true
+            }]
           };
           this.$refs["balance-rate"].initChart(option3);
-        }
-      });
-      let data2 = {};
-      if (this.click2 == true) {
-        data2 = {
-          daterange: date_0 + "-" + date_1,
-        };
-      }
-      ApiGetPower(data2).then(({ data }) => {
-        //时间戳转换函数
-        function dateFormat(date) {
-          if (date) {
-            date *= 1000;
-            return dayjs(date).format("YYYY/MM/DD HH:mm");
-          } else {
-            return "";
-          }
-        }
-        let dataList = data.msg;
-        let wellName = [];
-        let series = [];
-        let active_list = [];
-        let dates_list = [];
-        if (dataList == "") {
-          this.length = dataList.length + 1;
-        } else {
-          this.length = dataList.length;
-        }
-        for (let i = 0; i < this.length; i++) {
-          if (dataList == "") {
-            active_list = [];
-            wellName = [];
-            dates_list = [];
-          } else {
-            for (let j = 0; j < dataList[i].length; j++) {
-              if (dataList !== "") {
-                active_list.push(dataList[i][j].active);
-                wellName.push(dataList[i][j].well_name);
-                dates_list.push(dateFormat(dataList[i][j].time));
-              }
-            }
-          }
-          active_list.reverse();
-          dates_list.reverse();
-          let item = {
-            name: wellName[0],
-            smooth: true, //光滑
-            data: active_list,
-            type: "line"
-          };
-          series.push(item);
-          active_list = [];
-          wellName = [];
           let option4 = {
             title: {
-              text: "有功"
+              text: "平均有功"
             },
             grid: {
               left: "8%"
@@ -535,7 +453,7 @@ export default {
             xAxis: {
               type: "category",
               name: "时间",
-              data: dates_list
+              data: datatime
             },
             yAxis: {
               type: "value",
@@ -544,11 +462,17 @@ export default {
                 fontSize: 14
               }
             },
-            series: series
+            series: {
+              name: "平均有功",
+              smooth: true,
+              type: "line",
+              symbolSize: 8,
+              hoverAnimation: false,
+              data: active_list,
+              connectNulls:true
+            }
           };
-          dates_list = [];
           this.$refs["power"].initChart(option4);
-        }
       });
     },
     //判断产量和液面高度曲线图是否是根据时间搜索

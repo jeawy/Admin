@@ -7,6 +7,10 @@ export function ApiGetRealdata(params) {
 export function ApiGetPower(params) {
     return AXIOS.get('/api/realdata/realdata/?active', { params })
 }
+// 获取平均有功跟平衡度
+export function ApiGetAverage(params) {
+    return AXIOS.get('/api/realdata/realaverage/', { params })
+}
 // 能耗查询
 export function ApiSearchPower(params) {
     return AXIOS.get('/api/realdata/realdata/?real', { params })
