@@ -23,6 +23,7 @@
               v-model="belong"
               :props="{expandTrigger: 'hover'}"
               placeholder="请选择归属"
+              change-on-select
               type="text"
               style="width:230px;"
             ></el-cascader>
