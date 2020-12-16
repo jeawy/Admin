@@ -26,7 +26,7 @@
             ></el-option>
           </el-select>
         </el-col>
-        <el-col :span="6" type="flex">
+        <!-- <el-col :span="6" type="flex">
           <span class="toptext">上报日期:</span>
           <el-date-picker
             v-model="wellDatePicker"
@@ -40,7 +40,7 @@
             :picker-options="pickerOptions"
             value-format="yyyy/MM/dd"
           ></el-date-picker>
-        </el-col>
+        </el-col> -->
         <el-col :span="4">
           <el-button type="primary" class="button" @click="searchWell(1)">点击查询</el-button>
         </el-col>
@@ -237,7 +237,7 @@ export default {
         parm = {
           deptid:this.belong[this.belong.length-1],
           name:this.wellname,
-          daterange:this.wellDatePicker[0]+'-'+this.wellDatePicker[1],
+          // daterange:this.wellDatePicker[0]+'-'+this.wellDatePicker[1],
         }
       }
       ApiSearchPower(parm).then(res=>{
